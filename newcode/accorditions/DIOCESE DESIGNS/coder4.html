@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Bootstrap Audio Grid</title>
+
+  <!-- Bootstrap 5.3.3 CSS -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link href="https://unpkg.com/ionicons@4.2.2/dist/css/ionicons.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="//cdn.flowplayer.com/releases/native/stable/style/flowplayer.css">
+
+  <style>
+    .audio-block {
+      position: relative;
+      text-align: center;
+      margin-bottom: 2rem;
+    }
+
+    .thumbnail-img {
+      width: 100%;
+      height: auto;
+      display: block;
+    }
+
+    .custom-play-btn {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      font-size: 3rem;
+      background-color: rgba(0,0,0,0.6);
+      color: white;
+      border: none;
+      border-radius: 50%;
+      width: 60px;
+      height: 60px;
+      line-height: 60px;
+      text-align: center;
+      cursor: pointer;
+      z-index: 10;
+    }
+
+    .custom-play-btn:hover {
+      background-color: rgba(0,0,0,0.8);
+    }
+
+    .music-note {
+      display: none;
+    }
+
+    .fp-ratio {
+      height: 3.2em;
+      padding: 0 !important;
+    }
+
+    video {
+      display: none;
+    }
+
+    .fp-header,
+    .fp-middle {
+      display: none;
+    }
+
+    .fp-controls {
+      visibility: visible !important;
+      opacity: 1;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      position: absolute;
+    }
+
+    .audio-link {
+      margin-top: 0.5rem;
+      display: block;
+      color: #007BFF;
+      text-decoration: none;
+    }
+
+    .audio-link:hover {
+      text-decoration: underline;
+    }
+  </style>
+</head>
+<body>
+
+<div class="container py-4">
+  <div class="row g-4">
+
+    <!-- Audio Card Template (Repeat for each audio) -->
+    <div class="col-12 col-md-6 col-lg-4">
+      <div class="audio-block">
+        <img src="//releases.flowplayer.org/data/national.jpg" alt="Thumbnail" class="thumbnail-img">
+        <button class="custom-play-btn" onclick="playAudio('player1')">▶</button>
+        <div id="player1" class="is-audio">
+          <div class="cover"></div>
+          <span class="ion-ios-musical-note music-note"></span>
+        </div>
+        <a class="audio-link" href="audios/audio1.mp3" target="_blank">▶️ Listen: Audio 1</a>
+      </div>
+    </div>
+
+    <div class="col-12 col-md-6 col-lg-4">
+      <div class="audio-block">
+        <img src="//releases.flowplayer.org/data/national.jpg" alt="Thumbnail" class="thumbnail-img">
+        <button class="custom-play-btn" onclick="playAudio('player2')">▶</button>
+        <div id="player2" class="is-audio">
+          <div class="cover"></div>
+          <span class="ion-ios-musical-note music-note"></span>
+        </div>
+        <a class="audio-link" href="audios/audio2.mp3" target="_blank">▶️ Listen: Audio 2</a>
+      </div>
+    </div>
+
+    <div class="col-12 col-md-6 col-lg-4">
+      <div class="audio-block">
+        <img src="//releases.flowplayer.org/data/national.jpg" alt="Thumbnail" class="thumbnail-img">
+        <button class="custom-play-btn" onclick="playAudio('player3')">▶</button>
+        <div id="player3" class="is-audio">
+          <div class="cover"></div>
+          <span class="ion-ios-musical-note music-note"></span>
+        </div>
+        <a class="audio-link" href="audios/audio3.mp3" target="_blank">▶️ Listen: Audio 3</a>
+      </div>
+    </div>
+
+    <div class="col-12 col-md-6 col-lg-4">
+      <div class="audio-block">
+        <img src="//releases.flowplayer.org/data/national.jpg" alt="Thumbnail" class="thumbnail-img">
+        <button class="custom-play-btn" onclick="playAudio('player4')">▶</button>
+        <div id="player4" class="is-audio">
+          <div class="cover"></div>
+          <span class="ion-ios-musical-note music-note"></span>
+        </div>
+        <a class="audio-link" href="audios/audio4.mp3" target="_blank">▶️ Listen: Audio 4</a>
+      </div>
+    </div>
+
+    <div class="col-12 col-md-6 col-lg-4">
+      <div class="audio-block">
+        <img src="//releases.flowplayer.org/data/national.jpg" alt="Thumbnail" class="thumbnail-img">
+        <button class="custom-play-btn" onclick="playAudio('player5')">▶</button>
+        <div id="player5" class="is-audio">
+          <div class="cover"></div>
+          <span class="ion-ios-musical-note music-note"></span>
+        </div>
+        <a class="audio-link" href="audios/audio5.mp3" target="_blank">▶️ Listen: Audio 5</a>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<!-- Flowplayer JS -->
+<script src="//cdn.flowplayer.com/releases/native/stable/flowplayer.min.js"></script>
+<script src="//cdn.flowplayer.com/releases/native/stable/plugins/hls.min.js"></script>
+
+<script>
+  // Initialize players with separate audio sources
+  const players = {
+    player1: flowplayer('#player1', { src: "audios/audio1.mp3" }),
+    player2: flowplayer('#player2', { src: "audios/audio2.mp3" }),
+    player3: flowplayer('#player3', { src: "audios/audio3.mp3" }),
+    player4: flowplayer('#player4', { src: "audios/audio4.mp3" }),
+    player5: flowplayer('#player5', { src: "audios/audio5.mp3" }),
+  };
+
+  // Play function triggered by button
+  function playAudio(playerId) {
+    if (players[playerId]) {
+      players[playerId].play();
+    }
+  }
+</script>
+
+<!-- Bootstrap JS -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+
+</body>
+</html>

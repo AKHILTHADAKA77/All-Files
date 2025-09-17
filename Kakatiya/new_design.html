@@ -1,0 +1,765 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Navbar with Dropdown + Contact + Grid Icon</title>
+
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" />
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" rel="stylesheet" />
+
+  <style>
+    body {
+      margin: 0;
+ 
+   font-family: 'Poppins', sans-serif;
+    }
+    .navbar {
+      background: rgb(255, 255, 255);
+        padding: 0.5rem 1.5rem;
+    }
+    .navbar-brand {
+      color: #000000;
+      font-weight: 600;
+      display: flex;
+      align-items: center;
+      text-decoration: none;
+    }
+    .kakatiya_logo img{
+        width: 120px;
+    }
+    .navbar-brand svg {
+      width: 32px;
+      height: 32px;
+      margin-right: 8px;
+    }
+    .nav-link {
+      color: #000000;
+      font-weight: 500;
+      font-size: 19px;
+      margin: 0 12px;
+      transition: color 0.3s ease;
+    }
+    .nav-link:hover {
+      color: #246802;
+    }
+    .btn-contact {
+      background-color: #6cc832;
+      color: #000;
+      font-weight: 600;
+    font-size: 19px;
+      border-radius: 50px;
+      padding: 8px 20px;
+      border: none;
+      transition: background-color 0.3s ease;
+    }
+    .btn-contact:hover {
+      background-color: #4a8b04;
+    }
+    .grid-menu-icon {
+      font-size: 1.8rem;
+      color: #000;
+      cursor: pointer;
+      transition: color 0.3s ease;
+    }
+    .grid-menu-icon:hover {
+      color: #333;
+    }
+    .offcanvas {
+      background-color: #000000;
+    }
+    .offcanvas .nav-link {
+      color: white;
+      font-size: 1.1rem;
+      padding: 0.5rem 1rem;
+    }
+    .offcanvas .nav-link:hover {
+      color: #a4ff78;
+    }
+
+    .dropdown-menu {
+      display: block;
+      opacity: 0;
+      transform: translateY(10px);
+      visibility: hidden;
+      transition: all 0.3s ease;
+      background-color: #132f26;
+      border-radius: 8px;
+      border: none;
+      padding: 0.5rem 0;
+    }
+    .dropdown-menu .dropdown-item {
+      color: white;
+      transition: background-color 0.2s ease;
+    }
+    .dropdown-menu .dropdown-item:hover {
+      background-color: #128b18;
+      color: #ffffff;
+    }
+    .dropdown:hover .dropdown-menu {
+      opacity: 1;
+      transform: translateY(0);
+      visibility: visible;
+    }
+    @media (max-width: 1020px) {
+    .btn-contact , .nav-link{
+    font-size: 17px;
+    }
+    }
+    @media (max-width: 991.98px) {
+      .navbar-nav {
+        display: none !important;
+      }
+      /* .btn-contact {
+        display: none !important;
+      } */
+      .navbar-toggler {
+        display: block !important;
+      }
+    }
+    /* .container-fluid{
+     border-bottom: 1px solid black;
+    }
+    .navbar-brand{
+  border-right: 1px solid black;
+  padding-right: 10px;
+    }
+    .navbar-nav {
+ 
+    }
+    .contact_btn{
+   
+        padding-bottom: 10px;
+        padding-left: 10px;
+        border-left: 1px solid black;
+    } */
+  </style>
+      <style>
+ 
+      .carousel-inner img {
+        height: 86vh;
+        object-fit: cover;
+      }
+
+      .carousel-control-custom {
+        position: absolute;
+        bottom: 20px;
+        right: 30px;
+        z-index: 5;
+        display: flex;
+            flex-direction: column;
+        gap: 12px;
+      }
+
+      .carousel-control-custom button {
+        width: 44px;
+        height: 44px;
+        background-color:#6cc832;
+        border: 2px solid rgba(255, 255, 255, 0.3);
+        border-radius: 50%;
+        color: rgb(255, 255, 255);
+        font-size: 20px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        transition: all 0.3s ease;
+      }
+
+      .carousel-control-custom button:hover {
+        background-color: #6cc832;
+        border-color:#6cc832;
+        color: #000;
+      }
+
+      @media (max-width: 768px) {
+        .carousel-inner img {
+          height: 300px;
+        }
+
+        .carousel-control-custom {
+          bottom: 15px;
+          right: 20px;
+        }
+      }
+    </style>
+
+      <style>
+    body {
+      margin: 0;
+      font-family: Arial, sans-serif;
+    }
+
+    .slider1-section-area {
+      background-color:  #6cc832; 
+      overflow: hidden;
+      padding: 20px 0;
+    }
+
+    .marquee-wrap {
+      display: flex;
+      white-space: nowrap;
+      animation: scrollLeft 25s linear infinite;
+    }
+
+    .marquee-text {
+      display: flex;
+      gap: 60px;
+    }
+
+    .brand-single-box {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .brand-single-box h3 {
+      margin: 0;
+      font-size: 1.1rem;
+      font-weight: 700;
+      color: #fff; 
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .brand-single-box h3 .bi {
+      font-size: 20px;
+      color: #fff; 
+    }
+
+    @keyframes scrollLeft {
+      0% {
+        transform: translateX(0);
+      }
+      100% {
+        transform: translateX(-50%);
+      }
+    }
+  </style>
+
+    <style>
+    .services_section {
+      background-color: #072B26;
+      color: #fff;
+      font-family: 'Segoe UI', sans-serif;
+    }
+
+    h2.section-title {
+      font-size: 2.5rem;
+      margin-bottom: 1rem;
+      color: #7fff00;
+      text-align: center;
+    }
+
+    .section-subtitle {
+      text-align: center;
+      margin-bottom: 2rem;
+      color: #ccc;
+      font-size: 1.1rem;
+    }
+
+    #serviceImage {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      border-radius: 0.75rem;
+      transition: opacity 0.4s ease-in-out;
+      opacity: 1;
+    }
+
+    .service-card {
+      background-color: #0e3b36;
+      border-radius: 12px;
+      padding: 20px;
+      text-align: left;
+      display: flex;
+      align-items: center;
+      gap: 15px;
+      margin-bottom: 20px;
+      transition: transform 0.3s ease;
+      cursor: pointer;
+      position: relative;
+    }
+
+    .service-card:hover {
+      transform: translateY(-5px);
+    }
+
+    .service-card i {
+      font-size: 2rem;
+      color: #7fff00;
+    }
+
+    .service-card.active::after {
+      content: '';
+      width: 10px;
+      height: 10px;
+      background-color: white;
+      border-radius: 50%;
+      position: absolute;
+      top: 10px;
+      right: 10px;
+    }
+
+    /* Ensure full height for image column on large screens */
+    @media (min-width: 1200px) {
+      .left-col {
+        height: 100%;
+      }
+
+      #serviceImage {
+        height: 100%;
+        max-height: 100%;
+      }
+    }
+  </style>  <style>
+    body {
+      background: #f8f9fa;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    }
+
+    .section-title {
+      text-align: center;
+      margin-bottom: 30px;
+    }
+
+    .tool-card {
+      position: relative;
+      border-radius: 20px;
+      overflow: hidden;
+      height: 150px;
+      background: #ffffff;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+      transition: all 0.3s ease-in-out;
+    }
+
+    .tool-card:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 8px 20px rgba(0,0,0,0.2);
+    }
+
+    /* Logo fills card */
+    .tool-card img {
+      width: 100%;
+      height: 100%;
+      object-fit: contain; /* keeps aspect ratio */
+      padding: 20px;
+      background: #fff;
+    }
+
+    /* Glassmorphism company name bar */
+    .company-name {
+      position: absolute;
+      bottom: -100%;
+      left: 0;
+      width: 100%;
+      padding: 8px 12px;
+      text-align: center;
+      color: #fff;
+      font-weight: 600;
+      background: rgba(0, 0, 0, 0.5); /* darker transparent for readability */
+      backdrop-filter: blur(6px);
+      transition: all 0.4s ease-in-out;
+    }
+
+    .tool-card:hover .company-name {
+      bottom: 0;
+    }
+  </style>
+</head>
+<body>
+
+<nav class="navbar navbar-expand-lg">
+    <div class="container-fluid d-flex justify-content-between align-items-center">
+
+
+      <a class="navbar-brand kakatiya_logo" href="#">
+       <img src="https://i.postimg.cc/wBvNTLyH/image-3.png" alt="logo">
+      </a>
+
+    
+      <div class="navbar-nav mx-auto d-none d-lg-flex flex-row">
+        <a class="nav-link" href="#">Home</a>
+
+   
+        <div class="nav-item dropdown">
+          <a class="nav-link " href="#" id="pagesDropdown" role="button">
+            Pages 
+            <!-- <i class="bi bi-arrow-up-right ms-1"></i> -->
+          </a>
+          <ul class="dropdown-menu" aria-labelledby="pagesDropdown">
+            <li><a class="dropdown-item" href="#">About</a></li>
+            <li><a class="dropdown-item" href="#">Services</a></li>
+            <li><a class="dropdown-item" href="#">Team</a></li>
+            <li><a class="dropdown-item" href="#">Career</a></li>
+            <li><a class="dropdown-item" href="#">FAQ</a></li>
+          </ul>
+        </div>
+
+        <a class="nav-link" href="#">Portfolio</a>
+        <a class="nav-link" href="#">Pricing</a>
+        <a class="nav-link" href="#">Blog</a>
+        <a class="nav-link" href="#">Contact</a>
+      </div>
+
+
+      <div class="d-none d-lg-flex align-items-center gap-3 contact_btn">
+        <a href="#" class="btn btn-contact">
+          Contact Now <i class="bi bi-arrow-up-right ms-1"></i>
+        </a>
+
+        <i class="bi bi-grid grid-menu-icon" 
+           role="button" 
+           data-bs-toggle="offcanvas" 
+           data-bs-target="#offcanvasNav"></i>
+      </div>
+
+
+      <button class="navbar-toggler d-lg-none border-0 bg-transparent p-0" 
+              type="button" 
+              data-bs-toggle="offcanvas" 
+              data-bs-target="#offcanvasNav">
+         <i class="bi bi-grid grid-menu-icon" 
+           role="button" 
+           data-bs-toggle="offcanvas" 
+           data-bs-target="#offcanvasNav"></i>
+      </button>
+    </div>
+  </nav>
+
+  <div class="offcanvas offcanvas-end" tabindex="-1" id="offcanvasNav">
+    <div class="offcanvas-header">
+      <h5 class="text-white">Menu</h5>
+      <button type="button" class="btn-close btn-close-white" data-bs-dismiss="offcanvas"></button>
+    </div>
+    <div class="offcanvas-body">
+      <ul class="navbar-nav">
+        <li class="nav-item"><a class="nav-link" href="#">Home</a></li>
+        <li class="nav-item"><a class="nav-link" href="#">Pages</a></li>
+        <li class="nav-item"><a class="nav-link" href="#">Portfolio</a></li>
+        <li class="nav-item"><a class="nav-link" href="#">Pricing</a></li>
+        <li class="nav-item"><a class="nav-link" href="#">Blog</a></li>
+        <li class="nav-item"><a class="nav-link" href="#">Contact</a></li>
+      </ul>
+      <hr>
+      <a href="#" class="btn btn-contact w-100">
+        Contact Now <i class="bi bi-arrow-up-right ms-1"></i>
+      </a>
+    </div>
+  </div>
+
+
+
+
+  <!-- banner section  -->
+   <section class="nammer_section">
+          <div id="carouselExampleIndicators" class="carousel slide" data-bs-ride="carousel">
+        
+        <!-- Indicators -->
+        <div class="carousel-indicators">
+          <button type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide-to="0" class="active" aria-current="true" aria-label="Slide 1"></button>
+          <button type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide-to="1" aria-label="Slide 2"></button>
+          <button type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide-to="2" aria-label="Slide 3"></button>
+          <button type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide-to="3" aria-label="Slide 4"></button>
+          <button type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide-to="4" aria-label="Slide 5"></button>
+        </div>
+
+        <!-- Slides -->
+        <div class="carousel-inner">
+          <div class="carousel-item active">
+            <img src="https://i.postimg.cc/BZN7VRLt/banner.jpg" class="d-block w-100" alt="Slide 1">
+          </div>
+          <div class="carousel-item">
+            <img src="https://i.postimg.cc/BZN7VRLt/banner.jpg"  class="d-block w-100" alt="Slide 2">
+          </div>
+          <div class="carousel-item">
+            <img src="https://i.postimg.cc/BZN7VRLt/banner.jpg" class="d-block w-100" alt="Slide 3">
+          </div>
+          <div class="carousel-item">
+                        <img src="https://i.postimg.cc/BZN7VRLt/banner.jpg" class="d-block w-100" alt="Slide 4">
+          </div>
+          <div class="carousel-item">
+            <img src="https://i.postimg.cc/BZN7VRLt/banner.jpg" class="d-block w-100" alt="Slide 5">
+          </div>
+        </div>
+
+        <!-- Custom Controls: Arrows in Bottom-Right -->
+        <div class="carousel-control-custom">
+          <button type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide="prev">
+            <i class="bi bi-arrow-left"></i>
+          </button>
+          <button type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide="next">
+            <i class="bi bi-arrow-right"></i>
+          </button>
+        </div>
+
+      </div>
+
+   </section>
+
+
+
+
+   <section class="services_scroll">
+  <div class="slider1-section-area">
+    <div class="marquee-wrap">
+      <div class="marquee-text">
+
+        <div class="brand-single-box">
+          <h3>
+            <i class="bi bi-code-slash"></i>
+            Web Development
+          </h3>
+        </div>
+
+        <div class="brand-single-box">
+          <h3>
+            <i class="bi bi-phone"></i>
+            Mobile Development
+          </h3>
+        </div>
+
+        <div class="brand-single-box">
+          <h3>
+            <i class="bi bi-palette"></i>
+            Web Design
+          </h3>
+        </div>
+
+        <div class="brand-single-box">
+          <h3>
+            <i class="bi bi-megaphone"></i>
+            Digital Marketing
+          </h3>
+        </div>
+
+        <div class="brand-single-box">
+          <h3>
+            <i class="bi bi-server"></i>
+            Domain & Hosting
+          </h3>
+        </div>
+
+        <div class="brand-single-box">
+          <h3>
+            <i class="bi bi-award"></i>
+            Branding
+          </h3>
+        </div>
+
+        <div class="brand-single-box">
+          <h3>
+            <i class="bi bi-laptop"></i>
+            Software Development
+          </h3>
+        </div>
+
+        <div class="brand-single-box">
+          <h3>
+            <i class="bi bi-chat-dots"></i>
+            Bulk SMS / VOICE
+          </h3>
+        </div>
+
+        <!-- Repeat for smooth infinite scroll -->
+        <div class="brand-single-box">
+          <h3>
+            <i class="bi bi-code-slash"></i>
+            Web Development
+          </h3>
+        </div>
+
+        <div class="brand-single-box">
+          <h3>
+            <i class="bi bi-phone"></i>
+            Mobile Development
+          </h3>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+   </section>
+
+
+
+
+   <!-- services section -->
+
+   <section class="services_section">
+   <div class="container py-5">
+
+  <h2 class="section-title">What We Do</h2>
+  <p class="section-subtitle">We provide comprehensive digital solutions to grow your business</p>
+
+  <div class="row align-items-stretch">
+
+    <div class="col-12 col-xl-4 mb-4 mb-xl-0 left-col d-flex">
+      <img id="serviceImage" src="https://i.postimg.cc/26pzDzK0/aa.avif" alt="Service Image">
+    </div>
+
+
+    <div class="col-12 col-xl-8">
+      <div class="row" id="cardsContainer">
+ 
+        <div class="col-md-6">
+          <div class="service-card" data-img="https://i.postimg.cc/26pzDzK0/aa.avif">
+            <i class="bi bi-laptop"></i>
+            <h5 class="mb-0">Website Designing</h5>
+          </div>
+        </div>
+        <div class="col-md-6">
+          <div class="service-card" data-img="https://i.postimg.cc/6646cTzc/Gallery-lab.jpg">
+            <i class="bi bi-code-slash"></i>
+            <h5 class="mb-0">Website Development</h5>
+          </div>
+        </div>
+        <div class="col-md-6">
+          <div class="service-card" data-img="https://i.postimg.cc/vHWYRjJ6/Gallery-smartclass.avif">
+            <i class="bi bi-phone"></i>
+            <h5 class="mb-0">Mobile Applications</h5>
+          </div>
+        </div>
+        <div class="col-md-6">
+          <div class="service-card" data-img="https://i.postimg.cc/PJDt5FN9/Gallery-Bus.jpg">
+            <i class="bi bi-graph-up"></i>
+            <h5 class="mb-0">Digital Marketing</h5>
+          </div>
+        </div>
+        <div class="col-md-6">
+          <div class="service-card" data-img="https://i.postimg.cc/3xvG8f6v/Gallery-hosting.jpg">
+            <i class="bi bi-hdd-network"></i>
+            <h5 class="mb-0">Domain & Hosting</h5>
+          </div>
+        </div>
+        <div class="col-md-6">
+          <div class="service-card" data-img="https://i.postimg.cc/W3s8Z1Yw/Gallery-branding.jpg">
+            <i class="bi bi-palette"></i>
+            <h5 class="mb-0">Branding</h5>
+          </div>
+        </div>
+        <div class="col-md-6">
+          <div class="service-card" data-img="https://i.postimg.cc/kGg4T4Xx/Gallery-software.jpg">
+            <i class="bi bi-cpu"></i>
+            <h5 class="mb-0">Software Development</h5>
+          </div>
+        </div>
+        <div class="col-md-6">
+          <div class="service-card" data-img="https://i.postimg.cc/5yY1FtKZ/Gallery-sms.jpg">
+            <i class="bi bi-chat-dots"></i>
+            <h5 class="mb-0">Bulk SMS & Voice</h5>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+   </section>
+
+
+
+
+   <section class="ourclients_section">
+<div class="container py-5">
+    <div class="section-title">
+      <h2><strong>OUR CLIENTS</strong></h2>
+      <p>Our integrated ecosystem of tools across all three VibeFlow™ tracks.</p>
+    </div>
+
+    <div class="row g-3">
+      <!-- Example Tool Card -->
+      <div class="col-6 col-md-3">
+        <div class="tool-card">
+          <img src="https://cdn-icons-png.flaticon.com/512/5968/5968350.png" alt="AWS">
+          <div class="company-name">AWS Amplify</div>
+        </div>
+      </div>
+
+      <div class="col-6 col-md-3">
+        <div class="tool-card">
+          <img src="https://cdn-icons-png.flaticon.com/512/4712/4712108.png" alt="Bolt">
+          <div class="company-name">Bolt</div>
+        </div>
+      </div>
+
+      <div class="col-6 col-md-3">
+        <div class="tool-card">
+          <img src="https://cdn-icons-png.flaticon.com/512/5968/5968705.png" alt="Canva">
+          <div class="company-name">Canva</div>
+        </div>
+      </div>
+
+      <div class="col-6 col-md-3">
+        <div class="tool-card">
+          <img src="https://cdn-icons-png.flaticon.com/512/5968/5968381.png" alt="Cloudflare">
+          <div class="company-name">Cloudflare</div>
+        </div>
+      </div>
+   <div class="col-6 col-md-3">
+        <div class="tool-card">
+          <img src="https://cdn-icons-png.flaticon.com/512/5968/5968381.png" alt="Cloudflare">
+          <div class="company-name">Cloudflare</div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+   </section>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+<script>
+  const serviceCards = document.querySelectorAll('.service-card');
+  const serviceImage = document.getElementById('serviceImage');
+  let isTransitioning = false;
+  let activeIndex = 0;
+  let autoInterval;
+
+  function activateCard(index) {
+    serviceCards.forEach(card => card.classList.remove('active'));
+    const card = serviceCards[index];
+    card.classList.add('active');
+
+    const imgSrc = card.getAttribute('data-img');
+    if (serviceImage.src !== imgSrc) {
+      isTransitioning = true;
+      serviceImage.style.opacity = 0;
+      serviceImage.addEventListener('transitionend', function handler() {
+        serviceImage.removeEventListener('transitionend', handler);
+        serviceImage.src = imgSrc;
+      }, { once: true });
+    }
+  }
+
+  function startAutoRotation() {
+    autoInterval = setInterval(() => {
+      activeIndex = (activeIndex + 1) % serviceCards.length;
+      activateCard(activeIndex);
+    }, 5000);
+  }
+
+  function resetAutoRotation() {
+    clearInterval(autoInterval);
+    startAutoRotation();
+  }
+
+  // Initial activation
+  activateCard(activeIndex);
+  startAutoRotation();
+
+  // Handle card clicks manually
+  serviceCards.forEach((card, index) => {
+    card.addEventListener('click', () => {
+      activeIndex = index;
+      activateCard(index);
+      resetAutoRotation(); // restart timer
+    });
+  });
+
+  serviceImage.addEventListener('load', () => {
+    serviceImage.style.opacity = 1;
+    isTransitioning = false;
+  });
+</script>
+
+</body>
+</html>

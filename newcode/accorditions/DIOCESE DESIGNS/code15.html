@@ -1,0 +1,311 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>AI Music Cards — Accurate Progress & Time</title>
+<style>
+  :root{
+    --bg:#0f1720;
+    --card:#111827;
+    --accent:#ff4757;
+    --muted:#94a3b8;
+  }
+  body{
+    margin:0;
+    font-family: Inter, system-ui, -apple-system, "Segoe UI", Roboto, Arial;
+    background:var(--bg);
+    color:#fff;
+    padding:22px;
+  }
+  h1{ text-align:center; margin-bottom:18px; font-weight:600; }
+  .grid{
+    display:grid;
+    grid-template-columns:repeat(auto-fit, minmax(220px, 1fr));
+    gap:18px;
+    max-width:1200px;
+    margin:0 auto;
+  }
+
+  .card{
+    background:linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));
+    border-radius:12px;
+    overflow:hidden;
+    box-shadow: 0 8px 30px rgba(2,6,23,0.6);
+    transition: transform .18s ease, box-shadow .18s ease;
+    position:relative;
+  }
+  .card:hover{ transform:translateY(-6px); box-shadow: 0 18px 40px rgba(2,6,23,0.8); }
+
+  .cover{
+    width:100%;
+    height:160px;
+    display:block;
+    object-fit:cover;
+  }
+
+  .meta{
+    padding:12px;
+  }
+  .title{ font-size:1rem; margin:0 0 6px 0; color:#e6eef8; }
+  .sub{ margin:0; font-size:.84rem; color:var(--muted); }
+
+  /* overlay play/stop shown on hover (and remains while playing) */
+  .overlay {
+    position:absolute;
+    inset:0;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    background:rgba(0,0,0,0.35);
+    opacity:0;
+    transition:opacity .18s ease, background .18s;
+    pointer-events:none; /* allow clicks to pass through to button area */
+  }
+  .card:hover .overlay { opacity:1; pointer-events:auto; }
+  .btn-play {
+    background:rgba(0,0,0,0.6);
+    border-radius:50%;
+    padding:14px 16px;
+    font-size:20px;
+    color:#fff;
+    cursor:pointer;
+    border:0;
+    display:inline-flex;
+    align-items:center;
+    justify-content:center;
+  }
+
+  /* progress row hidden by default; show when .show-progress is applied to .card */
+  .progress-row{
+    display:flex;
+    align-items:center;
+    gap:8px;
+    padding:10px 12px 14px 12px;
+  }
+  .time { width:72px; text-align:center; color:var(--muted); font-size:.88rem; }
+  .bar-wrap {
+    flex:1;
+    height:8px;
+    background:rgba(255,255,255,0.06);
+    border-radius:8px;
+    position:relative;
+    cursor:pointer;
+    overflow:hidden;
+  }
+  .bar {
+    position:absolute;
+    left:0; top:0; bottom:0;
+    width:0%;
+    background: linear-gradient(90deg, var(--accent), #ff8a80);
+  }
+
+  /* hidden by default */
+  .card .progress-row{ display:none; }
+
+  /* when playing or paused (not reset) show progress */
+  .card.show-progress .progress-row { display:flex; }
+
+  /* small mobile tweak */
+  @media (max-width:520px){
+    .cover{ height:140px; }
+  }
+</style>
+</head>
+<body>
+
+<h1>🎶 AI Music Cards (15) — Accurate Time & Progress</h1>
+
+<div class="grid" id="grid"></div>
+
+<script>
+/* ---------- SONG LIST (15) ---------- */
+const songs = [
+  { title: "Dreamy Sunset", src: "accorditions/DIOCESE DESIGNS/eona-emotional-ambient-pop-351436.mp3" },
+  { title: "Chill Beats", src: "https://cdn.pixabay.com/download/audio/2021/09/15/audio_d8a0b7a84b.mp3?filename=chill-beats-8428.mp3" },
+  { title: "Piano Inspiration", src: "https://cdn.pixabay.com/download/audio/2021/09/08/audio_9ddfbeed52.mp3?filename=piano-inspiration-8074.mp3" },
+  { title: "Epic Motivation", src: "https://cdn.pixabay.com/download/audio/2021/09/15/audio_73a001be14.mp3?filename=epic-motivation-8430.mp3" },
+  { title: "Relaxing Guitar", src: "https://cdn.pixabay.com/download/audio/2022/01/28/audio_9cc8e36d3a.mp3?filename=relaxing-guitar-10672.mp3" },
+  { title: "Soft Piano", src: "https://cdn.pixabay.com/download/audio/2021/11/02/audio_99b0c94d67.mp3?filename=soft-piano-10616.mp3" },
+  { title: "LoFi Study", src: "https://cdn.pixabay.com/download/audio/2022/04/07/audio_6dbf7c2bb1.mp3?filename=lofi-study-11295.mp3" },
+  { title: "Jazz Vibes", src: "https://cdn.pixabay.com/download/audio/2022/05/12/audio_d6ee5d8b6b.mp3?filename=jazz-vibes-11385.mp3" },
+  { title: "Energetic EDM", src: "https://cdn.pixabay.com/download/audio/2022/02/28/audio_d917ddbbec.mp3?filename=energetic-edm-11099.mp3" },
+  { title: "Happy Ukulele", src: "https://cdn.pixabay.com/download/audio/2021/10/06/audio_f01b5e78df.mp3?filename=happy-ukulele-9087.mp3" },
+  { title: "Peaceful Nature", src: "https://cdn.pixabay.com/download/audio/2021/12/14/audio_5b8df08a63.mp3?filename=peaceful-nature-10076.mp3" },
+  { title: "Action Trailer", src: "https://cdn.pixabay.com/download/audio/2021/09/15/audio_dce3d6a0e3.mp3?filename=action-trailer-8432.mp3" },
+  { title: "Calm Meditation", src: "https://cdn.pixabay.com/download/audio/2022/02/01/audio_8c9c73383a.mp3?filename=calm-meditation-10981.mp3" },
+  { title: "Ambient Space", src: "https://cdn.pixabay.com/download/audio/2021/09/14/audio_7a2bcd2f67.mp3?filename=ambient-space-8411.mp3" },
+  { title: "Tech Future", src: "https://cdn.pixabay.com/download/audio/2021/10/30/audio_d3a63e0d3f.mp3?filename=tech-future-10449.mp3" }
+];
+
+/* ---------- DOM ---------- */
+const grid = document.getElementById('grid');
+
+/* Keep track of currently playing audio/card so we can reset it */
+let active = {
+  audio: null,
+  cardEl: null,
+  playBtn: null
+};
+
+/* Helper to format mm:ss */
+function formatTime(sec){
+  if (!sec || !isFinite(sec)) return "0:00";
+  const m = Math.floor(sec/60);
+  const s = Math.floor(sec%60);
+  return `${m}:${s<10? '0'+s : s}`;
+}
+
+/* Build cards */
+songs.forEach((s, i) => {
+  const card = document.createElement('div');
+  card.className = 'card';
+  card.innerHTML = `
+    <img class="cover" src="stock-vector-mobile-music-player-interface-podcast-turntable-template-audio-streaming-service-layout-profile-2584886791.jpg" alt="${escapeHtml(s.title)}">
+    <div class="overlay">
+      <button class="btn-play" data-index="${i}" aria-label="Play ${escapeHtml(s.title)}">▶️</button>
+    </div>
+    <div class="meta">
+      <p class="title">${escapeHtml(s.title)}</p>
+      <p class="sub">Album: AI Album ${i+1}</p>
+    </div>
+
+    <div class="progress-row">
+      <div class="time current">0:00</div>
+      <div class="bar-wrap">
+        <div class="bar"></div>
+      </div>
+      <div class="time duration">0:00</div>
+    </div>
+  `;
+  grid.appendChild(card);
+
+  // create Audio object for card (not appended to DOM)
+  const audio = new Audio(s.src);
+  audio.preload = 'metadata';
+
+  // store references
+  card._audio = audio;
+  const playBtn = card.querySelector('.btn-play');
+  const barWrap = card.querySelector('.bar-wrap');
+  const bar = card.querySelector('.bar');
+  const timeCur = card.querySelector('.time.current');
+  const timeDur = card.querySelector('.time.duration');
+
+  /* --- LISTENERS --- */
+
+  // when metadata loaded -> set duration text and reset bar width
+  audio.addEventListener('loadedmetadata', () => {
+    timeDur.textContent = formatTime(audio.duration);
+    // ensure progress bar correct initial width
+    updateProgressUI();
+  });
+
+  // update while playing
+  audio.addEventListener('timeupdate', () => updateProgressUI());
+
+  // when audio ends -> reset UI for this card
+  audio.addEventListener('ended', () => {
+    resetCardUI(card);
+  });
+
+  // Play/Stop button click
+  playBtn.addEventListener('click', async (ev) => {
+    ev.stopPropagation();
+    // If another audio is active and it's not this one -> stop it/reset before starting this
+    if (active.audio && active.audio !== audio) {
+      resetCardUI(active.cardEl);
+    }
+
+    // toggle play/stop behavior:
+    if (audio.paused) {
+      // start playing
+      try {
+        await audio.play(); // user gesture click - should succeed
+      } catch(err){
+        // play may fail in some browsers (rare on click); still update UI carefully
+      }
+      // mark this as active
+      active.audio = audio;
+      active.cardEl = card;
+      active.playBtn = playBtn;
+
+      // show progress UI on card
+      card.classList.add('show-progress');
+
+      // change button to stop icon
+      playBtn.textContent = '⏹️';
+    } else {
+      // Stop behavior: pause + reset time to 0 + hide progress
+      audio.pause();
+      audio.currentTime = 0;
+      resetCardUI(card);
+    }
+  });
+
+  // Clicking on progress bar to seek
+  barWrap.addEventListener('click', (e) => {
+    // only allow seeking if metadata loaded
+    if (!isFinite(audio.duration) || audio.duration === 0) return;
+    const rect = barWrap.getBoundingClientRect();
+    const clickX = e.clientX - rect.left;
+    const pct = Math.max(0, Math.min(1, clickX / rect.width));
+    const newTime = pct * audio.duration;
+    audio.currentTime = newTime;
+    updateProgressUI(); // immediate UI update
+  });
+
+  // function to update bar & times for this card
+  function updateProgressUI(){
+    // guard if no metadata
+    const dur = isFinite(audio.duration) ? audio.duration : 0;
+    const cur = isFinite(audio.currentTime) ? audio.currentTime : 0;
+    // percent safe
+    const pct = dur > 0 ? (cur / dur) * 100 : 0;
+    bar.style.width = pct + '%';
+    timeCur.textContent = formatTime(cur);
+    timeDur.textContent = formatTime(dur);
+  }
+
+  // helper to reset UI when stopped or another track starts
+  function resetCardUI(cardEl){
+    const a = cardEl._audio;
+    a.pause();
+    a.currentTime = 0;
+    const btn = cardEl.querySelector('.btn-play');
+    const barEl = cardEl.querySelector('.bar');
+    const timeCurEl = cardEl.querySelector('.time.current');
+    const timeDurEl = cardEl.querySelector('.time.duration');
+    // reset visuals
+    btn.textContent = '▶️';
+    barEl.style.width = '0%';
+    timeCurEl.textContent = '0:00';
+    // keep duration visible if metadata known
+    timeDurEl.textContent = isFinite(a.duration) ? formatTime(a.duration) : '0:00';
+    cardEl.classList.remove('show-progress');
+
+    // if this was active, clear active pointers
+    if (active.cardEl === cardEl) {
+      active.audio = null;
+      active.cardEl = null;
+      active.playBtn = null;
+    }
+  }
+
+}); // end foreach songs
+
+/* OPTIONAL: if user clicks outside a card, we do nothing.
+   If you want a global stop area, you could add a button that iterates cards and resets them. */
+
+/* Safe HTML escape for titles */
+function escapeHtml(text){
+  if (!text) return '';
+  return String(text)
+    .replaceAll('&','&amp;')
+    .replaceAll('<','&lt;')
+    .replaceAll('>','&gt;')
+    .replaceAll('"','&quot;');
+}
+</script>
+</body>
+</html>

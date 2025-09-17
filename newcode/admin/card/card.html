@@ -1,0 +1,297 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>6 Card Types — Colorful, Animated, and Mildly Hilarious</title>
+  <!-- Fonts -->
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&display=swap" rel="stylesheet">
+  <style>
+    :root{
+      --bg: #0b0b11;
+      --card: #11131a;
+      --text: #e8ebf0;
+      --muted: #b6c0d3;
+      --radius: 20px;
+      --shadow: 0 10px 30px rgba(0,0,0,.35);
+      --grad-1: linear-gradient(135deg,#7c3aed,#22d3ee,#06b6d4);
+      --grad-2: linear-gradient(135deg,#f43f5e,#f59e0b,#84cc16);
+      --grad-3: linear-gradient(135deg,#06b6d4,#6366f1,#a855f7);
+      --grad-4: linear-gradient(135deg,#22c55e,#14b8a6,#0ea5e9);
+      --grad-5: linear-gradient(135deg,#e879f9,#fb7185,#f59e0b);
+      --grad-6: linear-gradient(135deg,#f97316,#ef4444,#8b5cf6);
+    }
+
+    *{box-sizing:border-box}
+    html,body{height:100%}
+    body{
+      margin:0; background: radial-gradient(1200px 800px at 10% 10%, #151826 0%, #0b0b11 50%, #07070d 100%);
+      font-family: Inter, system-ui, -apple-system, Segoe UI, Roboto, "Helvetica Neue", Arial, Noto Sans, "Apple Color Emoji", "Segoe UI Emoji";
+      color:var(--text); line-height:1.5;
+    }
+
+    .wrap{max-width:1200px; margin:40px auto; padding:24px}
+    header{display:flex; align-items:center; gap:16px; margin-bottom:18px}
+    header h1{font-size:clamp(24px,4vw,40px); margin:0; font-weight:800; letter-spacing:.5px}
+    header p{margin:0; color:var(--muted)}
+
+    .grid{
+      display:grid; gap:24px; grid-template-columns:repeat(12,1fr);
+    }
+    .grid > section{grid-column: span 12;}
+    @media(min-width:720px){ .grid > section{grid-column: span 6;} }
+    @media(min-width:1024px){ .grid > section{grid-column: span 4;} }
+
+    .card{position:relative; border-radius:var(--radius); overflow:hidden; background:var(--card); box-shadow:var(--shadow); border:1px solid rgba(255,255,255,.06)}
+    .card .img{position:relative; height:190px; overflow:hidden}
+    .card .img img{width:100%; height:100%; object-fit:cover; display:block}
+    .card .body{padding:16px 16px 18px}
+    .title{font-size:1.05rem; font-weight:800; letter-spacing:.2px}
+    .desc{color:var(--muted); font-size:.95rem; margin:8px 0 14px}
+
+    .actions{display:flex; align-items:center; gap:10px; flex-wrap:wrap}
+    .btn{--p: #6ee7ff; position:relative; display:inline-flex; align-items:center; justify-content:center; gap:.5ch; padding:10px 14px; border-radius:14px; font-weight:700; border:0; cursor:pointer; transition:.25s ease; text-decoration:none; color:#081018; background: linear-gradient(180deg, #fff, #dce7ff);}
+    .btn:hover{transform:translateY(-1px)}
+    .btn:active{transform:translateY(0)}
+    .btn-ghost{background:#121421; color:#e6ebff; border:1px solid rgba(255,255,255,.12)}
+
+    /* Generic micro-badge for URL preview */
+    .url{font-size:.78rem; color:#9fb0c7; background:rgba(255,255,255,.05); padding:6px 10px; border-radius:999px; border:1px solid rgba(255,255,255,.08)}
+
+    /* Gradient shimmer background motion for accents */
+    .glow{position:absolute; inset:auto auto -40px -40px; width:180px; height:180px; background:var(--grad-1); filter:blur(40px); opacity:.5; animation:float 7s ease-in-out infinite}
+    @keyframes float{0%,100%{transform:translate(0,0) rotate(0)}50%{transform:translate(20px,-10px) rotate(20deg)}}
+    @keyframes hue{
+      0%{filter:hue-rotate(0)}100%{filter:hue-rotate(360deg)}
+    }
+
+    /* === CARD TYPE 1: Glass & Gradient Halo === */
+    .type-1{background:rgba(255,255,255,.04); backdrop-filter: blur(12px);}
+    .type-1 .img::after{content:""; position:absolute; inset:0; background:radial-gradient(60% 60% at 30% 20%, rgba(255,255,255,.35), transparent 60%)}
+    .type-1 .halo{position:absolute; inset:-30% -30% auto auto; width:240px; height:240px; background:var(--grad-2); filter:blur(60px); opacity:.6; animation:hue 8s linear infinite}
+
+    /* === CARD TYPE 2: Tilt & Neon Border === */
+    .type-2{border:2px solid rgba(255,255,255,.12)}
+    .type-2::before{content:""; position:absolute; inset:-2px; border-radius:calc(var(--radius) + 2px); padding:2px; background:var(--grad-3); -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0); -webkit-mask-composite: xor; mask-composite: exclude;}
+    .type-2:hover{transform:perspective(700px) rotateX(4deg) rotateY(-6deg)}
+    .type-2 .img img{transition:transform .6s ease}
+    .type-2:hover .img img{transform:scale(1.08)}
+
+    /* === CARD TYPE 3: Flip on Hover === */
+    .type-3{perspective:1000px; background:transparent; border:none}
+    .type-3 .flip{
+      position:relative; transform-style:preserve-3d; transition: transform .7s ease;
+      border-radius:var(--radius); overflow:hidden; background:var(--card); border:1px solid rgba(255,255,255,.08)
+    }
+    .type-3:hover .flip{transform:rotateY(180deg)}
+    .type-3 .front, .type-3 .back{position:absolute; inset:0; backface-visibility:hidden}
+    .type-3 .back{transform:rotateY(180deg); display:flex; flex-direction:column}
+    .type-3 .back .body{flex:1}
+
+    /* === CARD TYPE 4: Slide Overlay === */
+    .type-4 .img{height:210px}
+    .type-4 .overlay{position:absolute; inset:auto 0 0 0; height:56%; background:linear-gradient(180deg, rgba(0,0,0,.0), rgba(0,0,0,.55)); transform:translateY(100%); transition:transform .35s ease}
+    .type-4:hover .overlay{transform:translateY(0)}
+
+    /* === CARD TYPE 5: Animated Border Gradient === */
+    .type-5{position:relative;}
+    .type-5::before{content:""; position:absolute; inset:0; padding:2px; border-radius:var(--radius);
+      background: conic-gradient(from 0deg, #fff0, #fff0), var(--grad-5);
+      -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+      -webkit-mask-composite: xor; mask-composite: exclude; animation:spin 6s linear infinite}
+    @keyframes spin{to{transform:rotate(1turn)}}
+
+    /* === CARD TYPE 6: Minimal + Shimmer === */
+    .type-6{background:rgba(255,255,255,.03); border:1px dashed rgba(255,255,255,.16)}
+    .type-6 .skeleton{height:8px; width:100%; border-radius:999px; overflow:hidden; background:rgba(255,255,255,.06); position:relative}
+    .type-6 .skeleton::after{content:""; position:absolute; inset:0; transform:translateX(-100%);
+      background:linear-gradient(90deg, transparent, rgba(255,255,255,.35), transparent);
+      animation: shimmer 1.8s infinite}
+    @keyframes shimmer{100%{transform:translateX(100%)}}
+
+    /* Tiny label chip */
+    .chip{position:absolute; top:10px; left:10px; background:rgba(0,0,0,.55); border:1px solid rgba(255,255,255,.22); padding:6px 10px; border-radius:999px; font-size:.75rem}
+
+    /* Demo layout niceties */
+    footer{margin-top:26px; text-align:center; color:#8ea0ba; font-size:.9rem}
+    .note{opacity:.75}
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <header>
+      <h1>Six Ridiculously Colorful Cards</h1>
+      <p class="note">Each one packs: image, title, description, URL, and a button. Side effects may include sudden design confidence.</p>
+    </header>
+
+    <div class="grid">
+      <!-- ====================== TYPE 1: GLASS & GRADIENT HALO ====================== -->
+      <section>
+        <article class="card type-1">
+          <span class="chip">Type 1 • Glass</span>
+          <div class="img">
+            <img src="https://picsum.photos/seed/aurora/800/500" alt="Aurora"/>
+            <span class="halo"></span>
+          </div>
+          <div class="body">
+            <h3 class="title">Aurora App</h3>
+            <p class="desc">Glassy vibes and gradients so smooth they should come with seatbelts.</p>
+            <div class="actions">
+              <span class="url">https://aurora.example</span>
+              <a class="btn" href="#">Visit Site</a>
+              <button class="btn btn-ghost" data-copy="https://aurora.example">Copy URL</button>
+            </div>
+          </div>
+        </article>
+      </section>
+
+      <!-- ====================== TYPE 2: TILT & NEON BORDER ====================== -->
+      <section>
+        <article class="card type-2">
+          <span class="chip">Type 2 • Neon Tilt</span>
+          <div class="img">
+            <img src="https://picsum.photos/seed/aurora/800/500" alt="Neon"/>
+          </div>
+          <div class="body">
+            <h3 class="title">Neon Noodles</h3>
+            <p class="desc">A spicy tilt on hover. Best served hot with animated borders.</p>
+            <div class="actions">
+              <span class="url">https://noodles.example</span>
+              <a class="btn" href="#">Order Now</a>
+              <button class="btn btn-ghost" data-copy="https://noodles.example">Copy URL</button>
+            </div>
+          </div>
+          <span class="glow"></span>
+        </article>
+      </section>
+
+      <!-- ====================== TYPE 3: FLIP ON HOVER ====================== -->
+      <section>
+        <article class="type-3">
+          <div class="flip card">
+            <div class="front">
+              <div class="img"><img src="https://picsum.photos/seed/aurora/800/500" alt="Flip"/></div>
+              <div class="body">
+                <h3 class="title">Flip Ship</h3>
+                <p class="desc">Front side says hi. Hover to read the gossip on the back side.</p>
+                <div class="actions">
+                  <span class="url">https://flip.example</span>
+                  <a class="btn" href="#">Book Now</a>
+                </div>
+              </div>
+            </div>
+            <div class="back">
+              <div class="body">
+                <h3 class="title">Surprise! 🎉</h3>
+                <p class="desc">You flipped it. Now you know our secret: gradients fix everything.</p>
+                <div class="actions">
+                  <a class="btn" href="#">Read More</a>
+                  <button class="btn btn-ghost" data-copy="https://flip.example">Copy URL</button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </article>
+      </section>
+
+      <!-- ====================== TYPE 4: SLIDE OVERLAY ====================== -->
+      <section>
+        <article class="card type-4">
+          <span class="chip">Type 4 • Slide Overlay</span>
+          <div class="img">
+            <img src="https://picsum.photos/seed/overlay/800/500" alt="Overlay"/>
+            <div class="overlay"></div>
+          </div>
+          <div class="body">
+            <h3 class="title">Overlay Odyssey</h3>
+            <p class="desc">When you hover, the details slide in like a ninja on roller skates.</p>
+            <div class="actions">
+              <span class="url">https://overlay.example</span>
+              <a class="btn" href="#">Explore</a>
+            </div>
+          </div>
+        </article>
+      </section>
+
+      <!-- ====================== TYPE 5: ANIMATED BORDER GRADIENT ====================== -->
+      <section>
+        <article class="card type-5">
+          <span class="chip">Type 5 • Orbit Border</span>
+          <div class="img"><img src="https://picsum.photos/seed/border/800/500" alt="Border"/></div>
+          <div class="body">
+            <h3 class="title">Orbit Burger</h3>
+            <p class="desc">An animated border that orbits like a hungry planet around your content.</p>
+            <div class="actions">
+              <span class="url">https://orbit.example</span>
+              <a class="btn" href="#">Take a Bite</a>
+              <button class="btn btn-ghost" data-copy="https://orbit.example">Copy URL</button>
+            </div>
+          </div>
+        </article>
+      </section>
+
+      <!-- ====================== TYPE 6: MINIMAL + SHIMMER ====================== -->
+      <section>
+        <article class="card type-6">
+          <span class="chip">Type 6 • Minimal Shimmer</span>
+          <div class="img"><img src="https://picsum.photos/seed/minimal/800/500" alt="Minimal"/></div>
+          <div class="body">
+            <h3 class="title">Calm Commerce</h3>
+            <p class="desc">Low-key card with a soothing shimmer. Fancy without yelling.</p>
+            <div class="skeleton" aria-hidden="true"></div>
+            <div class="actions" style="margin-top:12px">
+              <span class="url">https://calm.example</span>
+              <a class="btn" href="#">Shop Zen</a>
+            </div>
+          </div>
+        </article>
+      </section>
+    </div>
+
+    <footer>
+      Pro Tip: Click any <b>Copy URL</b> and paste like a pro. If buttons could wink, these would.
+    </footer>
+  </div>
+
+  <script>
+    // Copy URL buttons with friendly toast
+    const toast = (() => {
+      const el = document.createElement('div');
+      el.style.position = 'fixed';
+      el.style.left = '50%';
+      el.style.bottom = '24px';
+      el.style.transform = 'translateX(-50%)';
+      el.style.background = 'rgba(15,17,28,.9)';
+      el.style.border = '1px solid rgba(255,255,255,.15)';
+      el.style.padding = '10px 14px';
+      el.style.borderRadius = '12px';
+      el.style.color = '#e6ebff';
+      el.style.fontWeight = '700';
+      el.style.boxShadow = '0 10px 30px rgba(0,0,0,.35)';
+      el.style.opacity = '0';
+      el.style.pointerEvents = 'none';
+      el.style.transition = 'opacity .25s ease, transform .25s ease';
+      document.body.appendChild(el);
+      let t;
+      return (msg) => {
+        clearTimeout(t);
+        el.textContent = msg;
+        el.style.opacity = '1';
+        el.style.transform = 'translateX(-50%) translateY(-6px)';
+        t = setTimeout(()=>{
+          el.style.opacity = '0';
+          el.style.transform = 'translateX(-50%) translateY(0)';
+        }, 1400);
+      };
+    })();
+
+    document.querySelectorAll('[data-copy]').forEach(btn => {
+      btn.addEventListener('click', async () => {
+        const url = btn.getAttribute('data-copy');
+        try{ await navigator.clipboard.writeText(url); toast('URL copied. Your clipboard is now fabulous.'); }
+        catch{ toast('Copied-ish. If not, blame the browser.'); }
+      })
+    });
+  </script>
+</body>
+</html>

@@ -1,0 +1,1396 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>URL Manager</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&family=Montserrat:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary-color: #6366f1;
+            --secondary-color: #8b5cf6;
+            --accent-color: #ec4899;
+            --success-color: #10b981;
+            --info-color: #06b6d4;
+            --warning-color: #f59e0b;
+            --danger-color: #ef4444;
+            --light-color: #f8fafc;
+            --dark-color: #1e293b;
+            --card-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            min-height: 100vh;
+            color: var(--dark-color);
+        }
+
+        h1, h2, h3, h4, h5, h6 {
+            font-family: 'Montserrat', sans-serif;
+            font-weight: 600;
+        }
+
+        .navbar {
+            background: linear-gradient(90deg, var(--primary-color), var(--secondary-color)) !important;
+            box-shadow: var(--card-shadow);
+        }
+
+        .navbar-brand {
+            font-weight: 700;
+            font-size: 1.5rem;
+            letter-spacing: 0.5px;
+        }
+
+        .url-container {
+            margin-top: 30px;
+        }
+
+        .url-card {
+            margin-bottom: 25px;
+            border-radius: 16px;
+            box-shadow: var(--card-shadow);
+            transition: all 0.3s ease;
+            overflow: hidden;
+            border: none;
+            background-color: white;
+        }
+
+        .url-card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+        }
+
+        .url-item {
+            padding: 15px;
+            border-bottom: 1px solid #f1f5f9;
+            position: relative;
+        }
+
+        .url-item:last-child {
+            border-bottom: none;
+        }
+
+        .admin-panel {
+            display: none;
+            margin-top: 20px;
+        }
+
+        .login-form, .register-form {
+            max-width: 450px;
+            margin: 60px auto;
+            padding: 30px;
+            background-color: white;
+            border-radius: 16px;
+            box-shadow: var(--card-shadow);
+        }
+
+        .card-header {
+            background: linear-gradient(90deg, var(--primary-color), var(--secondary-color));
+            color: white;
+            font-weight: 600;
+            border-radius: 16px 16px 0 0 !important;
+            padding: 15px 20px;
+        }
+
+        .edit-input {
+            border: none;
+            background: transparent;
+            width: 100%;
+        }
+
+        .edit-input:focus {
+            outline: none;
+            background: #f8fafc;
+            border-radius: 4px;
+            padding: 2px 5px;
+        }
+
+        .notification {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            padding: 15px 20px;
+            background: linear-gradient(90deg, var(--success-color), #34d399);
+            color: white;
+            border-radius: 12px;
+            box-shadow: var(--card-shadow);
+            z-index: 1000;
+            display: none;
+            font-weight: 500;
+        }
+
+        .url-actions {
+            display: flex;
+            gap: 8px;
+        }
+
+        .category-actions {
+            display: flex;
+            gap: 8px;
+        }
+
+        .export-section {
+            margin-top: 15px;
+            padding-top: 15px;
+            border-top: 1px solid #e2e8f0;
+        }
+
+        .folder-structure {
+            margin-top: 15px;
+            padding: 15px;
+            background-color: #f8fafc;
+            border-radius: 12px;
+            font-family: 'Courier New', monospace;
+            border: 1px solid #e2e8f0;
+        }
+
+        .folder-item {
+            margin-left: 20px;
+            padding: 5px 0;
+        }
+
+        .file-item {
+            margin-left: 40px;
+            padding: 5px 0;
+            color: var(--primary-color);
+        }
+
+        .preview-container {
+            margin-top: 10px;
+            position: relative;
+        }
+
+        .preview-toggle {
+            position: absolute;
+            top: 5px;
+            right: 5px;
+            z-index: 10;
+            background-color: rgba(255, 255, 255, 0.8);
+            border-radius: 6px;
+            padding: 4px 8px;
+            font-size: 12px;
+            cursor: pointer;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        .preview-iframe {
+            width: 100%;
+            height: 200px;
+            border: 1px solid #e2e8f0;
+            border-radius: 8px;
+            display: none;
+        }
+
+        .preview-loading {
+            display: none;
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background-color: rgba(255, 255, 255, 0.9);
+            padding: 10px;
+            border-radius: 8px;
+            z-index: 5;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        .url-link {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .url-title {
+            font-weight: 600;
+            margin-bottom: 5px;
+            color: var(--dark-color);
+        }
+
+        .url-address {
+            color: #64748b;
+            font-size: 0.9em;
+        }
+
+        .admin-stats {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border-radius: 16px;
+            padding: 25px;
+            margin-bottom: 30px;
+            box-shadow: var(--card-shadow);
+        }
+
+        .stat-card {
+            text-align: center;
+            padding: 20px 15px;
+            border-radius: 12px;
+            background-color: rgba(255, 255, 255, 0.9);
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+            transition: all 0.3s ease;
+            height: 100%;
+        }
+
+        .stat-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+        }
+
+        .stat-number {
+            font-size: 2.5rem;
+            font-weight: 700;
+            background: linear-gradient(90deg, var(--primary-color), var(--secondary-color));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 5px;
+        }
+
+        .stat-label {
+            color: #64748b;
+            font-size: 1rem;
+            font-weight: 500;
+        }
+
+        .admin-section-title {
+            border-bottom: 2px solid #e2e8f0;
+            padding-bottom: 10px;
+            margin-bottom: 20px;
+            color: var(--dark-color);
+            font-weight: 600;
+        }
+
+        .admin-card {
+            border-radius: 16px;
+            overflow: hidden;
+            box-shadow: var(--card-shadow);
+            margin-bottom: 25px;
+            border: none;
+            background-color: white;
+        }
+
+        .admin-card-header {
+            background: linear-gradient(90deg, var(--primary-color), var(--secondary-color));
+            color: white;
+            padding: 15px 20px;
+            font-weight: 600;
+        }
+
+        .admin-card-body {
+            padding: 25px;
+        }
+
+        .admin-btn {
+            margin-right: 8px;
+            margin-bottom: 8px;
+            border-radius: 8px;
+            font-weight: 500;
+            padding: 8px 16px;
+            transition: all 0.2s ease;
+        }
+
+        .quick-actions {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 12px;
+            margin-bottom: 25px;
+        }
+
+        .btn-primary {
+            background-color: var(--primary-color);
+            border-color: var(--primary-color);
+        }
+
+        .btn-primary:hover {
+            background-color: #5558e3;
+            border-color: #5558e3;
+        }
+
+        .btn-success {
+            background-color: var(--success-color);
+            border-color: var(--success-color);
+        }
+
+        .btn-success:hover {
+            background-color: #0ea971;
+            border-color: #0ea971;
+        }
+
+        .btn-info {
+            background-color: var(--info-color);
+            border-color: var(--info-color);
+        }
+
+        .btn-info:hover {
+            background-color: #0891b2;
+            border-color: #0891b2;
+        }
+
+        .btn-outline-primary {
+            color: var(--primary-color);
+            border-color: var(--primary-color);
+        }
+
+        .btn-outline-primary:hover {
+            background-color: var(--primary-color);
+            border-color: var(--primary-color);
+        }
+
+        .table {
+            border-radius: 12px;
+            overflow: hidden;
+        }
+
+        .table thead th {
+            background-color: #f8fafc;
+            border-bottom: 2px solid #e2e8f0;
+            color: var(--dark-color);
+            font-weight: 600;
+            text-transform: uppercase;
+            font-size: 0.8rem;
+            letter-spacing: 0.5px;
+        }
+
+        .badge {
+            padding: 6px 10px;
+            border-radius: 6px;
+            font-weight: 500;
+        }
+
+        .bg-primary {
+            background-color: var(--primary-color) !important;
+        }
+
+        .bg-info {
+            background-color: var(--info-color) !important;
+        }
+
+        .bg-warning {
+            background-color: var(--warning-color) !important;
+        }
+
+        .form-control, .form-select {
+            border-radius: 8px;
+            border: 1px solid #e2e8f0;
+            padding: 10px 15px;
+        }
+
+        .form-control:focus, .form-select:focus {
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 0.25rem rgba(99, 102, 241, 0.25);
+        }
+
+        .modal-content {
+            border-radius: 16px;
+            border: none;
+            box-shadow: var(--card-shadow);
+        }
+
+        .modal-header {
+            background: linear-gradient(90deg, var(--primary-color), var(--secondary-color));
+            color: white;
+            border-radius: 16px 16px 0 0;
+            border-bottom: none;
+        }
+
+        .modal-title {
+            font-weight: 600;
+        }
+
+        .btn-close {
+            filter: brightness(0) invert(1);
+        }
+
+        .spinner-border {
+            width: 1rem;
+            height: 1rem;
+        }
+
+        .auth-tabs {
+            display: flex;
+            margin-bottom: 20px;
+            border-bottom: 1px solid #e2e8f0;
+        }
+
+        .auth-tab {
+            padding: 10px 20px;
+            cursor: pointer;
+            font-weight: 500;
+            color: #64748b;
+            border-bottom: 2px solid transparent;
+            transition: all 0.2s ease;
+        }
+
+        .auth-tab.active {
+            color: var(--primary-color);
+            border-bottom: 2px solid var(--primary-color);
+        }
+
+        .auth-content {
+            display: none;
+        }
+
+        .auth-content.active {
+            display: block;
+        }
+
+        .user-avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: 600;
+            margin-right: 10px;
+            overflow: hidden;
+        }
+
+        .user-avatar img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .user-info {
+            display: flex;
+            align-items: center;
+        }
+
+        .user-menu {
+            position: relative;
+        }
+
+        .user-dropdown {
+            position: absolute;
+            top: 100%;
+            right: 0;
+            background-color: white;
+            border-radius: 8px;
+            box-shadow: var(--card-shadow);
+            min-width: 200px;
+            z-index: 1000;
+            display: none;
+            padding: 10px 0;
+        }
+
+        .user-dropdown.show {
+            display: block;
+        }
+
+        .user-dropdown-item {
+            padding: 10px 20px;
+            cursor: pointer;
+            transition: background-color 0.2s ease;
+        }
+
+        .user-dropdown-item:hover {
+            background-color: #f8fafc;
+        }
+
+        .status-badge {
+            font-size: 0.75rem;
+            padding: 4px 8px;
+            border-radius: 4px;
+        }
+
+        .status-pending {
+            background-color: #fef3c7;
+            color: #92400e;
+        }
+
+        .status-approved {
+            background-color: #d1fae5;
+            color: #065f46;
+        }
+
+        .status-rejected {
+            background-color: #fee2e2;
+            color: #991b1b;
+        }
+
+        .status-suspended {
+            background-color: #e0e7ff;
+            color: #3730a3;
+        }
+
+        .message-container {
+            max-width: 600px;
+            margin: 60px auto;
+            padding: 30px;
+            background-color: white;
+            border-radius: 16px;
+            box-shadow: var(--card-shadow);
+        }
+
+        .message-item {
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 15px;
+            background-color: #f8fafc;
+            border-left: 4px solid var(--primary-color);
+            transition: all 0.3s ease;
+        }
+
+        .message-item:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+        }
+
+        .message-header {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 8px;
+        }
+
+        .message-sender {
+            font-weight: 600;
+            color: var(--dark-color);
+        }
+
+        .message-date {
+            font-size: 0.8rem;
+            color: #64748b;
+        }
+
+        .message-content {
+            margin-bottom: 10px;
+        }
+
+        .message-actions {
+            display: flex;
+            gap: 8px;
+        }
+
+        .notification-badge {
+            position: absolute;
+            top: -5px;
+            right: -5px;
+            background-color: var(--danger-color);
+            color: white;
+            border-radius: 50%;
+            width: 18px;
+            height: 18px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.7rem;
+            font-weight: 600;
+        }
+
+        .pending-notice {
+            background-color: #fef3c7;
+            border: 1px solid #fcd34d;
+            border-radius: 8px;
+            padding: 15px;
+            margin-bottom: 20px;
+            color: #92400e;
+        }
+
+        .pending-notice h5 {
+            margin-bottom: 10px;
+            color: #92400e;
+        }
+
+        .message-form {
+            margin-top: 20px;
+        }
+
+        .message-textarea {
+            resize: vertical;
+            min-height: 150px;
+        }
+
+        .user-image-container {
+            position: relative;
+            width: 150px;
+            height: 150px;
+            margin: 0 auto 20px;
+            border-radius: 50%;
+            overflow: hidden;
+            border: 3px solid var(--primary-color);
+        }
+
+        .user-image {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .user-image-placeholder {
+            width: 100%;
+            height: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background-color: #f1f5f9;
+            color: #64748b;
+            font-size: 3rem;
+        }
+
+        .image-upload-btn {
+            position: absolute;
+            bottom: 0;
+            right: 0;
+            background-color: var(--primary-color);
+            color: white;
+            border: none;
+            border-radius: 50%;
+            width: 36px;
+            height: 36px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+        }
+
+        .message-card {
+            border-radius: 8px;
+            padding: 12px;
+            margin-bottom: 10px;
+            background-color: white;
+            border: 1px solid #e2e8f0;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .message-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        .message-card-header {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 8px;
+        }
+
+        .message-card-title {
+            font-weight: 600;
+            color: var(--dark-color);
+        }
+
+        .message-card-date {
+            font-size: 0.8rem;
+            color: #64748b;
+        }
+
+        .message-card-preview {
+            color: #64748b;
+            font-size: 0.9rem;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+
+        .modal-dialog-centered {
+            display: flex;
+            align-items: center;
+            min-height: calc(100% - 1rem);
+        }
+
+        .message-detail-modal .modal-body {
+            max-height: 70vh;
+            overflow-y: auto;
+        }
+
+        .user-stats-card {
+            background-color: white;
+            border-radius: 12px;
+            padding: 20px;
+            margin-bottom: 20px;
+            box-shadow: var(--card-shadow);
+            text-align: center;
+        }
+
+        .user-stats-number {
+            font-size: 2rem;
+            font-weight: 700;
+            color: var(--primary-color);
+            margin-bottom: 5px;
+        }
+
+        .user-stats-label {
+            color: #64748b;
+            font-size: 0.9rem;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <nav class="navbar navbar-expand-lg navbar-dark">
+            <div class="container-fluid">
+                <a class="navbar-brand" href="#">
+                    <i class="bi bi-link-45deg me-2"></i>URL Manager
+                </a>
+                <div class="d-flex">
+                    <!-- User Menu (shown when logged in) -->
+                    <div id="userMenu" class="user-menu me-2" style="display: none;">
+                        <div class="user-info" id="userInfo">
+                            <div class="user-avatar" id="userAvatar">
+                                <div class="user-image-placeholder">
+                                    <i class="bi bi-person"></i>
+                                </div>
+                            </div>
+                            <span id="userName">User</span>
+                            <i class="bi bi-chevron-down ms-2"></i>
+                            <div id="messageNotificationBadge" class="notification-badge" style="display: none;">0</div>
+                        </div>
+                        <div class="user-dropdown" id="userDropdown">
+                            <div class="user-dropdown-item" id="viewProfileBtn">
+                                <i class="bi bi-person me-2"></i>My Profile
+                            </div>
+                            <div class="user-dropdown-item" id="sendMessageBtn">
+                                <i class="bi bi-chat-dots me-2"></i>Send Message
+                            </div>
+                            <div class="user-dropdown-item" id="logoutUserBtn">
+                                <i class="bi bi-box-arrow-right me-2"></i>Logout
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Auth Buttons (shown when not logged in) -->
+                    <div id="authButtons">
+                        <button id="showUserLoginBtn" class="btn btn-outline-light me-2">
+                            <i class="bi bi-person-circle me-1"></i> User Login
+                        </button>
+                        <button id="showRegisterBtn" class="btn btn-outline-light">
+                            <i class="bi bi-person-plus me-1"></i> Register
+                        </button>
+                    </div>
+                    
+                    <!-- Admin Panel Button -->
+                    <button id="showAdminBtn" class="btn btn-outline-light me-2">
+                        <i class="bi bi-gear me-1"></i> Admin Panel
+                    </button>
+                    <button id="backToIndexBtn" class="btn btn-outline-light" style="display: none;">
+                        <i class="bi bi-house-door me-1"></i> Back to Index
+                    </button>
+                    <button id="logoutBtn" class="btn btn-outline-light" style="display: none;">
+                        <i class="bi bi-box-arrow-right me-1"></i> Logout
+                    </button>
+                </div>
+            </div>
+        </nav>
+
+        <!-- Notification -->
+        <div id="notification" class="notification"></div>
+
+        <!-- Main URL Display Page -->
+        <div id="urlDisplayPage">
+            <h1 class="mt-4 mb-4 text-center">URL Collection</h1>
+            
+            <!-- Pending Account Notice -->
+            <div id="pendingNotice" class="pending-notice" style="display: none;">
+                <h5><i class="bi bi-exclamation-triangle me-2"></i>Account Pending Approval</h5>
+                <p>Your account is currently pending approval by the administrator. You can send a message to the admin if you need urgent access.</p>
+                <button id="urgentAccessBtn" class="btn btn-warning btn-sm">
+                    <i class="bi bi-chat-dots me-1"></i>Request Urgent Access
+                </button>
+            </div>
+            
+            <!-- Login/Register Prompt (shown when not logged in) -->
+            <div id="authPrompt" class="text-center p-5">
+                <div class="card mx-auto" style="max-width: 500px;">
+                    <div class="card-body">
+                        <h4 class="card-title">Welcome to URL Manager</h4>
+                        <p class="card-text">Please login or register to view and manage URLs.</p>
+                        <div class="d-grid gap-2 d-md-flex justify-content-md-center">
+                            <button id="indexUserLoginBtn" class="btn btn-primary">
+                                <i class="bi bi-box-arrow-in-right me-2"></i>User Login
+                            </button>
+                            <button id="indexRegisterBtn" class="btn btn-outline-primary">
+                                <i class="bi bi-person-plus me-2"></i>Register
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- URL Categories (shown when logged in) -->
+            <div id="urlCategories" class="url-container row" style="display: none;">
+                <!-- Categories will be dynamically added here -->
+            </div>
+        </div>
+
+        <!-- User Profile Page -->
+        <div id="userProfilePage" style="display: none;">
+            <div class="container">
+                <div class="row">
+                    <div class="col-lg-4">
+                        <div class="card">
+                            <div class="card-body text-center">
+                                <div class="user-image-container">
+                                    <img id="profileUserImage" class="user-image" style="display: none;" alt="User Image">
+                                    <div id="profileUserImagePlaceholder" class="user-image-placeholder">
+                                        <i class="bi bi-person"></i>
+                                    </div>
+                                    <div class="image-upload-btn" id="changeProfileImageBtn">
+                                        <i class="bi bi-camera"></i>
+                                    </div>
+                                </div>
+                                <input type="file" id="profileImageInput" accept="image/*" style="display: none;">
+                                <h4 id="profileUsername" class="mt-3">Username</h4>
+                                <p id="profileEmail" class="text-muted">email@example.com</p>
+                                <span id="profileStatus" class="badge status-badge">Status</span>
+                                <div class="user-stats-card mt-3">
+                                    <div class="user-stats-number" id="profileUrlCount">0</div>
+                                    <div class="user-stats-label">URLs Saved</div>
+                                </div>
+                                <div class="mt-3">
+                                    <button id="editProfileBtn" class="btn btn-outline-primary btn-sm">
+                                        <i class="bi bi-pencil me-1"></i>Edit Profile
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-8">
+                        <div class="card">
+                            <div class="card-header">
+                                <h5 class="mb-0">User Messages</h5>
+                            </div>
+                            <div class="card-body">
+                                <div id="userMessagesList">
+                                    <!-- Messages will be dynamically added here -->
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- User Login/Register Form -->
+        <div id="userAuthForm" style="display: none;">
+            <div class="register-form">
+                <h3 class="text-center mb-4">Account Access</h3>
+                
+                <div class="auth-tabs">
+                    <div class="auth-tab active" data-tab="login">Login</div>
+                    <div class="auth-tab" data-tab="register">Register</div>
+                </div>
+                
+                <!-- Login Form -->
+                <div id="loginContent" class="auth-content active">
+                    <div class="mb-3">
+                        <label for="userUsername" class="form-label">Username</label>
+                        <input type="text" class="form-control" id="userUsername" placeholder="Enter username">
+                    </div>
+                    <div class="mb-3">
+                        <label for="userPassword" class="form-label">Password</label>
+                        <input type="password" class="form-control" id="userPassword" placeholder="Enter password">
+                    </div>
+                    <button id="userLoginBtn" class="btn btn-primary w-100">
+                        <i class="bi bi-box-arrow-in-right me-2"></i>Login
+                    </button>
+                    <div id="userLoginError" class="text-danger mt-2 text-center" style="display: none;">
+                        Invalid username or password
+                    </div>
+                </div>
+                
+                <!-- Register Form -->
+                <div id="registerContent" class="auth-content">
+                    <div class="mb-3">
+                        <label for="regUsername" class="form-label">Username</label>
+                        <input type="text" class="form-control" id="regUsername" placeholder="Choose a username">
+                    </div>
+                    <div class="mb-3">
+                        <label for="regEmail" class="form-label">Email</label>
+                        <input type="email" class="form-control" id="regEmail" placeholder="Enter your email">
+                    </div>
+                    <div class="mb-3">
+                        <label for="regPassword" class="form-label">Password</label>
+                        <input type="password" class="form-control" id="regPassword" placeholder="Create a password">
+                    </div>
+                    <div class="mb-3">
+                        <label for="regConfirmPassword" class="form-label">Confirm Password</label>
+                        <input type="password" class="form-control" id="regConfirmPassword" placeholder="Confirm your password">
+                    </div>
+                    <button id="userRegisterBtn" class="btn btn-primary w-100">
+                        <i class="bi bi-person-plus me-2"></i>Register
+                    </button>
+                    <div id="userRegisterError" class="text-danger mt-2 text-center" style="display: none;"></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Message Form -->
+        <div id="messageForm" style="display: none;">
+            <div class="message-container">
+                <h3 class="text-center mb-4">Send Message to Admin</h3>
+                <div class="mb-3">
+                    <label for="messageSubject" class="form-label">Subject</label>
+                    <input type="text" class="form-control" id="messageSubject" placeholder="Enter message subject">
+                </div>
+                <div class="mb-3">
+                    <label for="messageText" class="form-label">Message</label>
+                    <textarea class="form-control message-textarea" id="messageText" placeholder="Enter your message here..."></textarea>
+                </div>
+                <div class="d-grid gap-2">
+                    <button id="sendMessageFormBtn" class="btn btn-primary">
+                        <i class="bi bi-send me-2"></i>Send Message
+                    </button>
+                    <button id="cancelMessageBtn" class="btn btn-outline-secondary">
+                        <i class="bi bi-x-circle me-2"></i>Cancel
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Admin Login Form -->
+        <div id="adminLogin" class="login-form" style="display: none;">
+            <h3 class="text-center mb-4">Admin Login</h3>
+            <div class="mb-3">
+                <label for="username" class="form-label">Username</label>
+                <input type="text" class="form-control" id="username" placeholder="Enter username">
+            </div>
+            <div class="mb-3">
+                <label for="password" class="form-label">Password</label>
+                <input type="password" class="form-control" id="password" placeholder="Enter password">
+            </div>
+            <button id="loginBtn" class="btn btn-primary w-100">
+                <i class="bi bi-box-arrow-in-right me-2"></i>Login
+            </button>
+            <div id="loginError" class="text-danger mt-2 text-center" style="display: none;">
+                Invalid username or password
+            </div>
+        </div>
+
+        <!-- Admin Panel -->
+        <div id="adminPanel" class="admin-panel">
+            <h2 class="mb-4 text-center">
+                <i class="bi bi-gear me-2"></i>Admin Panel
+            </h2>
+            
+            <!-- Stats Section -->
+            <div class="admin-stats">
+                <div class="row">
+                    <div class="col-md-3 col-sm-6 mb-3">
+                        <div class="stat-card">
+                            <div class="stat-number" id="totalCategories">0</div>
+                            <div class="stat-label">Categories</div>
+                        </div>
+                    </div>
+                    <div class="col-md-3 col-sm-6 mb-3">
+                        <div class="stat-card">
+                            <div class="stat-number" id="totalUrls">0</div>
+                            <div class="stat-label">Total URLs</div>
+                        </div>
+                    </div>
+                    <div class="col-md-3 col-sm-6 mb-3">
+                        <div class="stat-card">
+                            <div class="stat-number" id="totalUsers">0</div>
+                            <div class="stat-label">Total Users</div>
+                        </div>
+                    </div>
+                    <div class="col-md-3 col-sm-6 mb-3">
+                        <div class="stat-card">
+                            <div class="stat-number" id="pendingUsers">0</div>
+                            <div class="stat-label">Pending Users</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Quick Actions -->
+            <div class="quick-actions">
+                <button id="addCategoryQuickBtn" class="btn btn-primary admin-btn">
+                    <i class="bi bi-folder-plus me-1"></i> Add Category
+                </button>
+                <button id="addUrlQuickBtn" class="btn btn-success admin-btn">
+                    <i class="bi bi-link-45deg me-1"></i> Add URL
+                </button>
+                <button id="exportDataQuickBtn" class="btn btn-info admin-btn">
+                    <i class="bi bi-download me-1"></i> Export Data
+                </button>
+                <button id="viewPendingMessagesBtn" class="btn btn-warning admin-btn">
+                    <i class="bi bi-chat-dots me-1"></i> Pending Messages
+                    <span id="adminPendingMessageBadge" class="notification-badge" style="display: none;">0</span>
+                </button>
+                <button id="viewApprovedMessagesBtn" class="btn btn-success admin-btn">
+                    <i class="bi bi-chat-dots me-1"></i> Approved Messages
+                    <span id="adminApprovedMessageBadge" class="notification-badge" style="display: none;">0</span>
+                </button>
+                <button id="viewAllCategoriesBtn" class="btn btn-outline-primary admin-btn">
+                    <i class="bi bi-list me-1"></i> View All Categories
+                </button>
+                <button id="viewAllUrlsBtn" class="btn btn-outline-primary admin-btn">
+                    <i class="bi bi-list-ul me-1"></i> View All URLs
+                </button>
+                <button id="viewAllUsersBtn" class="btn btn-outline-primary admin-btn">
+                    <i class="bi bi-people me-1"></i> View All Users
+                </button>
+            </div>
+            
+            <div class="row">
+                <!-- Category Management -->
+                <div class="col-lg-6 mb-4">
+                    <div class="admin-card">
+                        <div class="admin-card-header">
+                            <h3 class="mb-0">
+                                <i class="bi bi-folder me-2"></i>Categories
+                            </h3>
+                        </div>
+                        <div class="admin-card-body">
+                            <div class="d-flex justify-content-between align-items-center mb-3">
+                                <h5 class="admin-section-title">Manage Categories</h5>
+                                <button id="addCategoryBtn" class="btn btn-primary btn-sm">
+                                    <i class="bi bi-plus-circle me-1"></i> Add New
+                                </button>
+                            </div>
+                            <div class="table-responsive">
+                                <table class="table table-hover">
+                                    <thead>
+                                        <tr>
+                                            <th>Name</th>
+                                            <th>URLs Count</th>
+                                            <th>Actions</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="categoriesTableBody">
+                                        <!-- Categories will be dynamically added here -->
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- URL Management -->
+                <div class="col-lg-6 mb-4">
+                    <div class="admin-card">
+                        <div class="admin-card-header">
+                            <h3 class="mb-0">
+                                <i class="bi bi-link-45deg me-2"></i>URLs
+                            </h3>
+                        </div>
+                        <div class="admin-card-body">
+                            <div class="d-flex justify-content-between align-items-center mb-3">
+                                <h5 class="admin-section-title">Manage URLs</h5>
+                                <button id="addUrlBtn" class="btn btn-success btn-sm">
+                                    <i class="bi bi-plus-circle me-1"></i> Add New
+                                </button>
+                            </div>
+                            <div class="mb-3">
+                                <label for="categoryFilter" class="form-label">Filter by Category</label>
+                                <select id="categoryFilter" class="form-select">
+                                    <option value="">All Categories</option>
+                                </select>
+                            </div>
+                            <div class="table-responsive">
+                                <table class="table table-hover">
+                                    <thead>
+                                        <tr>
+                                            <th>Title</th>
+                                            <th>Category</th>
+                                            <th>Actions</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="urlsTableBody">
+                                        <!-- URLs will be dynamically added here -->
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- User Management -->
+            <div class="admin-card mb-4">
+                <div class="admin-card-header">
+                    <h3 class="mb-0">
+                        <i class="bi bi-people me-2"></i>User Management
+                    </h3>
+                </div>
+                <div class="admin-card-body">
+                    <div class="d-flex justify-content-between align-items-center mb-3">
+                        <h5 class="admin-section-title">Manage Users</h5>
+                        <div>
+                            <select id="userStatusFilter" class="form-select d-inline-block" style="width: auto;">
+                                <option value="">All Users</option>
+                                <option value="pending">Pending Approval</option>
+                                <option value="approved">Approved</option>
+                                <option value="rejected">Rejected</option>
+                                <option value="suspended">Suspended</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="table-responsive">
+                        <table class="table table-hover">
+                            <thead>
+                                <tr>
+                                    <th>Username</th>
+                                    <th>Email</th>
+                                    <th>Status</th>
+                                    <th>Registered</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody id="usersTableBody">
+                                <!-- Users will be dynamically added here -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Pending Messages Management -->
+            <div class="admin-card mb-4" id="pendingMessagesCard" style="display: none;">
+                <div class="admin-card-header">
+                    <h3 class="mb-0">
+                        <i class="bi bi-chat-dots me-2"></i>Pending Messages
+                    </h3>
+                </div>
+                <div class="admin-card-body">
+                    <div id="pendingMessagesList">
+                        <!-- Messages will be dynamically added here -->
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Approved Messages Management -->
+            <div class="admin-card mb-4" id="approvedMessagesCard" style="display: none;">
+                <div class="admin-card-header">
+                    <h3 class="mb-0">
+                        <i class="bi bi-chat-dots me-2"></i>Approved Messages
+                    </h3>
+                </div>
+                <div class="admin-card-body">
+                    <div id="approvedMessagesList">
+                        <!-- Messages will be dynamically added here -->
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Folder Structure Section -->
+            <div class="admin-card">
+                <div class="admin-card-header">
+                    <h3 class="mb-0">
+                        <i class="bi bi-folder-symlink me-2"></i>Data Export
+                    </h3>
+                </div>
+                <div class="admin-card-body">
+                    <h5 class="admin-section-title">Folder Structure</h5>
+                    <p>Your data is organized in the following folder structure:</p>
+                    <div id="folderStructure" class="folder-structure">
+                        <!-- Folder structure will be dynamically added here -->
+                    </div>
+                    <div class="text-center mt-3">
+                        <button id="exportDataBtn" class="btn btn-success">
+                            <i class="bi bi-download me-2"></i>Download All Folders
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Message Detail Modal -->
+        <div class="modal fade" id="messageDetailModal" tabindex="-1" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="messageDetailModalTitle">Message Details</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body message-detail-modal">
+                        <div class="mb-3">
+                            <strong>From:</strong> <span id="messageDetailSender"></span>
+                        </div>
+                        <div class="mb-3">
+                            <strong>Date:</strong> <span id="messageDetailDate"></span>
+                        </div>
+                        <div class="mb-3">
+                            <strong>Subject:</strong> <span id="messageDetailSubject"></span>
+                        </div>
+                        <div class="mb-3">
+                            <strong>Message:</strong>
+                        </div>
+                        <div id="messageDetailText" class="border rounded p-3 bg-light"></div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                        <button type="button" class="btn btn-primary" id="approveUserFromMessageDetailBtn">
+                            <i class="bi bi-person-check me-1"></i>Approve User
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Add Category Modal -->
+        <div class="modal fade" id="addCategoryModal" tabindex="-1" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title">
+                            <i class="bi bi-folder-plus me-2"></i>Add New Category
+                        </h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <div class="mb-3">
+                            <label for="categoryName" class="form-label">Category Name</label>
+                            <input type="text" class="form-control" id="categoryName" placeholder="Enter category name">
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                        <button type="button" class="btn btn-primary" id="saveCategoryBtn">
+                            <i class="bi bi-check-circle me-1"></i>Save
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Edit Category Modal -->
+        <div class="modal fade" id="editCategoryModal" tabindex="-1" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title">
+                            <i class="bi bi-pencil-square me-2"></i>Edit Category
+                        </h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <div class="mb-3">
+                            <label for="editCategoryName" class="form-label">Category Name</label>
+                            <input type="text" class="form-control" id="editCategoryName" placeholder="Enter category name">
+                            <input type="hidden" id="editCategoryId">
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                        <button type="button" class="btn btn-primary" id="updateCategoryBtn">
+                            <i class="bi bi-check-circle me-1"></i>Update
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Add URL Modal -->
+        <div class="modal fade" id="addUrlModal" tabindex="-1" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title">
+                            <i class="bi bi-link-45deg me-2"></i>Add New URL
+                        </h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <div class="mb-3">
+                            <label for="urlTitle" class="form-label">Title</label>
+                            <input type="text" class="form-control" id="urlTitle" placeholder="Enter URL title">
+                        </div>
+                        <div class="mb-3">
+                            <label for="urlLink" class="form-label">URL</label>
+                            <input type="text" class="form-control" id="urlLink" placeholder="Enter URL">
+                        </div>
+                        <div class="mb-3">
+                            <label for="urlCategory" class="form-label">Category</label>
+                            <select id="urlCategory" class="form-select">
+                                <option value="">Select a category</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                        <button type="button" class="btn btn-primary" id="saveUrlBtn">
+                            <i class="bi bi-check-circle me-1"></i>Save
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Edit URL Modal -->
+        <div class="modal fade" id="editUrlModal" tabindex="-1" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title">
+                            <i class="bi bi-pencil-square me-2"></i>Edit URL
+                        </h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <div class="mb-3">
+                            <label for="editUrlTitle" class="form-label">Title</label>
+                            <input type="text" class="form-control" id="editUrlTitle" placeholder="Enter URL title">
+                        </div>
+                        <div class="mb-3">
+                            <label for="editUrlLink" class="form-label">URL</label>
+                            <input type="text" class="form-control" id="editUrlLink" placeholder="Enter URL">
+                        </div>
+                        <div class="mb-3">
+                            <label for="editUrlCategory" class="form-label">Category</label>
+                            <select id="editUrlCategory" class="form-select">
+                                <option value="">Select a category</option>
+                            </select>
+                            <input type="hidden" id="editUrlId">
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                        <button type="button" class="btn btn-primary" id="updateUrlBtn">
+                            <i class="bi bi-check-circle me-1"></i>Update
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/jszip@3.7.1/dist/jszip.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/file-saver@2.0.5/dist/FileSaver.min.js"></script>
+    <script>
+        // Load data from localStorage or use sample data
+        let categories = JSON.parse(localStorage.getItem('categories')) || [
+            { id: 1, name: "Social Media" },
+            { id: 2, name: "News" },
+            { id: 3, name: "Technology" }
+        ];
+
+        let urls = JSON.parse(localStorage.getItem('urls')) || [
+            { id: 1, title: "Facebook", url: "https://www.facebook.com", categoryId: 1 },
+            { id: 2, title: "Twitter", url: "https://www.twitter.com", categoryId: 1 },
+            { id: 3, title: "BBC News", url: "https://www.bbc.com/news", categoryId: 2 },
+            { id: 4, title: "TechCrunch", url: "https://techcrunch.com", categoryId: 3 }
+        ];
+
+        let users = JSON.parse(localStorage.getItem('users')) || [];
+        let messages = JSON.parse(localStorage.getItem('messages')) || [];
+        
+        // Admin credentials
+        const adminCredentials = {
+            username: "admin",
+            password: "admin123"
+        };
+
+        let isLoggedIn = false;
+        let isAdmin = false;
+        let currentUser = null;
+        let nextCategoryId = categories.length > 0 ? Math.max(...categories.map(c => c.id)) + 1 : 1;
+        let nextUrlId = urls.length > 0 ? Math.max(...urls.map(u => u.id)) + 1 : 1;
+        let nextUserId = users.length > 0 ? Math.max(...users.map(u => u.id)) + 1 : 1;
+        let nextMessageId = messages.length > 0 ? Math.max(...messages.map(m => m.id)) + 1 : 1;
+
+        // DOM elements
+        const urlDisplayPage = document.getElementById('urlDisplayPage');
+        const userProfilePage = document.getElementById('userProfilePage');
+        const user

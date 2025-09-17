@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Bishop Profile</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css" rel="stylesheet">
+  <style>
+    body {
+      background: #fff7f3;
+      font-family: 'Segoe UI', sans-serif;
+    }
+    .profile-card {
+      border-radius: 12px;
+      padding: 2rem;
+ 
+    }
+    .profile-img {
+      border-radius: 12px;
+      object-fit: cover;
+      width: 100%;
+      max-width: 340px;
+    }
+    .section-title {
+      font-weight: 600;
+      margin-bottom: .8rem;
+      font-size: 1.1rem;
+      color: #333;
+    }
+    .info-box {
+      display: grid;
+      grid-template-columns: repeat(auto-fit,minmax(220px,1fr));
+      gap: 1rem;
+      margin-top: 1.5rem;
+    }
+    .info-card {
+      background: #f5f5f5;
+      border-radius: 10px;
+      padding: 1rem;
+      display: flex;
+      align-items: center;
+      gap: .8rem;
+      font-size: .95rem;
+      font-weight: 500;
+    }
+    .info-card i {
+      font-size: 1.3rem;
+      color: #c03a2b;
+    }
+    .bishop_row{
+        text-align: center;
+              background: #fff;
+           box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+    }
+  </style>
+</head>
+<body>
+  <div class="container py-5">
+    <div class="row g-4 bishop_row">
+      <!-- Left: Text -->
+      <div class="col-lg-8">
+        <div class="profile-card">
+          <h2 class="mb-3">Our Local Ordinary<br><span class="text-danger">Most Rev. Udumala Bala, D.D.</span></h2>
+          <p>
+            Bishop Udumala Bala, born on <strong>18 June 1954</strong> in <strong>Gudur (Lourdunagar), Warangal Dt., Telangana</strong>, 
+            was ordained to the priesthood in <strong>February 1979</strong>. After serving in pastoral ministry, seminary formation, and administrative roles, 
+            he was appointed Bishop of Warangal on <strong>13 April 2013</strong> and consecrated on <strong>23 March 2013</strong>. 
+          </p>
+          <p>
+            With rich experience in teaching moral theology, guiding seminarians, and serving in national roles with the CCBI, Bishop Bala has been dedicated 
+            to the growth of the Church in Warangal and beyond.
+          </p>
+
+          <!-- Info Icons -->
+          <div class="info-box">
+            <div class="info-card"><i class="bi bi-calendar-event"></i> Ordained Deacon: Dec 1977</div>
+            <div class="info-card"><i class="bi bi-calendar-check"></i> Ordained Priest: Feb 1979</div>
+            <div class="info-card"><i class="bi bi-telephone"></i> 0870-2459128</div>
+            <div class="info-card"><i class="bi bi-envelope"></i> wgdioabu@gmail.com</div>
+            <div class="info-card"><i class="bi bi-book"></i> Studies: M.A. Philosophy, Rome</div>
+            <div class="info-card"><i class="bi bi-translate"></i> Languages: Telugu, Hindi, English, Italian, German</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Right: Image -->
+      <div class="col-lg-4 text-center">
+        <img src="https://i.postimg.cc/Pqzvb6F2/bishop.png" alt="Bishop Udumala Bala" class="profile-img shadow">
+      </div>
+    </div>
+  </div>
+</body>
+</html>

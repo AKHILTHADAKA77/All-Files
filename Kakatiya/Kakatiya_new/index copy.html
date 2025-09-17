@@ -1,0 +1,476 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Kakatiya Solutions</title>
+    <link rel="stylesheet" href="style.css">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-LN+7fdVzj6u52u30Kp6M/trliBMCMKTyK833zpbD+pXdCLuTusPj697FH4R/5mcr" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <style>
+        :root {
+            --primary-color: #2c3e50;
+            /* Dark blue from logo */
+            --secondary-color: #e74c3c;
+            /* Red accent from logo */
+            --accent-color: #f39c12;
+            /* Orange accent */
+            --light-color: #ecf0f1;
+            /* Light gray background */
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            padding-top: 70px;
+            /* Space for fixed navbar */
+        }
+
+        .cno-header {
+            box-shadow: 0 2px 15px rgba(0, 0, 0, 0.1);
+            padding: 10px 0;
+            transition: all 0.3s ease;
+            background-color: white !important;
+        }
+
+        .header--sticky {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 1030;
+        }
+
+        .logo-container {
+            display: flex;
+            align-items: center;
+            height: 100%;
+        }
+
+        .logo {
+            display: flex;
+            flex-direction: column;
+            font-family: 'Arial', sans-serif;
+            line-height: 1;
+        }
+
+        .logo-main {
+            font-size: 28px;
+            font-weight: 700;
+            color: var(--primary-color);
+            letter-spacing: 0.5px;
+        }
+
+        .logo-sub {
+            font-size: 16px;
+            font-weight: 600;
+            color: var(--secondary-color);
+            letter-spacing: 1.5px;
+            margin-top: -2px;
+        }
+
+        .navbar-container {
+            display: flex;
+            width: 100%;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .mainmenu-nav {
+            flex-grow: 1;
+            display: flex;
+            justify-content: center;
+        }
+
+        .mainmenu-nav .mainmenu {
+            display: flex;
+            gap: 25px;
+            margin: 0;
+            padding: 0;
+        }
+
+        .mainmenu-nav .mainmenu li {
+            list-style: none;
+        }
+
+        .mainmenu-nav .mainmenu li a {
+            color: var(--primary-color);
+            font-weight: 600;
+            text-decoration: none;
+            padding: 8px 0;
+            position: relative;
+            transition: all 0.3s ease;
+            font-size: 18px;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .mainmenu-nav .mainmenu li a i {
+            font-size: 14px;
+        }
+
+        .mainmenu-nav .mainmenu li a:hover,
+        .mainmenu-nav .mainmenu li a:focus {
+            color: var(--secondary-color);
+        }
+
+        .mainmenu-nav .mainmenu li a:after {
+            content: '';
+            position: absolute;
+            width: 0;
+            height: 2px;
+            bottom: 0;
+            left: 0;
+            background-color: var(--secondary-color);
+            transition: width 0.3s ease;
+        }
+
+        .mainmenu-nav .mainmenu li a:hover:after {
+            width: 100%;
+        }
+
+
+        .cno-switch-btn:hover {
+            transform: translateY(-3px) !important;
+            box-shadow: 0 5px 15px rgba(231, 76, 60, 0.4);
+        }
+
+        .mobile-menu-btn {
+            background-color: var(--primary-color);
+            color: white;
+            width: 40px;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 50%;
+            border: none;
+            font-size: 18px;
+            margin-left: 15px;
+        }
+
+        /* Offcanvas Menu */
+        .offcanvas {
+            background-color: var(--primary-color);
+            color: white;
+        }
+
+        .offcanvas-header {
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            padding: 20px;
+        }
+
+        .offcanvas-title {
+            display: flex;
+            flex-direction: column;
+            font-family: 'Arial', sans-serif;
+            line-height: 1;
+        }
+
+        .offcanvas-title .logo-main {
+            color: white;
+            font-size: 24px;
+        }
+
+        .offcanvas-title .logo-sub {
+            color: var(--accent-color);
+            font-size: 14px;
+        }
+
+        .btn-close {
+            filter: invert(1);
+            opacity: 0.8;
+            font-size: 14px;
+        }
+
+        .mobile-menu {
+            padding: 0;
+        }
+
+        .mobile-menu li {
+            list-style: none;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        .mobile-menu li a {
+            color: white;
+            text-decoration: none;
+            padding: 15px 20px;
+            display: block;
+            font-weight: 500;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            transition: all 0.3s ease;
+        }
+
+        .mobile-menu li a:hover {
+            color: var(--accent-color);
+            padding-left: 25px;
+            background-color: rgba(255, 255, 255, 0.05);
+        }
+
+        .mobile-menu li a i {
+            width: 20px;
+            text-align: center;
+        }
+        .onepagenav{
+            z-index: 1030;
+        }
+
+    .wrapper {
+      height: 100%;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      z-index: 1031;
+    }
+
+    .single-search {
+      border-radius: 30px;
+      padding: 10px;
+      background-color: white;
+      display: flex;
+      align-items: center;
+      transition: box-shadow 0.3s ease;
+    }
+
+    .single-search.expanded {
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+    }
+
+    .custom-input {
+      border: 0;
+      outline: 0;
+      width: 0;
+      line-height: 40px;
+      transition: width 0.4s ease;
+      background: transparent;
+      font-size: 20px;
+      color: #262626;
+      padding: 0;
+    }
+
+    .single-search.expanded .custom-input {
+      width: 300px;
+      padding: 0 10px;
+      caret-color: #262626;
+    }
+
+    .custom-input::placeholder {
+      color: #262626;
+      font-size: 19px;
+    }
+
+    .icon-area {
+      height: 40px;
+      width: 40px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      border-radius: 50%;
+      text-decoration: none;
+      color: #262626;
+    }
+
+    .fa-search {
+      font-size: 20px;
+    }
+
+        /* Mobile View Improvements */
+        @media (max-width: 991.98px) {
+            .logo-main {
+                font-size: 22px;
+            }
+
+            .logo-sub {
+                font-size: 13px;
+            }
+
+            .header-right {
+                display: flex;
+                align-items: center;
+            }
+
+
+            .mobile-menu-btn {
+                display: flex !important;
+            }
+        }
+
+        @media (max-width: 767.98px) {
+            .logo-main {
+                font-size: 20px;
+            }
+
+            .logo-sub {
+                font-size: 12px;
+            }
+
+            .offcanvas {
+                width: 280px !important;
+            }
+        }
+
+        @media (max-width: 575.98px) {
+            .logo-main {
+                font-size: 18px;
+            }
+
+            .logo-sub {
+                font-size: 11px;
+                letter-spacing: 1px;
+            }
+
+            .cno-header {
+                padding: 8px 0;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <header class="cno-header-parent header--sticky">
+        <div class="cno-header bg-color-white">
+            <div class="container">
+                <div class="navbar-container">
+                    <!-- Left Side - Logo -->
+                    <div class="header-left">
+                        <div class="logo-container">
+                            <a href="#" class="logo">
+                                <img src="assets/images/logo1.png" alt="logo">
+                            </a>
+                        </div>
+                    </div>
+
+                    <!-- Center - Navigation (Hidden on mobile) -->
+                    <div class="cno-main-navigation">
+                        <div class="d-none d-lg-block">
+                            <nav class="mainmenu-nav">
+                                <ul class="mainmenu onepagenav">
+                                    <li class="with-megamenu has-menu-child-item">
+                                        <a href="#hero">Home</a>
+                                    </li>
+                                    <li class="has-dropdown has-menu-child-item">
+                                        <a href="#feature">About Us</a>
+                                    </li>
+                                    <li class="with-megamenu has-menu-child-item">
+                                        <a href="#demos"> Services</a>
+                                    </li>
+                                    <li class="with-megamenu has-menu-child-item">
+                                        <a href="#faq"> FAQ's</a>
+                                    </li>
+                                    <li class="with-megamenu has-menu-child-item">
+                                        <a href="#contact">Clients</a>
+                                    </li>
+                                    <li class="with-megamenu has-menu-child-item">
+                                        <a href="#contact">Contact</a>
+                                    </li>
+                                </ul>
+                            </nav>
+                        </div>
+                    </div>
+
+                    <!-- Right Side - Button and Mobile Menu -->
+                    <div class="header-right">
+                       
+  <div class="wrapper">
+    <div class="single-search" id="searchBox">
+      <input class="custom-input" type="text" placeholder="What are you looking for …" />
+      <a href="#" class="icon-area"><i class="fa fa-search"></i></a>
+    </div>
+  </div>
+
+
+                        <!-- Mobile Menu Button -->
+                        <button class="mobile-menu-btn d-lg-none" type="button" data-bs-toggle="offcanvas"
+                            data-bs-target="#mobileMenu" aria-controls="mobileMenu">
+                            <i class="fas fa-bars"></i>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Mobile Offcanvas Menu -->
+    <div class="offcanvas offcanvas-end" tabindex="-1" id="mobileMenu" aria-labelledby="mobileMenuLabel">
+        <div class="offcanvas-header">
+            <div class="offcanvas-title" id="mobileMenuLabel">
+                <span class="logo-main">Kakatiya</span>
+                <span class="logo-sub">Solutions</span>
+            </div>
+            <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+        </div>
+        <div class="offcanvas-body">
+            <ul class="mobile-menu">
+                <li>
+                    <a href="#hero" data-bs-dismiss="offcanvas">
+                        <i class="fas fa-home"></i> Home
+                    </a>
+                </li>
+                <li>
+                    <a href="#feature" data-bs-dismiss="offcanvas">
+                        <i class="fas fa-star"></i> About Us
+                    </a>
+                </li>
+                <li>
+                    <a href="#demos" data-bs-dismiss="offcanvas">
+                        <i class="fas fa-laptop-code"></i> Services
+                    </a>
+                </li>
+                <li>
+                    <a href="#faq" data-bs-dismiss="offcanvas">
+                        <i class="fas fa-question-circle"></i> FAQ's
+                    </a>
+                </li>
+                <li>
+                    <a href="#contact" data-bs-dismiss="offcanvas">
+                        <i class="fas fa-envelope"></i> Contact
+                    </a>
+                </li>
+
+                <li>
+                    <a href="#contact" data-bs-dismiss="offcanvas">
+                        <i class="fas fa-envelope"></i> Clients
+                    </a>
+                </li>
+                <li>
+                   
+  <div class="wrapper">
+    <div class="single-search" id="searchBox">
+      <input class="custom-input" type="text" placeholder="What are you looking for …" />
+      <a href="#" class="icon-area"><i class="fa fa-search"></i></a>
+    </div>
+  </div>
+
+                </li>
+            </ul>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-ndDqU0Gzau9qJ1lfW4pNLlhNTkCfHzAVBReH9diLvGRem5+R9g2FzA8ZGN954O5Q"
+        crossorigin="anonymous"></script>
+  <script>
+    const searchBox = document.getElementById('searchBox');
+    let collapseTimeout;
+
+    searchBox.addEventListener('mouseenter', () => {
+      clearTimeout(collapseTimeout); // Cancel collapse if re-hovered
+      searchBox.classList.add('expanded');
+    });
+
+    searchBox.addEventListener('mouseleave', () => {
+      collapseTimeout = setTimeout(() => {
+        searchBox.classList.remove('expanded');
+      }, 1500); // Delay of 1.5 seconds
+    });
+  </script>
+
+</body>
+
+</html>

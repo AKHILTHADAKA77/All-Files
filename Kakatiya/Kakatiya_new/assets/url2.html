@@ -1,0 +1,2335 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>URL Manager</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&family=Montserrat:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary-color: #6366f1;
+            --secondary-color: #8b5cf6;
+            --accent-color: #ec4899;
+            --success-color: #10b981;
+            --info-color: #06b6d4;
+            --warning-color: #f59e0b;
+            --danger-color: #ef4444;
+            --light-color: #f8fafc;
+            --dark-color: #1e293b;
+            --card-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            min-height: 100vh;
+            color: var(--dark-color);
+        }
+
+        h1, h2, h3, h4, h5, h6 {
+            font-family: 'Montserrat', sans-serif;
+            font-weight: 600;
+        }
+
+        .navbar {
+            background: linear-gradient(90deg, var(--primary-color), var(--secondary-color)) !important;
+            box-shadow: var(--card-shadow);
+        }
+
+        .navbar-brand {
+            font-weight: 700;
+            font-size: 1.5rem;
+            letter-spacing: 0.5px;
+        }
+
+        .url-container {
+            margin-top: 30px;
+        }
+
+        .url-card {
+            margin-bottom: 25px;
+            border-radius: 16px;
+            box-shadow: var(--card-shadow);
+            transition: all 0.3s ease;
+            overflow: hidden;
+            border: none;
+            background-color: white;
+        }
+
+        .url-card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+        }
+
+        .url-item {
+            padding: 15px;
+            border-bottom: 1px solid #f1f5f9;
+            position: relative;
+        }
+
+        .url-item:last-child {
+            border-bottom: none;
+        }
+
+        .admin-panel {
+            display: none;
+            margin-top: 20px;
+        }
+
+        .login-form, .register-form {
+            max-width: 450px;
+            margin: 60px auto;
+            padding: 30px;
+            background-color: white;
+            border-radius: 16px;
+            box-shadow: var(--card-shadow);
+        }
+
+        .card-header {
+            background: linear-gradient(90deg, var(--primary-color), var(--secondary-color));
+            color: white;
+            font-weight: 600;
+            border-radius: 16px 16px 0 0 !important;
+            padding: 15px 20px;
+        }
+
+        .edit-input {
+            border: none;
+            background: transparent;
+            width: 100%;
+        }
+
+        .edit-input:focus {
+            outline: none;
+            background: #f8fafc;
+            border-radius: 4px;
+            padding: 2px 5px;
+        }
+
+        .notification {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            padding: 15px 20px;
+            background: linear-gradient(90deg, var(--success-color), #34d399);
+            color: white;
+            border-radius: 12px;
+            box-shadow: var(--card-shadow);
+            z-index: 1000;
+            display: none;
+            font-weight: 500;
+        }
+
+        .url-actions {
+            display: flex;
+            gap: 8px;
+        }
+
+        .category-actions {
+            display: flex;
+            gap: 8px;
+        }
+
+        .export-section {
+            margin-top: 15px;
+            padding-top: 15px;
+            border-top: 1px solid #e2e8f0;
+        }
+
+        .folder-structure {
+            margin-top: 15px;
+            padding: 15px;
+            background-color: #f8fafc;
+            border-radius: 12px;
+            font-family: 'Courier New', monospace;
+            border: 1px solid #e2e8f0;
+        }
+
+        .folder-item {
+            margin-left: 20px;
+            padding: 5px 0;
+        }
+
+        .file-item {
+            margin-left: 40px;
+            padding: 5px 0;
+            color: var(--primary-color);
+        }
+
+        .preview-container {
+            margin-top: 10px;
+            position: relative;
+        }
+
+        .preview-toggle {
+            position: absolute;
+            top: 5px;
+            right: 5px;
+            z-index: 10;
+            background-color: rgba(255, 255, 255, 0.8);
+            border-radius: 6px;
+            padding: 4px 8px;
+            font-size: 12px;
+            cursor: pointer;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        .preview-iframe {
+            width: 100%;
+            height: 200px;
+            border: 1px solid #e2e8f0;
+            border-radius: 8px;
+            display: none;
+        }
+
+        .preview-loading {
+            display: none;
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background-color: rgba(255, 255, 255, 0.9);
+            padding: 10px;
+            border-radius: 8px;
+            z-index: 5;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        .url-link {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .url-title {
+            font-weight: 600;
+            margin-bottom: 5px;
+            color: var(--dark-color);
+        }
+
+        .url-address {
+            color: #64748b;
+            font-size: 0.9em;
+        }
+
+        .admin-stats {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border-radius: 16px;
+            padding: 25px;
+            margin-bottom: 30px;
+            box-shadow: var(--card-shadow);
+        }
+
+        .stat-card {
+            text-align: center;
+            padding: 20px 15px;
+            border-radius: 12px;
+            background-color: rgba(255, 255, 255, 0.9);
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+            transition: all 0.3s ease;
+            height: 100%;
+        }
+
+        .stat-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+        }
+
+        .stat-number {
+            font-size: 2.5rem;
+            font-weight: 700;
+            background: linear-gradient(90deg, var(--primary-color), var(--secondary-color));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 5px;
+        }
+
+        .stat-label {
+            color: #64748b;
+            font-size: 1rem;
+            font-weight: 500;
+        }
+
+        .admin-section-title {
+            border-bottom: 2px solid #e2e8f0;
+            padding-bottom: 10px;
+            margin-bottom: 20px;
+            color: var(--dark-color);
+            font-weight: 600;
+        }
+
+        .admin-card {
+            border-radius: 16px;
+            overflow: hidden;
+            box-shadow: var(--card-shadow);
+            margin-bottom: 25px;
+            border: none;
+            background-color: white;
+        }
+
+        .admin-card-header {
+            background: linear-gradient(90deg, var(--primary-color), var(--secondary-color));
+            color: white;
+            padding: 15px 20px;
+            font-weight: 600;
+        }
+
+        .admin-card-body {
+            padding: 25px;
+        }
+
+        .admin-btn {
+            margin-right: 8px;
+            margin-bottom: 8px;
+            border-radius: 8px;
+            font-weight: 500;
+            padding: 8px 16px;
+            transition: all 0.2s ease;
+        }
+
+        .quick-actions {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 12px;
+            margin-bottom: 25px;
+        }
+
+        .btn-primary {
+            background-color: var(--primary-color);
+            border-color: var(--primary-color);
+        }
+
+        .btn-primary:hover {
+            background-color: #5558e3;
+            border-color: #5558e3;
+        }
+
+        .btn-success {
+            background-color: var(--success-color);
+            border-color: var(--success-color);
+        }
+
+        .btn-success:hover {
+            background-color: #0ea971;
+            border-color: #0ea971;
+        }
+
+        .btn-info {
+            background-color: var(--info-color);
+            border-color: var(--info-color);
+        }
+
+        .btn-info:hover {
+            background-color: #0891b2;
+            border-color: #0891b2;
+        }
+
+        .btn-outline-primary {
+            color: var(--primary-color);
+            border-color: var(--primary-color);
+        }
+
+        .btn-outline-primary:hover {
+            background-color: var(--primary-color);
+            border-color: var(--primary-color);
+        }
+
+        .table {
+            border-radius: 12px;
+            overflow: hidden;
+        }
+
+        .table thead th {
+            background-color: #f8fafc;
+            border-bottom: 2px solid #e2e8f0;
+            color: var(--dark-color);
+            font-weight: 600;
+            text-transform: uppercase;
+            font-size: 0.8rem;
+            letter-spacing: 0.5px;
+        }
+
+        .badge {
+            padding: 6px 10px;
+            border-radius: 6px;
+            font-weight: 500;
+        }
+
+        .bg-primary {
+            background-color: var(--primary-color) !important;
+        }
+
+        .bg-info {
+            background-color: var(--info-color) !important;
+        }
+
+        .bg-warning {
+            background-color: var(--warning-color) !important;
+        }
+
+        .form-control, .form-select {
+            border-radius: 8px;
+            border: 1px solid #e2e8f0;
+            padding: 10px 15px;
+        }
+
+        .form-control:focus, .form-select:focus {
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 0.25rem rgba(99, 102, 241, 0.25);
+        }
+
+        .modal-content {
+            border-radius: 16px;
+            border: none;
+            box-shadow: var(--card-shadow);
+        }
+
+        .modal-header {
+            background: linear-gradient(90deg, var(--primary-color), var(--secondary-color));
+            color: white;
+            border-radius: 16px 16px 0 0;
+            border-bottom: none;
+        }
+
+        .modal-title {
+            font-weight: 600;
+        }
+
+        .btn-close {
+            filter: brightness(0) invert(1);
+        }
+
+        .spinner-border {
+            width: 1rem;
+            height: 1rem;
+        }
+
+        .auth-tabs {
+            display: flex;
+            margin-bottom: 20px;
+            border-bottom: 1px solid #e2e8f0;
+        }
+
+        .auth-tab {
+            padding: 10px 20px;
+            cursor: pointer;
+            font-weight: 500;
+            color: #64748b;
+            border-bottom: 2px solid transparent;
+            transition: all 0.2s ease;
+        }
+
+        .auth-tab.active {
+            color: var(--primary-color);
+            border-bottom: 2px solid var(--primary-color);
+        }
+
+        .auth-content {
+            display: none;
+        }
+
+        .auth-content.active {
+            display: block;
+        }
+
+        .user-avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: 600;
+            margin-right: 10px;
+        }
+
+        .user-info {
+            display: flex;
+            align-items: center;
+        }
+
+        .user-menu {
+            position: relative;
+        }
+
+        .user-dropdown {
+            position: absolute;
+            top: 100%;
+            right: 0;
+            background-color: white;
+            border-radius: 8px;
+            box-shadow: var(--card-shadow);
+            min-width: 200px;
+            z-index: 1000;
+            display: none;
+            padding: 10px 0;
+        }
+
+        .user-dropdown.show {
+            display: block;
+        }
+
+        .user-dropdown-item {
+            padding: 10px 20px;
+            cursor: pointer;
+            transition: background-color 0.2s ease;
+        }
+
+        .user-dropdown-item:hover {
+            background-color: #f8fafc;
+        }
+
+        .status-badge {
+            font-size: 0.75rem;
+            padding: 4px 8px;
+            border-radius: 4px;
+        }
+
+        .status-pending {
+            background-color: #fef3c7;
+            color: #92400e;
+        }
+
+        .status-approved {
+            background-color: #d1fae5;
+            color: #065f46;
+        }
+
+        .status-rejected {
+            background-color: #fee2e2;
+            color: #991b1b;
+        }
+
+        .message-container {
+            max-width: 600px;
+            margin: 60px auto;
+            padding: 30px;
+            background-color: white;
+            border-radius: 16px;
+            box-shadow: var(--card-shadow);
+        }
+
+        .message-item {
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 15px;
+            background-color: #f8fafc;
+            border-left: 4px solid var(--primary-color);
+        }
+
+        .message-header {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 8px;
+        }
+
+        .message-sender {
+            font-weight: 600;
+            color: var(--dark-color);
+        }
+
+        .message-date {
+            font-size: 0.8rem;
+            color: #64748b;
+        }
+
+        .message-content {
+            margin-bottom: 10px;
+        }
+
+        .message-actions {
+            display: flex;
+            gap: 8px;
+        }
+
+        .notification-badge {
+            position: absolute;
+            top: -5px;
+            right: -5px;
+            background-color: var(--danger-color);
+            color: white;
+            border-radius: 50%;
+            width: 18px;
+            height: 18px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.7rem;
+            font-weight: 600;
+        }
+
+        .pending-notice {
+            background-color: #fef3c7;
+            border: 1px solid #fcd34d;
+            border-radius: 8px;
+            padding: 15px;
+            margin-bottom: 20px;
+            color: #92400e;
+        }
+
+        .pending-notice h5 {
+            margin-bottom: 10px;
+            color: #92400e;
+        }
+
+        .message-form {
+            margin-top: 20px;
+        }
+
+        .message-textarea {
+            resize: vertical;
+            min-height: 100px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <nav class="navbar navbar-expand-lg navbar-dark">
+            <div class="container-fluid">
+                <a class="navbar-brand" href="#">
+                    <i class="bi bi-link-45deg me-2"></i>URL Manager
+                </a>
+                <div class="d-flex">
+                    <!-- User Menu (shown when logged in) -->
+                    <div id="userMenu" class="user-menu me-2" style="display: none;">
+                        <div class="user-info" id="userInfo">
+                            <div class="user-avatar" id="userAvatar">U</div>
+                            <span id="userName">User</span>
+                            <i class="bi bi-chevron-down ms-2"></i>
+                            <div id="messageNotificationBadge" class="notification-badge" style="display: none;">0</div>
+                        </div>
+                        <div class="user-dropdown" id="userDropdown">
+                            <div class="user-dropdown-item" id="sendMessageBtn">
+                                <i class="bi bi-chat-dots me-2"></i>Send Message
+                            </div>
+                            <div class="user-dropdown-item" id="logoutUserBtn">
+                                <i class="bi bi-box-arrow-right me-2"></i>Logout
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Auth Buttons (shown when not logged in) -->
+                    <div id="authButtons">
+                        <button id="showLoginBtn" class="btn btn-outline-light me-2">
+                            <i class="bi bi-person-circle me-1"></i> Login
+                        </button>
+                        <button id="showRegisterBtn" class="btn btn-outline-light">
+                            <i class="bi bi-person-plus me-1"></i> Register
+                        </button>
+                    </div>
+                    
+                    <!-- Admin Panel Button -->
+                    <button id="showAdminBtn" class="btn btn-outline-light me-2">
+                        <i class="bi bi-gear me-1"></i> Admin Panel
+                    </button>
+                    <button id="backToIndexBtn" class="btn btn-outline-light" style="display: none;">
+                        <i class="bi bi-house-door me-1"></i> Back to Index
+                    </button>
+                    <button id="logoutBtn" class="btn btn-outline-light" style="display: none;">
+                        <i class="bi bi-box-arrow-right me-1"></i> Logout
+                    </button>
+                </div>
+            </div>
+        </nav>
+
+        <!-- Notification -->
+        <div id="notification" class="notification"></div>
+
+        <!-- Main URL Display Page -->
+        <div id="urlDisplayPage">
+            <h1 class="mt-4 mb-4 text-center">URL Collection</h1>
+            
+            <!-- Pending Account Notice -->
+            <div id="pendingNotice" class="pending-notice" style="display: none;">
+                <h5><i class="bi bi-exclamation-triangle me-2"></i>Account Pending Approval</h5>
+                <p>Your account is currently pending approval by the administrator. You can send a message to the admin if you need urgent access.</p>
+                <button id="urgentAccessBtn" class="btn btn-warning btn-sm">
+                    <i class="bi bi-chat-dots me-1"></i>Request Urgent Access
+                </button>
+            </div>
+            
+            <!-- Login/Register Prompt (shown when not logged in) -->
+            <div id="authPrompt" class="text-center p-5">
+                <div class="card mx-auto" style="max-width: 500px;">
+                    <div class="card-body">
+                        <h4 class="card-title">Welcome to URL Manager</h4>
+                        <p class="card-text">Please login or register to view and manage URLs.</p>
+                        <div class="d-grid gap-2 d-md-flex justify-content-md-center">
+                            <button id="indexLoginBtn" class="btn btn-primary">
+                                <i class="bi bi-box-arrow-in-right me-2"></i>Login
+                            </button>
+                            <button id="indexRegisterBtn" class="btn btn-outline-primary">
+                                <i class="bi bi-person-plus me-2"></i>Register
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- URL Categories (shown when logged in) -->
+            <div id="urlCategories" class="url-container row" style="display: none;">
+                <!-- Categories will be dynamically added here -->
+            </div>
+        </div>
+
+        <!-- User Login/Register Form -->
+        <div id="userAuthForm" style="display: none;">
+            <div class="register-form">
+                <h3 class="text-center mb-4">Account Access</h3>
+                
+                <div class="auth-tabs">
+                    <div class="auth-tab active" data-tab="login">Login</div>
+                    <div class="auth-tab" data-tab="register">Register</div>
+                </div>
+                
+                <!-- Login Form -->
+                <div id="loginContent" class="auth-content active">
+                    <div class="mb-3">
+                        <label for="userUsername" class="form-label">Username</label>
+                        <input type="text" class="form-control" id="userUsername" placeholder="Enter username">
+                    </div>
+                    <div class="mb-3">
+                        <label for="userPassword" class="form-label">Password</label>
+                        <input type="password" class="form-control" id="userPassword" placeholder="Enter password">
+                    </div>
+                    <button id="userLoginBtn" class="btn btn-primary w-100">
+                        <i class="bi bi-box-arrow-in-right me-2"></i>Login
+                    </button>
+                    <div id="userLoginError" class="text-danger mt-2 text-center" style="display: none;">
+                        Invalid username or password
+                    </div>
+                </div>
+                
+                <!-- Register Form -->
+                <div id="registerContent" class="auth-content">
+                    <div class="mb-3">
+                        <label for="regUsername" class="form-label">Username</label>
+                        <input type="text" class="form-control" id="regUsername" placeholder="Choose a username">
+                    </div>
+                    <div class="mb-3">
+                        <label for="regEmail" class="form-label">Email</label>
+                        <input type="email" class="form-control" id="regEmail" placeholder="Enter your email">
+                    </div>
+                    <div class="mb-3">
+                        <label for="regPassword" class="form-label">Password</label>
+                        <input type="password" class="form-control" id="regPassword" placeholder="Create a password">
+                    </div>
+                    <div class="mb-3">
+                        <label for="regConfirmPassword" class="form-label">Confirm Password</label>
+                        <input type="password" class="form-control" id="regConfirmPassword" placeholder="Confirm your password">
+                    </div>
+                    <button id="userRegisterBtn" class="btn btn-primary w-100">
+                        <i class="bi bi-person-plus me-2"></i>Register
+                    </button>
+                    <div id="userRegisterError" class="text-danger mt-2 text-center" style="display: none;"></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Message Form -->
+        <div id="messageForm" style="display: none;">
+            <div class="message-container">
+                <h3 class="text-center mb-4">Send Message to Admin</h3>
+                <div class="mb-3">
+                    <label for="messageSubject" class="form-label">Subject</label>
+                    <input type="text" class="form-control" id="messageSubject" placeholder="Enter message subject">
+                </div>
+                <div class="mb-3">
+                    <label for="messageText" class="form-label">Message</label>
+                    <textarea class="form-control message-textarea" id="messageText" placeholder="Enter your message here..."></textarea>
+                </div>
+                <div class="d-grid gap-2">
+                    <button id="sendMessageFormBtn" class="btn btn-primary">
+                        <i class="bi bi-send me-2"></i>Send Message
+                    </button>
+                    <button id="cancelMessageBtn" class="btn btn-outline-secondary">
+                        <i class="bi bi-x-circle me-2"></i>Cancel
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Admin Login Form -->
+        <div id="adminLogin" class="login-form" style="display: none;">
+            <h3 class="text-center mb-4">Admin Login</h3>
+            <div class="mb-3">
+                <label for="username" class="form-label">Username</label>
+                <input type="text" class="form-control" id="username" placeholder="Enter username">
+            </div>
+            <div class="mb-3">
+                <label for="password" class="form-label">Password</label>
+                <input type="password" class="form-control" id="password" placeholder="Enter password">
+            </div>
+            <button id="loginBtn" class="btn btn-primary w-100">
+                <i class="bi bi-box-arrow-in-right me-2"></i> Login
+            </button>
+            <div id="loginError" class="text-danger mt-2 text-center" style="display: none;">
+                Invalid username or password
+            </div>
+        </div>
+
+        <!-- Admin Panel -->
+        <div id="adminPanel" class="admin-panel">
+            <h2 class="mb-4 text-center">
+                <i class="bi bi-gear me-2"></i>Admin Panel
+            </h2>
+            
+            <!-- Stats Section -->
+            <div class="admin-stats">
+                <div class="row">
+                    <div class="col-md-3 col-sm-6 mb-3">
+                        <div class="stat-card">
+                            <div class="stat-number" id="totalCategories">0</div>
+                            <div class="stat-label">Categories</div>
+                        </div>
+                    </div>
+                    <div class="col-md-3 col-sm-6 mb-3">
+                        <div class="stat-card">
+                            <div class="stat-number" id="totalUrls">0</div>
+                            <div class="stat-label">Total URLs</div>
+                        </div>
+                    </div>
+                    <div class="col-md-3 col-sm-6 mb-3">
+                        <div class="stat-card">
+                            <div class="stat-number" id="totalUsers">0</div>
+                            <div class="stat-label">Total Users</div>
+                        </div>
+                    </div>
+                    <div class="col-md-3 col-sm-6 mb-3">
+                        <div class="stat-card">
+                            <div class="stat-number" id="pendingUsers">0</div>
+                            <div class="stat-label">Pending Users</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Quick Actions -->
+            <div class="quick-actions">
+                <button id="addCategoryQuickBtn" class="btn btn-primary admin-btn">
+                    <i class="bi bi-folder-plus me-1"></i> Add Category
+                </button>
+                <button id="addUrlQuickBtn" class="btn btn-success admin-btn">
+                    <i class="bi bi-link-45deg me-1"></i> Add URL
+                </button>
+                <button id="exportDataQuickBtn" class="btn btn-info admin-btn">
+                    <i class="bi bi-download me-1"></i> Export Data
+                </button>
+                <button id="viewMessagesBtn" class="btn btn-warning admin-btn">
+                    <i class="bi bi-chat-dots me-1"></i> View Messages
+                    <span id="adminMessageBadge" class="notification-badge" style="display: none;">0</span>
+                </button>
+                <button id="viewAllCategoriesBtn" class="btn btn-outline-primary admin-btn">
+                    <i class="bi bi-list me-1"></i> View All Categories
+                </button>
+                <button id="viewAllUrlsBtn" class="btn btn-outline-primary admin-btn">
+                    <i class="bi bi-list-ul me-1"></i> View All URLs
+                </button>
+                <button id="viewAllUsersBtn" class="btn btn-outline-primary admin-btn">
+                    <i class="bi bi-people me-1"></i> View All Users
+                </button>
+            </div>
+            
+            <div class="row">
+                <!-- Category Management -->
+                <div class="col-lg-6 mb-4">
+                    <div class="admin-card">
+                        <div class="admin-card-header">
+                            <h3 class="mb-0">
+                                <i class="bi bi-folder me-2"></i>Categories
+                            </h3>
+                        </div>
+                        <div class="admin-card-body">
+                            <div class="d-flex justify-content-between align-items-center mb-3">
+                                <h5 class="admin-section-title">Manage Categories</h5>
+                                <button id="addCategoryBtn" class="btn btn-primary btn-sm">
+                                    <i class="bi bi-plus-circle me-1"></i> Add New
+                                </button>
+                            </div>
+                            <div class="table-responsive">
+                                <table class="table table-hover">
+                                    <thead>
+                                        <tr>
+                                            <th>Name</th>
+                                            <th>URLs Count</th>
+                                            <th>Actions</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="categoriesTableBody">
+                                        <!-- Categories will be dynamically added here -->
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- URL Management -->
+                <div class="col-lg-6 mb-4">
+                    <div class="admin-card">
+                        <div class="admin-card-header">
+                            <h3 class="mb-0">
+                                <i class="bi bi-link-45deg me-2"></i>URLs
+                            </h3>
+                        </div>
+                        <div class="admin-card-body">
+                            <div class="d-flex justify-content-between align-items-center mb-3">
+                                <h5 class="admin-section-title">Manage URLs</h5>
+                                <button id="addUrlBtn" class="btn btn-success btn-sm">
+                                    <i class="bi bi-plus-circle me-1"></i> Add New
+                                </button>
+                            </div>
+                            <div class="mb-3">
+                                <label for="categoryFilter" class="form-label">Filter by Category</label>
+                                <select id="categoryFilter" class="form-select">
+                                    <option value="">All Categories</option>
+                                </select>
+                            </div>
+                            <div class="table-responsive">
+                                <table class="table table-hover">
+                                    <thead>
+                                        <tr>
+                                            <th>Title</th>
+                                            <th>Category</th>
+                                            <th>Actions</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="urlsTableBody">
+                                        <!-- URLs will be dynamically added here -->
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- User Management -->
+            <div class="admin-card mb-4">
+                <div class="admin-card-header">
+                    <h3 class="mb-0">
+                        <i class="bi bi-people me-2"></i>User Management
+                    </h3>
+                </div>
+                <div class="admin-card-body">
+                    <div class="d-flex justify-content-between align-items-center mb-3">
+                        <h5 class="admin-section-title">Manage Users</h5>
+                        <div>
+                            <select id="userStatusFilter" class="form-select d-inline-block" style="width: auto;">
+                                <option value="">All Users</option>
+                                <option value="pending">Pending Approval</option>
+                                <option value="approved">Approved</option>
+                                <option value="rejected">Rejected</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="table-responsive">
+                        <table class="table table-hover">
+                            <thead>
+                                <tr>
+                                    <th>Username</th>
+                                    <th>Email</th>
+                                    <th>Status</th>
+                                    <th>Registered</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody id="usersTableBody">
+                                <!-- Users will be dynamically added here -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Messages Management -->
+            <div class="admin-card mb-4" id="messagesCard" style="display: none;">
+                <div class="admin-card-header">
+                    <h3 class="mb-0">
+                        <i class="bi bi-chat-dots me-2"></i>User Messages
+                    </h3>
+                </div>
+                <div class="admin-card-body">
+                    <div id="messagesList">
+                        <!-- Messages will be dynamically added here -->
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Folder Structure Section -->
+            <div class="admin-card">
+                <div class="admin-card-header">
+                    <h3 class="mb-0">
+                        <i class="bi bi-folder-symlink me-2"></i>Data Export
+                    </h3>
+                </div>
+                <div class="admin-card-body">
+                    <h5 class="admin-section-title">Folder Structure</h5>
+                    <p>Your data is organized in the following folder structure:</p>
+                    <div id="folderStructure" class="folder-structure">
+                        <!-- Folder structure will be dynamically added here -->
+                    </div>
+                    <div class="text-center mt-3">
+                        <button id="exportDataBtn" class="btn btn-success">
+                            <i class="bi bi-download me-2"></i>Download All Folders
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Add Category Modal -->
+        <div class="modal fade" id="addCategoryModal" tabindex="-1" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title">
+                            <i class="bi bi-folder-plus me-2"></i>Add New Category
+                        </h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <div class="mb-3">
+                            <label for="categoryName" class="form-label">Category Name</label>
+                            <input type="text" class="form-control" id="categoryName" placeholder="Enter category name">
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                        <button type="button" class="btn btn-primary" id="saveCategoryBtn">
+                            <i class="bi bi-check-circle me-1"></i>Save
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Edit Category Modal -->
+        <div class="modal fade" id="editCategoryModal" tabindex="-1" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title">
+                            <i class="bi bi-pencil-square me-2"></i>Edit Category
+                        </h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <div class="mb-3">
+                            <label for="editCategoryName" class="form-label">Category Name</label>
+                            <input type="text" class="form-control" id="editCategoryName" placeholder="Enter category name">
+                            <input type="hidden" id="editCategoryId">
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                        <button type="button" class="btn btn-primary" id="updateCategoryBtn">
+                            <i class="bi bi-check-circle me-1"></i>Update
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Add URL Modal -->
+        <div class="modal fade" id="addUrlModal" tabindex="-1" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title">
+                            <i class="bi bi-link-45deg me-2"></i>Add New URL
+                        </h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <div class="mb-3">
+                            <label for="urlTitle" class="form-label">Title</label>
+                            <input type="text" class="form-control" id="urlTitle" placeholder="Enter URL title">
+                        </div>
+                        <div class="mb-3">
+                            <label for="urlLink" class="form-label">URL</label>
+                            <input type="text" class="form-control" id="urlLink" placeholder="Enter URL">
+                        </div>
+                        <div class="mb-3">
+                            <label for="urlCategory" class="form-label">Category</label>
+                            <select id="urlCategory" class="form-select">
+                                <option value="">Select a category</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                        <button type="button" class="btn btn-primary" id="saveUrlBtn">
+                            <i class="bi bi-check-circle me-1"></i>Save
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Edit URL Modal -->
+        <div class="modal fade" id="editUrlModal" tabindex="-1" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title">
+                            <i class="bi bi-pencil-square me-2"></i>Edit URL
+                        </h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <div class="mb-3">
+                            <label for="editUrlTitle" class="form-label">Title</label>
+                            <input type="text" class="form-control" id="editUrlTitle" placeholder="Enter URL title">
+                        </div>
+                        <div class="mb-3">
+                            <label for="editUrlLink" class="form-label">URL</label>
+                            <input type="text" class="form-control" id="editUrlLink" placeholder="Enter URL">
+                        </div>
+                        <div class="mb-3">
+                            <label for="editUrlCategory" class="form-label">Category</label>
+                            <select id="editUrlCategory" class="form-select">
+                                <option value="">Select a category</option>
+                            </select>
+                            <input type="hidden" id="editUrlId">
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                        <button type="button" class="btn btn-primary" id="updateUrlBtn">
+                            <i class="bi bi-check-circle me-1"></i>Update
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/jszip@3.7.1/dist/jszip.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/file-saver@2.0.5/dist/FileSaver.min.js"></script>
+    <script>
+        // Load data from localStorage or use sample data
+        let categories = JSON.parse(localStorage.getItem('categories')) || [
+            { id: 1, name: "Social Media" },
+            { id: 2, name: "News" },
+            { id: 3, name: "Technology" }
+        ];
+
+        let urls = JSON.parse(localStorage.getItem('urls')) || [
+            { id: 1, title: "Facebook", url: "https://www.facebook.com", categoryId: 1 },
+            { id: 2, title: "Twitter", url: "https://www.twitter.com", categoryId: 1 },
+            { id: 3, title: "BBC News", url: "https://www.bbc.com/news", categoryId: 2 },
+            { id: 4, title: "TechCrunch", url: "https://techcrunch.com", categoryId: 3 }
+        ];
+
+        let users = JSON.parse(localStorage.getItem('users')) || [];
+        let messages = JSON.parse(localStorage.getItem('messages')) || [];
+        
+        // Admin credentials
+        const adminCredentials = {
+            username: "admin",
+            password: "admin123"
+        };
+
+        let isLoggedIn = false;
+        let isAdmin = false;
+        let currentUser = null;
+        let nextCategoryId = categories.length > 0 ? Math.max(...categories.map(c => c.id)) + 1 : 1;
+        let nextUrlId = urls.length > 0 ? Math.max(...urls.map(u => u.id)) + 1 : 1;
+        let nextUserId = users.length > 0 ? Math.max(...users.map(u => u.id)) + 1 : 1;
+        let nextMessageId = messages.length > 0 ? Math.max(...messages.map(m => m.id)) + 1 : 1;
+
+        // DOM elements
+        const urlDisplayPage = document.getElementById('urlDisplayPage');
+        const userAuthForm = document.getElementById('userAuthForm');
+        const adminLogin = document.getElementById('adminLogin');
+        const adminPanel = document.getElementById('adminPanel');
+        const messageForm = document.getElementById('messageForm');
+        const messagesCard = document.getElementById('messagesCard');
+        const messagesList = document.getElementById('messagesList');
+        const pendingNotice = document.getElementById('pendingNotice');
+        const authPrompt = document.getElementById('authPrompt');
+        const urlCategories = document.getElementById('urlCategories');
+        const authButtons = document.getElementById('authButtons');
+        const userMenu = document.getElementById('userMenu');
+        const showAdminBtn = document.getElementById('showAdminBtn');
+        const backToIndexBtn = document.getElementById('backToIndexBtn');
+        const logoutBtn = document.getElementById('logoutBtn');
+        const showLoginBtn = document.getElementById('showLoginBtn');
+        const showRegisterBtn = document.getElementById('showRegisterBtn');
+        const indexLoginBtn = document.getElementById('indexLoginBtn');
+        const indexRegisterBtn = document.getElementById('indexRegisterBtn');
+        const urgentAccessBtn = document.getElementById('urgentAccessBtn');
+        const sendMessageBtn = document.getElementById('sendMessageBtn');
+        const loginBtn = document.getElementById('loginBtn');
+        const userLoginBtn = document.getElementById('userLoginBtn');
+        const userRegisterBtn = document.getElementById('userRegisterBtn');
+        const sendMessageFormBtn = document.getElementById('sendMessageFormBtn');
+        const cancelMessageBtn = document.getElementById('cancelMessageBtn');
+        const logoutUserBtn = document.getElementById('logoutUserBtn');
+        const loginError = document.getElementById('loginError');
+        const userLoginError = document.getElementById('userLoginError');
+        const userRegisterError = document.getElementById('userRegisterError');
+        const usernameInput = document.getElementById('username');
+        const passwordInput = document.getElementById('password');
+        const userUsernameInput = document.getElementById('userUsername');
+        const userPasswordInput = document.getElementById('userPassword');
+        const regUsernameInput = document.getElementById('regUsername');
+        const regEmailInput = document.getElementById('regEmail');
+        const regPasswordInput = document.getElementById('regPassword');
+        const regConfirmPasswordInput = document.getElementById('regConfirmPassword');
+        const messageSubjectInput = document.getElementById('messageSubject');
+        const messageTextInput = document.getElementById('messageText');
+        const addCategoryBtn = document.getElementById('addCategoryBtn');
+        const addCategoryQuickBtn = document.getElementById('addCategoryQuickBtn');
+        const addUrlBtn = document.getElementById('addUrlBtn');
+        const addUrlQuickBtn = document.getElementById('addUrlQuickBtn');
+        const exportDataBtn = document.getElementById('exportDataBtn');
+        const exportDataQuickBtn = document.getElementById('exportDataQuickBtn');
+        const viewMessagesBtn = document.getElementById('viewMessagesBtn');
+        const viewAllCategoriesBtn = document.getElementById('viewAllCategoriesBtn');
+        const viewAllUrlsBtn = document.getElementById('viewAllUrlsBtn');
+        const viewAllUsersBtn = document.getElementById('viewAllUsersBtn');
+        const categoryFilter = document.getElementById('categoryFilter');
+        const userStatusFilter = document.getElementById('userStatusFilter');
+        const urlCategorySelect = document.getElementById('urlCategory');
+        const editUrlCategorySelect = document.getElementById('editUrlCategory');
+        const saveCategoryBtn = document.getElementById('saveCategoryBtn');
+        const updateCategoryBtn = document.getElementById('updateCategoryBtn');
+        const saveUrlBtn = document.getElementById('saveUrlBtn');
+        const updateUrlBtn = document.getElementById('updateUrlBtn');
+        const categoryNameInput = document.getElementById('categoryName');
+        const editCategoryNameInput = document.getElementById('editCategoryName');
+        const editCategoryIdInput = document.getElementById('editCategoryId');
+        const urlTitleInput = document.getElementById('urlTitle');
+        const urlLinkInput = document.getElementById('urlLink');
+        const editUrlTitleInput = document.getElementById('editUrlTitle');
+        const editUrlLinkInput = document.getElementById('editUrlLink');
+        const editUrlIdInput = document.getElementById('editUrlId');
+        const notification = document.getElementById('notification');
+        const folderStructure = document.getElementById('folderStructure');
+        const categoriesTableBody = document.getElementById('categoriesTableBody');
+        const urlsTableBody = document.getElementById('urlsTableBody');
+        const usersTableBody = document.getElementById('usersTableBody');
+        const totalCategoriesEl = document.getElementById('totalCategories');
+        const totalUrlsEl = document.getElementById('totalUrls');
+        const totalUsersEl = document.getElementById('totalUsers');
+        const pendingUsersEl = document.getElementById('pendingUsers');
+        const userInfo = document.getElementById('userInfo');
+        const userAvatar = document.getElementById('userAvatar');
+        const userName = document.getElementById('userName');
+        const userDropdown = document.getElementById('userDropdown');
+        const messageNotificationBadge = document.getElementById('messageNotificationBadge');
+        const adminMessageBadge = document.getElementById('adminMessageBadge');
+
+        // Auth tabs
+        const authTabs = document.querySelectorAll('.auth-tab');
+        const loginContent = document.getElementById('loginContent');
+        const registerContent = document.getElementById('registerContent');
+
+        // Event listeners
+        authTabs.forEach(tab => {
+            tab.addEventListener('click', function() {
+                // Remove active class from all tabs and contents
+                authTabs.forEach(t => t.classList.remove('active'));
+                document.querySelectorAll('.auth-content').forEach(c => c.classList.remove('active'));
+                
+                // Add active class to clicked tab
+                this.classList.add('active');
+                
+                // Show corresponding content
+                const tabName = this.getAttribute('data-tab');
+                if (tabName === 'login') {
+                    loginContent.classList.add('active');
+                } else {
+                    registerContent.classList.add('active');
+                }
+            });
+        });
+
+        userInfo.addEventListener('click', function() {
+            userDropdown.classList.toggle('show');
+        });
+
+        document.addEventListener('click', function(event) {
+            if (!userInfo.contains(event.target) && !userDropdown.contains(event.target)) {
+                userDropdown.classList.remove('show');
+            }
+        });
+
+        showAdminBtn.addEventListener('click', showAdminLogin);
+        showLoginBtn.addEventListener('click', showUserAuth);
+        showRegisterBtn.addEventListener('click', showUserAuth);
+        indexLoginBtn.addEventListener('click', showUserAuth);
+        indexRegisterBtn.addEventListener('click', showUserAuth);
+        urgentAccessBtn.addEventListener('click', showMessageForm);
+        sendMessageBtn.addEventListener('click', showMessageForm);
+        backToIndexBtn.addEventListener('click', backToIndex);
+        logoutBtn.addEventListener('click', logout);
+        logoutUserBtn.addEventListener('click', logoutUser);
+        loginBtn.addEventListener('click', login);
+        userLoginBtn.addEventListener('click', userLogin);
+        userRegisterBtn.addEventListener('click', userRegister);
+        sendMessageFormBtn.addEventListener('click', sendMessage);
+        cancelMessageBtn.addEventListener('click', hideMessageForm);
+        exportDataBtn.addEventListener('click', exportData);
+        exportDataQuickBtn.addEventListener('click', exportData);
+        viewMessagesBtn.addEventListener('click', () => {
+            messagesCard.style.display = 'block';
+            messagesCard.scrollIntoView({ behavior: 'smooth' });
+            updateMessageNotificationBadge();
+        });
+        addCategoryBtn.addEventListener('click', () => {
+            categoryNameInput.value = '';
+            new bootstrap.Modal(document.getElementById('addCategoryModal')).show();
+        });
+        addCategoryQuickBtn.addEventListener('click', () => {
+            categoryNameInput.value = '';
+            new bootstrap.Modal(document.getElementById('addCategoryModal')).show();
+        });
+        addUrlBtn.addEventListener('click', () => {
+            urlTitleInput.value = '';
+            urlLinkInput.value = '';
+            urlCategorySelect.value = '';
+            updateUrlCategorySelect();
+            new bootstrap.Modal(document.getElementById('addUrlModal')).show();
+        });
+        addUrlQuickBtn.addEventListener('click', () => {
+            urlTitleInput.value = '';
+            urlLinkInput.value = '';
+            urlCategorySelect.value = '';
+            updateUrlCategorySelect();
+            new bootstrap.Modal(document.getElementById('addUrlModal')).show();
+        });
+        saveCategoryBtn.addEventListener('click', saveCategory);
+        updateCategoryBtn.addEventListener('click', updateCategory);
+        saveUrlBtn.addEventListener('click', saveUrl);
+        updateUrlBtn.addEventListener('click', updateUrl);
+        categoryFilter.addEventListener('click', displayUrlsByCategory);
+        userStatusFilter.addEventListener('change', displayUsersByStatus);
+        viewAllCategoriesBtn.addEventListener('click', () => {
+            categoryFilter.value = '';
+            displayUrlsByCategory();
+            document.querySelector('.col-lg-6:first-child .admin-card').scrollIntoView({ behavior: 'smooth' });
+        });
+        viewAllUrlsBtn.addEventListener('click', () => {
+            categoryFilter.value = '';
+            displayUrlsByCategory();
+            document.querySelector('.col-lg-6:last-child .admin-card').scrollIntoView({ behavior: 'smooth' });
+        });
+        viewAllUsersBtn.addEventListener('click', () => {
+            userStatusFilter.value = '';
+            displayUsersByStatus();
+            document.querySelector('#usersTableBody').closest('.admin-card').scrollIntoView({ behavior: 'smooth' });
+        });
+
+        // Functions
+        function showMessageForm() {
+            urlDisplayPage.style.display = 'none';
+            userAuthForm.style.display = 'none';
+            adminLogin.style.display = 'none';
+            adminPanel.style.display = 'none';
+            messageForm.style.display = 'block';
+            showAdminBtn.style.display = 'none';
+            backToIndexBtn.style.display = 'block';
+            
+            // Reset form
+            messageSubjectInput.value = '';
+            messageTextInput.value = '';
+            
+            // Set default subject
+            if (currentUser && currentUser.status === 'pending') {
+                messageSubjectInput.value = 'Request for Urgent Account Approval';
+                messageTextInput.value = 'Dear Admin,\n\nI have registered for an account and would appreciate if you could approve my account as soon as possible. I need urgent access to the URL Manager system.\n\nThank you for your consideration.\n\nSincerely,\n' + currentUser.username;
+            }
+        }
+
+        function hideMessageForm() {
+            messageForm.style.display = 'none';
+            if (currentUser) {
+                urlDisplayPage.style.display = 'block';
+                authPrompt.style.display = 'none';
+                urlCategories.style.display = 'flex';
+            } else {
+                urlDisplayPage.style.display = 'block';
+                authPrompt.style.display = 'block';
+                urlCategories.style.display = 'none';
+            }
+            showAdminBtn.style.display = 'block';
+            backToIndexBtn.style.display = 'none';
+        }
+
+        function sendMessage() {
+            const subject = messageSubjectInput.value.trim();
+            const text = messageTextInput.value.trim();
+            
+            if (!subject || !text) {
+                showNotification('Please fill in all fields');
+                return;
+            }
+            
+            // Create new message
+            const newMessage = {
+                id: nextMessageId++,
+                senderId: currentUser.id,
+                senderName: currentUser.username,
+                subject: subject,
+                text: text,
+                timestamp: new Date().toISOString(),
+                read: false
+            };
+            
+            messages.push(newMessage);
+            saveDataToLocalStorage();
+            
+            // Reset form
+            messageSubjectInput.value = '';
+            messageTextInput.value = '';
+            
+            // Show success message
+            showNotification('Message sent successfully!');
+            
+            // Hide form and go back to previous view
+            hideMessageForm();
+            
+            // Update admin notification badge
+            if (isAdmin) {
+                updateAdminMessageBadge();
+            }
+        }
+
+        function updateMessageNotificationBadge() {
+            const unreadCount = messages.filter(m => !m.read).length;
+            if (unreadCount > 0) {
+                messageNotificationBadge.textContent = unreadCount;
+                messageNotificationBadge.style.display = 'flex';
+            } else {
+                messageNotificationBadge.style.display = 'none';
+            }
+        }
+
+        function updateAdminMessageBadge() {
+            const unreadCount = messages.filter(m => !m.read).length;
+            if (unreadCount > 0) {
+                adminMessageBadge.textContent = unreadCount;
+                adminMessageBadge.style.display = 'flex';
+            } else {
+                adminMessageBadge.style.display = 'none';
+            }
+        }
+
+        function displayMessages() {
+            messagesList.innerHTML = '';
+            
+            if (messages.length === 0) {
+                messagesList.innerHTML = '<div class="text-center p-4">No messages found</div>';
+                return;
+            }
+            
+            // Sort messages by timestamp (newest first)
+            const sortedMessages = [...messages].sort((a, b) => new Date(b.timestamp) - new Date(a.timestamp));
+            
+            sortedMessages.forEach(message => {
+                const messageDate = new Date(message.timestamp).toLocaleString();
+                const messageItem = document.createElement('div');
+                messageItem.className = 'message-item';
+                
+                messageItem.innerHTML = `
+                    <div class="message-header">
+                        <div class="message-sender">${message.senderName}</div>
+                        <div class="message-date">${messageDate}</div>
+                    </div>
+                    <div class="message-content">
+                        <strong>${message.subject}</strong>
+                        <p>${message.text.replace(/\n/g, '<br>')}</p>
+                    </div>
+                    <div class="message-actions">
+                        ${!message.read ? `
+                            <button class="btn btn-sm btn-success mark-read-btn" data-id="${message.id}">
+                                <i class="bi bi-check-circle me-1"></i>Mark as Read
+                            </button>
+                        ` : ''}
+                        <button class="btn btn-sm btn-primary approve-user-from-message-btn" data-id="${message.senderId}">
+                            <i class="bi bi-person-check me-1"></i>Approve User
+                        </button>
+                    </div>
+                `;
+                
+                messagesList.appendChild(messageItem);
+            });
+            
+            // Add event listeners to mark as read buttons
+            document.querySelectorAll('.mark-read-btn').forEach(btn => {
+                btn.addEventListener('click', function() {
+                    const messageId = parseInt(this.getAttribute('data-id'));
+                    markMessageAsRead(messageId);
+                });
+            });
+            
+            // Add event listeners to approve user buttons
+            document.querySelectorAll('.approve-user-from-message-btn').forEach(btn => {
+                btn.addEventListener('click', function() {
+                    const userId = parseInt(this.getAttribute('data-id'));
+                    updateUserStatus(userId, 'approved');
+                });
+            });
+        }
+
+        function markMessageAsRead(messageId) {
+            const messageIndex = messages.findIndex(m => m.id === messageId);
+            if (messageIndex !== -1) {
+                messages[messageIndex].read = true;
+                saveDataToLocalStorage();
+                displayMessages();
+                updateAdminMessageBadge();
+                showNotification('Message marked as read');
+            }
+        }
+
+        function showUserAuth() {
+            urlDisplayPage.style.display = 'none';
+            userAuthForm.style.display = 'block';
+            adminLogin.style.display = 'none';
+            adminPanel.style.display = 'none';
+            showAdminBtn.style.display = 'none';
+            backToIndexBtn.style.display = 'block';
+            
+            // Reset form
+            userUsernameInput.value = '';
+            userPasswordInput.value = '';
+            regUsernameInput.value = '';
+            regEmailInput.value = '';
+            regPasswordInput.value = '';
+            regConfirmPasswordInput.value = '';
+            userLoginError.style.display = 'none';
+            userRegisterError.style.display = 'none';
+        }
+
+        function showAdminLogin() {
+            urlDisplayPage.style.display = 'none';
+            userAuthForm.style.display = 'none';
+            adminLogin.style.display = 'block';
+            adminPanel.style.display = 'none';
+            showAdminBtn.style.display = 'none';
+            backToIndexBtn.style.display = 'block';
+        }
+
+        function backToIndex() {
+            if (currentUser) {
+                // If user is logged in, show URL categories or pending notice
+                urlDisplayPage.style.display = 'block';
+                if (currentUser.status === 'pending') {
+                    pendingNotice.style.display = 'block';
+                    urlCategories.style.display = 'none';
+                } else {
+                    pendingNotice.style.display = 'none';
+                    urlCategories.style.display = 'flex';
+                }
+            } else {
+                // If no user is logged in, show auth prompt
+                urlDisplayPage.style.display = 'block';
+                authPrompt.style.display = 'block';
+                urlCategories.style.display = 'none';
+                pendingNotice.style.display = 'none';
+            }
+            
+            userAuthForm.style.display = 'none';
+            adminLogin.style.display = 'none';
+            adminPanel.style.display = 'none';
+            messageForm.style.display = 'none';
+            showAdminBtn.style.display = 'block';
+            backToIndexBtn.style.display = 'none';
+            logoutBtn.style.display = 'none';
+            
+            // Clear login form
+            usernameInput.value = '';
+            passwordInput.value = '';
+            loginError.style.display = 'none';
+        }
+
+        function login() {
+            const username = usernameInput.value;
+            const password = passwordInput.value;
+
+            if (username === adminCredentials.username && password === adminCredentials.password) {
+                isLoggedIn = true;
+                isAdmin = true;
+                currentUser = null;
+                urlDisplayPage.style.display = 'none';
+                userAuthForm.style.display = 'none';
+                adminLogin.style.display = 'none';
+                adminPanel.style.display = 'block';
+                logoutBtn.style.display = 'block';
+                showAdminBtn.style.display = 'none';
+                loginError.style.display = 'none';
+                
+                updateAdminPanel();
+                updateAdminMessageBadge();
+                showNotification('Admin login successful!');
+            } else {
+                loginError.style.display = 'block';
+            }
+        }
+
+        function userLogin() {
+            const username = userUsernameInput.value;
+            const password = userPasswordInput.value;
+
+            // Find user with matching credentials and approved status
+            const user = users.find(u => u.username === username && u.password === password && u.status === 'approved');
+            
+            if (user) {
+                isLoggedIn = true;
+                isAdmin = false;
+                currentUser = user;
+                
+                // Update UI
+                authButtons.style.display = 'none';
+                userMenu.style.display = 'flex';
+                userAvatar.textContent = user.username.charAt(0).toUpperCase();
+                userName.textContent = user.username;
+                
+                // Show URL categories
+                urlDisplayPage.style.display = 'block';
+                authPrompt.style.display = 'none';
+                urlCategories.style.display = 'flex';
+                pendingNotice.style.display = 'none';
+                userAuthForm.style.display = 'none';
+                adminLogin.style.display = 'none';
+                adminPanel.style.display = 'none';
+                showAdminBtn.style.display = 'block';
+                backToIndexBtn.style.display = 'none';
+                userLoginError.style.display = 'none';
+                
+                displayUrls();
+                showNotification('Login successful!');
+            } else {
+                // Check if user exists but is not approved
+                const pendingUser = users.find(u => u.username === username && u.password === password && u.status === 'pending');
+                if (pendingUser) {
+                    isLoggedIn = true;
+                    isAdmin = false;
+                    currentUser = pendingUser;
+                    
+                    // Update UI
+                    authButtons.style.display = 'none';
+                    userMenu.style.display = 'flex';
+                    userAvatar.textContent = pendingUser.username.charAt(0).toUpperCase();
+                    userName.textContent = pendingUser.username;
+                    
+                    // Show pending notice
+                    urlDisplayPage.style.display = 'block';
+                    authPrompt.style.display = 'none';
+                    urlCategories.style.display = 'none';
+                    pendingNotice.style.display = 'block';
+                    userAuthForm.style.display = 'none';
+                    adminLogin.style.display = 'none';
+                    adminPanel.style.display = 'none';
+                    showAdminBtn.style.display = 'block';
+                    backToIndexBtn.style.display = 'none';
+                    userLoginError.style.display = 'none';
+                    
+                    showNotification('Your account is pending approval. Please wait for admin confirmation.');
+                } else {
+                    userLoginError.style.display = 'block';
+                }
+            }
+        }
+
+        function userRegister() {
+            const username = regUsernameInput.value.trim();
+            const email = regEmailInput.value.trim();
+            const password = regPasswordInput.value;
+            const confirmPassword = regConfirmPasswordInput.value;
+            
+            // Reset error message
+            userRegisterError.style.display = 'none';
+            
+            // Validate inputs
+            if (!username || !email || !password || !confirmPassword) {
+                userRegisterError.textContent = 'Please fill in all fields';
+                userRegisterError.style.display = 'block';
+                return;
+            }
+            
+            if (password !== confirmPassword) {
+                userRegisterError.textContent = 'Passwords do not match';
+                userRegisterError.style.display = 'block';
+                return;
+            }
+            
+            // Check if username already exists
+            if (users.some(u => u.username === username)) {
+                userRegisterError.textContent = 'Username already exists';
+                userRegisterError.style.display = 'block';
+                return;
+            }
+            
+            // Check if email already exists
+            if (users.some(u => u.email === email)) {
+                userRegisterError.textContent = 'Email already exists';
+                userRegisterError.style.display = 'block';
+                return;
+            }
+            
+            // Create new user with pending status
+            const newUser = {
+                id: nextUserId++,
+                username: username,
+                email: email,
+                password: password,
+                status: 'pending',
+                registeredAt: new Date().toISOString()
+            };
+            
+            users.push(newUser);
+            saveDataToLocalStorage();
+            
+            // Reset form
+            regUsernameInput.value = '';
+            regEmailInput.value = '';
+            regPasswordInput.value = '';
+            regConfirmPasswordInput.value = '';
+            
+            // Show success message
+            showNotification('Registration successful! Please wait for admin approval.');
+            
+            // Switch to login tab
+            authTabs.forEach(t => t.classList.remove('active'));
+            document.querySelectorAll('.auth-content').forEach(c => c.classList.remove('active'));
+            authTabs[0].classList.add('active');
+            loginContent.classList.add('active');
+        }
+
+        function logoutUser() {
+            isLoggedIn = false;
+            isAdmin = false;
+            currentUser = null;
+            
+            // Update UI
+            authButtons.style.display = 'flex';
+            userMenu.style.display = 'none';
+            userDropdown.classList.remove('show');
+            
+            // Show auth prompt
+            urlDisplayPage.style.display = 'block';
+            authPrompt.style.display = 'block';
+            urlCategories.style.display = 'none';
+            pendingNotice.style.display = 'none';
+            
+            showNotification('Logged out successfully!');
+        }
+
+        function logout() {
+            isLoggedIn = false;
+            isAdmin = false;
+            currentUser = null;
+            backToIndex();
+            showNotification('Logged out successfully!');
+        }
+
+        function updateUserStatus(userId, status) {
+            const userIndex = users.findIndex(u => u.id === userId);
+            if (userIndex !== -1) {
+                users[userIndex].status = status;
+                saveDataToLocalStorage();
+                updateAdminPanel();
+                showNotification(`User status updated to ${status}!`);
+            }
+        }
+
+        function updateAdminPanel() {
+            updateStats();
+            displayCategories();
+            updateCategoryFilter();
+            updateUrlCategorySelect();
+            displayUrlsByCategory();
+            displayUsersByStatus();
+            displayMessages();
+            updateFolderStructure();
+        }
+
+        function updateStats() {
+            // Update total categories
+            totalCategoriesEl.textContent = categories.length;
+            
+            // Update total URLs
+            totalUrlsEl.textContent = urls.length;
+            
+            // Update total users
+            totalUsersEl.textContent = users.length;
+            
+            // Update pending users
+            const pendingUsersCount = users.filter(u => u.status === 'pending').length;
+            pendingUsersEl.textContent = pendingUsersCount;
+        }
+
+        function displayCategories() {
+            categoriesTableBody.innerHTML = '';
+            
+            if (categories.length === 0) {
+                categoriesTableBody.innerHTML = '<tr><td colspan="3" class="text-center">No categories found</td></tr>';
+                return;
+            }
+            
+            categories.forEach(category => {
+                const categoryUrls = urls.filter(url => url.categoryId === category.id);
+                const row = document.createElement('tr');
+                row.innerHTML = `
+                    <td>${category.name}</td>
+                    <td><span class="badge bg-primary">${categoryUrls.length}</span></td>
+                    <td>
+                        <div class="url-actions">
+                            <button class="btn btn-sm btn-outline-primary edit-category-btn" data-id="${category.id}" data-name="${category.name}">
+                                <i class="bi bi-pencil"></i>
+                            </button>
+                            <button class="btn btn-sm btn-outline-danger delete-category-btn" data-id="${category.id}">
+                                <i class="bi bi-trash"></i>
+                            </button>
+                        </div>
+                    </td>
+                `;
+                categoriesTableBody.appendChild(row);
+            });
+
+            // Add event listeners to edit buttons
+            document.querySelectorAll('.edit-category-btn').forEach(btn => {
+                btn.addEventListener('click', function() {
+                    const categoryId = parseInt(this.getAttribute('data-id'));
+                    const categoryName = this.getAttribute('data-name');
+                    editCategory(categoryId, categoryName);
+                });
+            });
+
+            // Add event listeners to delete buttons
+            document.querySelectorAll('.delete-category-btn').forEach(btn => {
+                btn.addEventListener('click', function() {
+                    const categoryId = parseInt(this.getAttribute('data-id'));
+                    deleteCategory(categoryId);
+                });
+            });
+        }
+
+        function updateCategoryFilter() {
+            categoryFilter.innerHTML = '<option value="">All Categories</option>';
+            
+            categories.forEach(category => {
+                const option = document.createElement('option');
+                option.value = category.id;
+                option.textContent = category.name;
+                categoryFilter.appendChild(option);
+            });
+        }
+
+        function updateUrlCategorySelect() {
+            urlCategorySelect.innerHTML = '<option value="">Select a category</option>';
+            editUrlCategorySelect.innerHTML = '<option value="">Select a category</option>';
+            
+            categories.forEach(category => {
+                const option1 = document.createElement('option');
+                option1.value = category.id;
+                option1.textContent = category.name;
+                urlCategorySelect.appendChild(option1);
+                
+                const option2 = document.createElement('option');
+                option2.value = category.id;
+                option2.textContent = category.name;
+                editUrlCategorySelect.appendChild(option2);
+            });
+        }
+
+        function displayUrlsByCategory() {
+            const categoryId = categoryFilter.value ? parseInt(categoryFilter.value) : null;
+            urlsTableBody.innerHTML = '';
+            
+            let filteredUrls = urls;
+            if (categoryId !== null) {
+                filteredUrls = urls.filter(url => url.categoryId === categoryId);
+            }
+            
+            if (filteredUrls.length === 0) {
+                urlsTableBody.innerHTML = '<tr><td colspan="3" class="text-center">No URLs found</td></tr>';
+                return;
+            }
+            
+            filteredUrls.forEach(url => {
+                const category = categories.find(c => c.id === url.categoryId);
+                const categoryName = category ? category.name : 'Unknown';
+                
+                const row = document.createElement('tr');
+                row.innerHTML = `
+                    <td>
+                        <div>${url.title}</div>
+                        <div class="small text-muted">${url.url}</div>
+                    </td>
+                    <td><span class="badge bg-info">${categoryName}</span></td>
+                    <td>
+                        <div class="url-actions">
+                            <button class="btn btn-sm btn-outline-primary edit-url-btn" 
+                                    data-id="${url.id}" 
+                                    data-title="${url.title}" 
+                                    data-url="${url.url}" 
+                                    data-category="${url.categoryId}">
+                                <i class="bi bi-pencil"></i>
+                            </button>
+                            <button class="btn btn-sm btn-outline-danger delete-url-btn" data-id="${url.id}">
+                                <i class="bi bi-trash"></i>
+                            </button>
+                        </div>
+                    </td>
+                `;
+                urlsTableBody.appendChild(row);
+            });
+
+            // Add event listeners to edit buttons
+            document.querySelectorAll('.edit-url-btn').forEach(btn => {
+                btn.addEventListener('click', function() {
+                    const urlId = parseInt(this.getAttribute('data-id'));
+                    const urlTitle = this.getAttribute('data-title');
+                    const urlLink = this.getAttribute('data-url');
+                    const urlCategoryId = parseInt(this.getAttribute('data-category'));
+                    editUrl(urlId, urlTitle, urlLink, urlCategoryId);
+                });
+            });
+
+            // Add event listeners to delete buttons
+            document.querySelectorAll('.delete-url-btn').forEach(btn => {
+                btn.addEventListener('click', function() {
+                    const urlId = parseInt(this.getAttribute('data-id'));
+                    deleteUrl(urlId);
+                });
+            });
+        }
+
+        function displayUsersByStatus() {
+            const status = userStatusFilter.value;
+            usersTableBody.innerHTML = '';
+            
+            let filteredUsers = users;
+            if (status) {
+                filteredUsers = users.filter(user => user.status === status);
+            }
+            
+            if (filteredUsers.length === 0) {
+                usersTableBody.innerHTML = '<tr><td colspan="5" class="text-center">No users found</td></tr>';
+                return;
+            }
+            
+            filteredUsers.forEach(user => {
+                const formattedDate = new Date(user.registeredAt).toLocaleDateString();
+                
+                const row = document.createElement('tr');
+                row.innerHTML = `
+                    <td>${user.username}</td>
+                    <td>${user.email}</td>
+                    <td>
+                        <span class="status-badge status-${user.status}">${user.status.charAt(0).toUpperCase() + user.status.slice(1)}</span>
+                    </td>
+                    <td>${formattedDate}</td>
+                    <td>
+                        <div class="url-actions">
+                            ${user.status === 'pending' ? `
+                                <button class="btn btn-sm btn-success approve-user-btn" data-id="${user.id}">
+                                    <i class="bi bi-check-circle"></i>
+                                </button>
+                                <button class="btn btn-sm btn-danger reject-user-btn" data-id="${user.id}">
+                                    <i class="bi bi-x-circle"></i>
+                                </button>
+                            ` : ''}
+                            ${user.status === 'approved' ? `
+                                <button class="btn btn-sm btn-warning reset-password-btn" data-id="${user.id}" data-username="${user.username}">
+                                    <i class="bi bi-key"></i>
+                                </button>
+                            ` : ''}
+                        </div>
+                    </td>
+                `;
+                usersTableBody.appendChild(row);
+            });
+
+            // Add event listeners to approve buttons
+            document.querySelectorAll('.approve-user-btn').forEach(btn => {
+                btn.addEventListener('click', function() {
+                    const userId = parseInt(this.getAttribute('data-id'));
+                    updateUserStatus(userId, 'approved');
+                });
+            });
+
+            // Add event listeners to reject buttons
+            document.querySelectorAll('.reject-user-btn').forEach(btn => {
+                btn.addEventListener('click', function() {
+                    const userId = parseInt(this.getAttribute('data-id'));
+                    if (confirm('Are you sure you want to reject this user?')) {
+                        updateUserStatus(userId, 'rejected');
+                    }
+                });
+            });
+
+            // Add event listeners to reset password buttons
+            document.querySelectorAll('.reset-password-btn').forEach(btn => {
+                btn.addEventListener('click', function() {
+                    const userId = parseInt(this.getAttribute('data-id'));
+                    const username = this.getAttribute('data-username');
+                    const newPassword = prompt(`Enter new password for ${username}:`);
+                    if (newPassword) {
+                        const userIndex = users.findIndex(u => u.id === userId);
+                        if (userIndex !== -1) {
+                            users[userIndex].password = newPassword;
+                            saveDataToLocalStorage();
+                            showNotification(`Password reset for ${username}!`);
+                        }
+                    }
+                });
+            });
+        }
+
+        function updateFolderStructure() {
+            folderStructure.innerHTML = '<div class="folder-item"><i class="bi bi-folder-fill"></i> url_collection</div>';
+            
+            categories.forEach(category => {
+                const categoryFolderName = category.name.replace(/\s+/g, '_').toLowerCase();
+                const categoryUrls = urls.filter(url => url.categoryId === category.id);
+                
+                const categoryFolder = document.createElement('div');
+                categoryFolder.className = 'folder-item';
+                categoryFolder.innerHTML = `<i class="bi bi-folder-fill"></i> ${categoryFolderName}`;
+                folderStructure.appendChild(categoryFolder);
+                
+                const linksFile = document.createElement('div');
+                linksFile.className = 'file-item';
+                linksFile.innerHTML = `<i class="bi bi-file-earmark-code"></i> links.json (${categoryUrls.length} links)`;
+                folderStructure.appendChild(linksFile);
+            });
+        }
+
+        function saveCategory() {
+            const categoryName = categoryNameInput.value.trim();
+            
+            if (categoryName) {
+                categories.push({
+                    id: nextCategoryId++,
+                    name: categoryName
+                });
+                
+                saveDataToLocalStorage();
+                categoryNameInput.value = '';
+                bootstrap.Modal.getInstance(document.getElementById('addCategoryModal')).hide();
+                updateAdminPanel();
+                if (currentUser) {
+                    displayUrls();
+                }
+                showNotification('Category added successfully!');
+            }
+        }
+
+        function editCategory(id, name) {
+            editCategoryNameInput.value = name;
+            editCategoryIdInput.value = id;
+            new bootstrap.Modal(document.getElementById('editCategoryModal')).show();
+        }
+
+        function updateCategory() {
+            const categoryId = parseInt(editCategoryIdInput.value);
+            const categoryName = editCategoryNameInput.value.trim();
+            
+            if (categoryName) {
+                const categoryIndex = categories.findIndex(c => c.id === categoryId);
+                if (categoryIndex !== -1) {
+                    categories[categoryIndex].name = categoryName;
+                    
+                    saveDataToLocalStorage();
+                    bootstrap.Modal.getInstance(document.getElementById('editCategoryModal')).hide();
+                    updateAdminPanel();
+                    if (currentUser) {
+                        displayUrls();
+                    }
+                    showNotification('Category updated successfully!');
+                }
+            }
+        }
+
+        function saveUrl() {
+            const title = urlTitleInput.value.trim();
+            const url = urlLinkInput.value.trim();
+            const categoryId = parseInt(urlCategorySelect.value);
+            
+            if (title && url && !isNaN(categoryId)) {
+                urls.push({
+                    id: nextUrlId++,
+                    title: title,
+                    url: url,
+                    categoryId: categoryId
+                });
+                
+                saveDataToLocalStorage();
+                urlTitleInput.value = '';
+                urlLinkInput.value = '';
+                urlCategorySelect.value = '';
+                bootstrap.Modal.getInstance(document.getElementById('addUrlModal')).hide();
+                updateAdminPanel();
+                if (currentUser) {
+                    displayUrls();
+                }
+                showNotification('URL added successfully!');
+            }
+        }
+
+        function editUrl(id, title, url, categoryId) {
+            editUrlTitleInput.value = title;
+            editUrlLinkInput.value = url;
+            editUrlCategorySelect.value = categoryId;
+            editUrlIdInput.value = id;
+            new bootstrap.Modal(document.getElementById('editUrlModal')).show();
+        }
+
+        function updateUrl() {
+            const urlId = parseInt(editUrlIdInput.value);
+            const urlTitle = editUrlTitleInput.value.trim();
+            const urlLink = editUrlLinkInput.value.trim();
+            const urlCategoryId = parseInt(editUrlCategorySelect.value);
+            
+            if (urlTitle && urlLink && !isNaN(urlCategoryId)) {
+                const urlIndex = urls.findIndex(u => u.id === urlId);
+                if (urlIndex !== -1) {
+                    urls[urlIndex] = {
+                        id: urlId,
+                        title: urlTitle,
+                        url: urlLink,
+                        categoryId: urlCategoryId
+                    };
+                    
+                    saveDataToLocalStorage();
+                    bootstrap.Modal.getInstance(document.getElementById('editUrlModal')).hide();
+                    updateAdminPanel();
+                    if (currentUser) {
+                        displayUrls();
+                    }
+                    showNotification('URL updated successfully!');
+                }
+            }
+        }
+
+        function deleteCategory(categoryId) {
+            if (confirm('Are you sure you want to delete this category? All URLs in this category will also be deleted.')) {
+                // Remove the category
+                categories = categories.filter(category => category.id !== categoryId);
+                
+                // Remove all URLs in this category
+                urls = urls.filter(url => url.categoryId !== categoryId);
+                
+                saveDataToLocalStorage();
+                updateAdminPanel();
+                if (currentUser) {
+                    displayUrls();
+                }
+                showNotification('Category deleted successfully!');
+            }
+        }
+
+        function deleteUrl(urlId) {
+            if (confirm('Are you sure you want to delete this URL?')) {
+                urls = urls.filter(url => url.id !== urlId);
+                
+                saveDataToLocalStorage();
+                updateAdminPanel();
+                if (currentUser) {
+                    displayUrls();
+                }
+                showNotification('URL deleted successfully!');
+            }
+        }
+
+        function displayUrls() {
+            urlCategories.innerHTML = '';
+            
+            if (categories.length === 0) {
+                urlCategories.innerHTML = '<div class="col-12 text-center p-5">No categories available</div>';
+                return;
+            }
+            
+            categories.forEach(category => {
+                const categoryUrls = urls.filter(url => url.categoryId === category.id);
+                
+                const categoryDiv = document.createElement('div');
+                categoryDiv.className = 'col-md-4 mb-4';
+                
+                const card = document.createElement('div');
+                card.className = 'url-card h-100';
+                
+                const cardHeader = document.createElement('div');
+                cardHeader.className = 'card-header';
+                cardHeader.innerHTML = `
+                    <h5 class="mb-0">${category.name}</h5>
+                `;
+                
+                const cardBody = document.createElement('div');
+                cardBody.className = 'card-body';
+                
+                if (categoryUrls.length === 0) {
+                    cardBody.innerHTML = '<div class="text-center p-3">No URLs in this category</div>';
+                } else {
+                    categoryUrls.forEach(url => {
+                        const urlItem = document.createElement('div');
+                        urlItem.className = 'url-item';
+                        
+                        // Create unique ID for this URL item
+                        const urlItemId = `url-${url.id}`;
+                        
+                        urlItem.innerHTML = `
+                            <div class="url-link">
+                                <div>
+                                    <div class="url-title"><a href="${url.url}" target="_blank" class="text-decoration-none">${url.title}</a></div>
+                                    <div class="url-address"><a href="${url.url}" target="_blank" class="text-muted text-decoration-none">${url.url}</a></div>
+                                </div>
+                                <button class="btn btn-sm btn-outline-primary preview-btn" data-url="${url.url}" data-target="${urlItemId}">
+                                    <i class="bi bi-eye"></i>
+                                </button>
+                            </div>
+                            <div class="preview-container">
+                                <div class="preview-toggle" id="toggle-${urlItemId}" style="display: none;">
+                                    <i class="bi bi-eye-slash"></i> Hide Preview
+                                </div>
+                                <div class="preview-loading" id="loading-${urlItemId}">
+                                    <div class="spinner-border spinner-border-sm" role="status">
+                                        <span class="visually-hidden">Loading...</span>
+                                    </div> Loading preview...
+                                </div>
+                                <iframe class="preview-iframe" id="${urlItemId}" 
+                                        sandbox="allow-same-origin allow-scripts allow-forms"
+                                        loading="lazy">
+                                </iframe>
+                            </div>
+                        `;
+                        cardBody.appendChild(urlItem);
+                        
+                        // Add event listener to the preview button
+                        const previewBtn = urlItem.querySelector('.preview-btn');
+                        previewBtn.addEventListener('click', function() {
+                            const url = this.getAttribute('data-url');
+                            const targetId = this.getAttribute('data-target');
+                            togglePreview(url, targetId);
+                        });
+                    });
+                }
+                
+                card.appendChild(cardHeader);
+                card.appendChild(cardBody);
+                categoryDiv.appendChild(card);
+                urlCategories.appendChild(categoryDiv);
+            });
+        }
+
+        function togglePreview(url, targetId) {
+            const iframe = document.getElementById(targetId);
+            const toggle = document.getElementById(`toggle-${targetId}`);
+            const loading = document.getElementById(`loading-${targetId}`);
+            
+            if (iframe.style.display === 'none' || iframe.style.display === '') {
+                // Show the preview
+                loading.style.display = 'block';
+                
+                // Set iframe source
+                iframe.src = url;
+                
+                // Show iframe when loaded
+                iframe.onload = function() {
+                    loading.style.display = 'none';
+                    iframe.style.display = 'block';
+                    toggle.style.display = 'block';
+                };
+                
+                // Set a timeout in case the iframe takes too long to load
+                setTimeout(function() {
+                    if (loading.style.display === 'block') {
+                        loading.style.display = 'none';
+                    }
+                }, 5000);
+            } else {
+                // Hide the preview
+                iframe.style.display = 'none';
+                toggle.style.display = 'none';
+            }
+        }
+
+        function saveDataToLocalStorage() {
+            localStorage.setItem('categories', JSON.stringify(categories));
+            localStorage.setItem('urls', JSON.stringify(urls));
+            localStorage.setItem('users', JSON.stringify(users));
+            localStorage.setItem('messages', JSON.stringify(messages));
+        }
+
+        function exportData() {
+            const zip = new JSZip();
+            const urlCollection = zip.folder("url_collection");
+            
+            // Create a folder for each category and add the links.json file
+            categories.forEach(category => {
+                const categoryFolderName = category.name.replace(/\s+/g, '_').toLowerCase();
+                const categoryFolder = urlCollection.folder(categoryFolderName);
+                
+                // Get URLs for this category
+                const categoryUrls = urls.filter(url => url.categoryId === category.id);
+                
+                // Create JSON content for this category
+                const jsonContent = JSON.stringify(categoryUrls, null, 2);
+                
+                // Add the JSON file to the category folder
+                categoryFolder.file("links.json", jsonContent);
+            });
+            
+            // Generate the zip file and download it
+            zip.generateAsync({type: "blob"}).then(function(content) {
+                saveAs(content, "url_collection.zip");
+                showNotification('Data exported successfully!');
+            });
+        }
+
+        function showNotification(message) {
+            notification.textContent = message;
+            notification.style.display = 'block';
+            
+            setTimeout(() => {
+                notification.style.display = 'none';
+            }, 3000);
+        }
+
+        // Initialize the page
+        if (currentUser) {
+            // User is logged in, show appropriate view
+            authButtons.style.display = 'none';
+            userMenu.style.display = 'flex';
+            userAvatar.textContent = currentUser.username.charAt(0).toUpperCase();
+            userName.textContent = currentUser.username;
+            
+            if (currentUser.status === 'pending') {
+                // Show pending notice
+                pendingNotice.style.display = 'block';
+                urlCategories.style.display = 'none';
+            } else {
+                // Show URL categories
+                pendingNotice.style.display = 'none';
+                urlCategories.style.display = 'flex';
+                displayUrls();
+            }
+        } else {
+            // No user is logged in, show auth prompt
+            authButtons.style.display = 'flex';
+            userMenu.style.display = 'none';
+            authPrompt.style.display = 'block';
+            urlCategories.style.display = 'none';
+            pendingNotice.style.display = 'none';
+        }
+    </script>
+</body>
+</html>

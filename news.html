@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>College News</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            background-color: #f4f4f9;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 800px;
+            background-color: #fff;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            border-radius: 8px;
+            overflow: hidden;
+        }
+
+        .news-header {
+            text-align: center;
+            padding: 20px;
+            background-color: #1a237e;
+            color: #fff;
+            border-top-left-radius: 8px;
+            border-top-right-radius: 8px;
+        }
+
+        .news-item {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 15px;
+            border-bottom: 1px solid #eee;
+            transition: background-color 0.3s ease;
+        }
+
+        .news-item:hover {
+            background-color: #f9f9f9;
+        }
+
+        .news-content {
+            display: flex;
+            align-items: center;
+            flex-grow: 1;
+        }
+
+        .news-date-box {
+            background-color: #3f51b5;
+            color: #fff;
+            padding: 10px;
+            text-align: center;
+            font-weight: bold;
+            border-radius: 5px;
+            min-width: 80px;
+            margin-right: 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .news-date-box .day {
+            font-size: 1.2em;
+        }
+
+        .news-date-box .month-year {
+            font-size: 0.8em;
+            text-transform: uppercase;
+        }
+
+        .news-title {
+            flex-grow: 1;
+            color: #333;
+        }
+
+        .download-btn {
+            background-color: #4CAF50;
+            color: #fff;
+            padding: 8px 12px;
+            border-radius: 5px;
+            text-decoration: none;
+            font-size: 14px;
+            transition: background-color 0.3s ease;
+            white-space: nowrap; /* Prevents button text from wrapping */
+            margin-left: 20px;
+        }
+
+        .download-btn:hover {
+            background-color: #45a049;
+        }
+
+        .view-more-button {
+            display: block;
+            width: 150px;
+            margin: 20px auto;
+            padding: 10px;
+            text-align: center;
+            background-color: #1a237e;
+            color: #fff;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+            transition: background-color 0.3s ease;
+        }
+
+        .view-more-button:hover {
+            background-color: #303f9f;
+        }
+
+        .hidden {
+            display: none;
+        }
+
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h2 class="news-header">IN THE NEWS</h2>
+        <div id="news-list">
+            </div>
+        <button id="viewMoreBtn" class="view-more-button">View More</button>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const newsData = [
+                { date: '30-08-2025', title: 'Industrial Ecpert Talk on Present Situtation - IV B Tech Students', file: 'file1.pdf' },
+                { date: '30-08-2025', title: 'Talent Search - B Tech 1st Year', file: 'file2.pdf' },
+                { date: '28 - 30 Aug 2025', title: 'Three days workshop on AUTOCAD USEL LEVEL - III MECH', file: 'file3.pdf' },
+                { date: '28 - 30 Aug 2025', title: 'Three days workshop on AUTOCAD USEL LEVEL - III Civil', file: 'file4.pdf' },
+                { date: '28 - 30 Aug 2025', title: 'Three days workshop on AUTOCAD USEL LEVEL - III EEE', file: 'file5.pdf' },
+                { date: '29-08-2025', title: 'Inaugural Mass - beginning to the academic Year - 2025-26', file: 'file6.pdf' },
+                { date: '25-08-2025', title: 'Eureka pitching - Incubation cell', file: 'file7.pdf' },
+                { date: '22 & 23 Aug 2025', title: 'Workshop on "Network Simulation Introduction III ECE', file: 'file8.pdf' },
+                { date: '21 - 23 Aug 2025', title: 'Programming Essentials in java - III CSE', file: 'file9.pdf' },
+                { date: '21-08-2025', title: 'World Enterpreneurship day - IIC cell', file: 'file10.pdf' },
+                { date: '15-08-2025', title: 'Inauguration of Incubation cell', file: 'file11.pdf' },
+                { date: '15-08-2025', title: 'Startup summit - IIC cell', file: 'file12.pdf' },
+                { date: '15-08-2025', title: 'Independence day', file: 'file13.pdf' },
+                { date: '14-08-2025', title: 'Field Visit - A part of Induction Program - B Tech 1 Year', file: 'file14.pdf' },
+                { date: '13-08-2025', title: 'Motivational Talk - A part of Induction Program - B Tech 1 Year', file: 'file15.pdf' },
+                { date: '08-12-2025', title: 'Session on Innovation/Prototype - ICC Cell', file: 'file16.pdf' },
+                { date: '31 Jul - 02 Aug 2025', title: 'Programming Essentials in java - III CSM', file: 'file17.pdf' },
+                { date: '18-02-2025 to 08-03-2025', title: 'Infosys Foundation Finish School for Employability', file: 'file18.pdf' }
+            ];
+
+            const newsList = document.getElementById('news-list');
+            const viewMoreBtn = document.getElementById('viewMoreBtn');
+            const initialCount = 5;
+
+            function renderNews() {
+                newsList.innerHTML = '';
+                newsData.forEach((item, index) => {
+                    const newsItem = document.createElement('div');
+                    newsItem.classList.add('news-item');
+                    if (index >= initialCount) {
+                        newsItem.classList.add('hidden');
+                    }
+                    
+                    const dateParts = item.date.split('-');
+                    const day = dateParts[0];
+                    const monthYear = dateParts[1] + (dateParts[2] ? '-' + dateParts[2] : '');
+
+                    newsItem.innerHTML = `
+                        <div class="news-content">
+                            <div class="news-date-box">
+                                <span class="day">${day}</span>
+                                <span class="month-year">${monthYear}</span>
+                            </div>
+                            <div class="news-title">${item.title}</div>
+                        </div>
+                        <a href="${item.file}" class="download-btn" download>Download</a>
+                    `;
+                    newsList.appendChild(newsItem);
+                });
+            }
+
+            viewMoreBtn.addEventListener('click', function() {
+                const hiddenItems = newsList.querySelectorAll('.news-item.hidden');
+                hiddenItems.forEach(item => {
+                    item.classList.remove('hidden');
+                });
+                viewMoreBtn.style.display = 'none';
+            });
+
+            renderNews();
+        });
+    </script>
+</body>
+</html>

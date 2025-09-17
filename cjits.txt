@@ -1,0 +1,174 @@
+<div class="panel-group" id="accordion" role="tablist" aria-multiselectable="true">
+                                <div class="panel panel-default">
+                                    <div class="panel-heading" role="tab" id="headingOneR15s3-501">
+                                        <h4 class="panel-title">
+                                            <a role="button" data-toggle="collapse" data-parent="#accordion" href="#collapseOneR15s3-501" aria-expanded="true" aria-controls="collapseOneR15s3-501">
+                                               II B.TECH II/I SEM Regular/Supply Tsheets JUNE 2025
+                                            </a>
+
+                                        </h4>
+                                    </div>
+                                    <div id="collapseOneR15s3-501" class="panel-collapse  show" role="tabpanel" aria-labelledby="headingOneR15s3-501">
+                                        <div class="panel-body">
+                                            <div class="labs">
+                                                <div class="table-responsive">
+                                                    <table class="table table-bordered table-hover">
+                                                        <thead>
+                                                            <tr>
+                                                                <th>S.No.</th>
+                                                                <th>Results</th>
+                                                                <th>Downloads</th>
+                                                            </tr>
+                                                        </thead>
+                                                        <tbody>
+
+                                                            <tr>
+                                                                <td>1.</td>
+                                                                <td>68-1-II B.Tech. II Semester (R16) Supplementary</td>
+                                                                <td style="text-align:center;padding:10px 0px;"><a href="results-doc/II_B_TECH II-I_SEM_Regular_Supply/68-1-II B.Tech. II Semester (R16) Supplementary.xlsx" target="_blank"><i class="fa fa-file-excel-o" style="font-size: 45px;" aria-hidden="true"></i> </a></td>
+                                                            </tr>
+                                                            
+                                                            <tr>
+                                                                <td>2.</td>
+                                                                <td>68-1-II B.Tech. II Semester (R18) Supplementary</td>
+                                                                <td style="text-align:center;padding:10px 0px;"><a href="results-doc/II_B_TECH II-I_SEM_Regular_Supply/68-1-II B.Tech. II Semester (R18) Supplementary.xlsx" target="_blank"><i class="fa fa-file-excel-o" style="font-size: 45px;" aria-hidden="true"></i> </a></td>
+                                                            </tr>
+                                                            <tr>
+                                                                <td>3.</td>
+                                                                <td>68-1-II B.Tech. II Semester (R22) Regular</td>
+                                                                <td style="text-align:center;padding:10px 0px;"><a href="results-doc/II_B_TECH II-I_SEM_Regular_Supply/68-1-II B.Tech. II Semester (R22) Regular.xlsx" target="_blank"><i class="fa fa-file-excel-o" style="font-size: 45px;" aria-hidden="true"></i> </a></td>
+                                                            </tr>
+                                                            <tr>
+                                                                <td>4.</td>
+                                                                <td>68-2-II B.Tech. II Semester (R15) Supplementary.</td>
+                                                                <td style="text-align:center;padding:10px 0px;"><a href="results-doc/II_B_TECH II-I_SEM_Regular_Supply/68-2-II B.Tech. II Semester (R15) Supplementary.xlsx" target="_blank"><i class="fa fa-file-excel-o" style="font-size: 45px;" aria-hidden="true"></i> </a></td>
+                                                            </tr>
+                                                            <tr>
+                                                                <td>5.</td>
+                                                                <td>68-2-II B.Tech. II Semester (R18) Supplementary.</td>
+                                                                <td style="text-align:center;padding:10px 0px;"><a href="results-doc/II_B_TECH II-I_SEM_Regular_Supply/68-2-II B.Tech. II Semester (R18) Supplementary.xlsx" target="_blank"><i class="fa fa-file-excel-o" style="font-size: 45px;" aria-hidden="true"></i> </a></td>
+                                                            </tr>
+                                                            <tr>
+                                                                <td>6.</td>
+                                                                <td>668-2-II B.Tech. II Semester (R22) Regular.</td>
+                                                                <td style="text-align:center;padding:10px 0px;"><a href="results-doc/II_B_TECH II-I_SEM_Regular_Supply/68-2-II B.Tech. II Semester (R22) Regular.xlsx" target="_blank"><i class="fa fa-file-excel-o" style="font-size: 45px;" aria-hidden="true"></i> </a></td>
+                                                            </tr>
+                                                            <tr>
+                                                                <td>7.</td>
+                                                                <td>68-3-II B.Tech. II Semester (R18) Supplementary.</td>
+                                                                <td style="text-align:center;padding:10px 0px;"><a href="results-doc/II_B_TECH II-I_SEM_Regular_Supply/68-3-II B.Tech. II Semester (R18) Supplementary.xlsx" target="_blank"><i class="fa fa-file-excel-o" style="font-size: 45px;" aria-hidden="true"></i> </a></td>
+                                                            </tr>
+                                                            <tr>
+                                                                <td>8.</td>
+                                                                <td>68-3-II B.Tech. II Semester (R22) Regular.</td>
+                                                                <td style="text-align:center;padding:10px 0px;"><a href="results-doc/II_B_TECH II-I_SEM_Regular_Supply/68-3-II B.Tech. II Semester (R22) Regular.xlsx" target="_blank"><i class="fa fa-file-excel-o" style="font-size: 45px;" aria-hidden="true"></i> </a></td>
+                                                            </tr><tr>
+                                                                <td>9.</td>
+                                                                <td>68-4-II B.Tech. II Semester (R15) Supplementary.</td>
+                                                                <td style="text-align:center;padding:10px 0px;"><a href="results-doc/II_B_TECH II-I_SEM_Regular_Supply/68-4-II B.Tech. II Semester (R15) Supplementary.xlsx" target="_blank"><i class="fa fa-file-excel-o" style="font-size: 45px;" aria-hidden="true"></i> </a></td>
+                                                            </tr><tr>
+                                                                <td>10.</td>
+                                                                <td>68-4-II B.Tech. II Semester (R16) Supplementary.</td>
+                                                                <td style="text-align:center;padding:10px 0px;"><a href="results-doc/II_B_TECH II-I_SEM_Regular_Supply/68-4-II B.Tech. II Semester (R16) Supplementary.xlsx" target="_blank"><i class="fa fa-file-excel-o" style="font-size: 45px;" aria-hidden="true"></i> </a></td>
+                                                            </tr>
+                                                            <tr>
+                                                                <td>11.</td>
+                                                                <td>68-4-II B.Tech. II Semester (R18) Supplementary.</td>
+                                                                <td style="text-align:center;padding:10px 0px;"><a href="results-doc/II_B_TECH II-I_SEM_Regular_Supply/68-4-II B.Tech. II Semester (R18) Supplementary.xlsx" target="_blank"><i class="fa fa-file-excel-o" style="font-size: 45px;" aria-hidden="true"></i> </a></td>
+                                                            </tr>
+                                                            <tr>
+                                                                <td>12.</td>
+                                                                <td>68-4-II B.Tech. II Semester (R22) Regular.</td>
+                                                                <td style="text-align:center;padding:10px 0px;"><a href="results-doc/II_B_TECH II-I_SEM_Regular_Supply/68-4-II B.Tech. II Semester (R22) Regular.xlsx" target="_blank"><i class="fa fa-file-excel-o" style="font-size: 45px;" aria-hidden="true"></i> </a></td>
+                                                            </tr>
+                                                            <tr>
+                                                                <td>13.</td>
+                                                                <td>68-5-II B.Tech. II Semester (R16) Supplementary.</td>
+                                                                <td style="text-align:center;padding:10px 0px;"><a href="results-doc/II_B_TECH II-I_SEM_Regular_Supply/68-5-II B.Tech. II Semester (R16) Supplementary.xlsx" target="_blank"><i class="fa fa-file-excel-o" style="font-size: 45px;" aria-hidden="true"></i> </a></td>
+                                                            </tr>
+                                                            <tr>
+                                                                <td>14.</td>
+                                                                <td>68-5-II B.Tech. II Semester (R18) Supplementary.</td>
+                                                                <td style="text-align:center;padding:10px 0px;"><a href="results-doc/II_B_TECH II-I_SEM_Regular_Supply/68-5-II B.Tech. II Semester (R18) Supplementary.xlsx" target="_blank"><i class="fa fa-file-excel-o" style="font-size: 45px;" aria-hidden="true"></i> </a></td>
+                                                            </tr>
+                                                            <tr>
+                                                                <td>15.</td>
+                                                                <td>68-5-II B.Tech. II Semester (R22) Regular.</td>
+                                                                <td style="text-align:center;padding:10px 0px;"><a href="results-doc/II_B_TECH II-I_SEM_Regular_Supply/68-5-II B.Tech. II Semester (R22) Regular.xlsx" target="_blank"><i class="fa fa-file-excel-o" style="font-size: 45px;" aria-hidden="true"></i> </a></td>
+                                                            </tr>
+                                                            <tr>
+                                                                <td>16.</td>
+                                                                <td>68-66-II B.Tech. II Semester (R22) Regular.</td>
+                                                                <td style="text-align:center;padding:10px 0px;"><a href="results-doc/II_B_TECH II-I_SEM_Regular_Supply/68-66-II B.Tech. II Semester (R22) Regular.xlsx" target="_blank"><i class="fa fa-file-excel-o" style="font-size: 45px;" aria-hidden="true"></i> </a></td>
+                                                            </tr>
+                                              
+                                                             completed the 28 pdfs 
+                                                        </tbody>
+                                                    </table>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                </div>
+                            </div>
+  
+                            <div class="panel-group" id="accordion" role="tablist" aria-multiselectable="true">
+                                <div class="panel panel-default">
+                                    <div class="panel-heading" role="tab" id="headingOneR15s3-50">
+                                        <h4 class="panel-title">
+                                            <a role="button" data-toggle="collapse" data-parent="#accordion" href="#collapseOneR15s3-50" aria-expanded="true" aria-controls="collapseOneR15s3-50">
+                                                68-Btech_41_Feb_2025_exams_Tsheets_27-03-2025
+                                            </a>
+
+                                        </h4>
+                                    </div>
+                                    <div id="collapseOneR15s3-50" class="panel-collapse " role="tabpanel" aria-labelledby="headingOneR15s3-50">
+                                        <div class="panel-body">
+                                            <div class="labs">
+                                                <div class="table-responsive">
+                                                    <table class="table table-bordered table-hover">
+                                                        <thead>
+                                                            <tr>
+                                                                <th>S.No.</th>
+                                                                <th>Results</th>
+                                                                <th>Downloads</th>
+                                                            </tr>
+                                                        </thead>
+                                                        <tbody>
+
+                                                            <tr>
+                                                                <td>1.</td>
+                                                                <td>68-1-IV B.Tech. I Semester (R18) Regular.</td>
+                                                                <td style="text-align:center;padding:10px 0px;"><a href="results-doc/Btech_4-1_Feb_2025/68-1-IV_B.Tech_I_Semester_(R18)_Regular.xlsx" target="_blank"><i class="fa fa-file-excel-o" style="font-size: 45px;" aria-hidden="true"></i> </a></td>
+                                                            </tr>
+                                                            <tr>
+                                                                <td>2.</td>
+                                                                <td>68-2-IV B.Tech. I Semester (R18) Regular.</td>
+                                                                <td style="text-align:center;padding:10px 0px;"><a href="results-doc/Btech_4-1_Feb_2025/68-2-IV_B.Tech_I_Semester_(R18)_Regular.xlsx" target="_blank"><i class="fa fa-file-excel-o" style="font-size: 45px;" aria-hidden="true"></i> </a></td>
+                                                            </tr>
+                                                            <tr>
+                                                                <td>3.</td>
+                                                                <td>68-3-IV B.Tech. I Semester (R18) Regular.</td>
+                                                                <td style="text-align:center;padding:10px 0px;"><a href="results-doc/Btech_4-1_Feb_2025/68-3-IV_B.Tech_I_Semester_(R18)_Regular.xlsx" target="_blank"><i class="fa fa-file-excel-o" style="font-size: 45px;" aria-hidden="true"></i> </a></td>
+                                                            </tr>
+                                                            <tr>
+                                                                <td>4.</td>
+                                                                <td>68-4-IV B.Tech. I Semester (R18) Regular.</td>
+                                                                <td style="text-align:center;padding:10px 0px;"><a href="results-doc/Btech_4-1_Feb_2025/68-4-IV_B.Tech_I_Semester_(R18)_Regular.xlsx" target="_blank"><i class="fa fa-file-excel-o" style="font-size: 45px;" aria-hidden="true"></i> </a></td>
+                                                            </tr>
+                                                            <tr>
+                                                                <td>5.</td>
+                                                                <td>68-5-IV B.Tech. I Semester (R18) Regular.</td>
+                                                                <td style="text-align:center;padding:10px 0px;"><a href="results-doc/Btech_4-1_Feb_2025/68-5-IV_B.Tech_I_Semester_(R18)_Regular.xlsx" target="_blank"><i class="fa fa-file-excel-o" style="font-size: 45px;" aria-hidden="true"></i> </a></td>
+                                                            </tr>
+                                                             completed the 28 pdfs 
+                                                        </tbody>
+                                                    </table>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                </div>
+                            </div>

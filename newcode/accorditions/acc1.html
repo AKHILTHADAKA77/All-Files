@@ -1,0 +1,476 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>Accordion Olympics 2025 — 20 Animated Accordions</title>
+<style>
+  /* Basic page styling (because even circus tents have rules) */
+  :root{
+    --bg:#0f1724;
+    --card:#0b1220;
+    --accent:#ff6b6b;
+    --muted:#9aa6b2;
+    --glass: rgba(255,255,255,0.04);
+  }
+  html,body{height:100%;margin:0;font-family:Inter,ui-sans-serif,system-ui,-apple-system,"Segoe UI",Roboto,"Helvetica Neue";background:
+    linear-gradient(180deg,#071022 0%, #091428 60%, #0f1724 100%);color:#e6eef6}
+  .wrap{max-width:1100px;margin:32px auto;padding:24px}
+  h1{font-size:1.8rem;margin:0 0 10px}
+  p.lead{color:var(--muted);margin:0 0 22px}
+
+  /* Accordion base */
+  .accordion{background:linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));border-radius:12px;margin:12px 0;overflow:visible;box-shadow:0 6px 18px rgba(2,6,23,0.6);border:1px solid rgba(255,255,255,0.03)}
+  .acc-header{display:flex;align-items:center;justify-content:space-between;padding:14px 18px;cursor:pointer;user-select:none;gap:12px}
+  .acc-title{font-weight:600}
+  .acc-sub{font-size:.85rem;color:var(--muted)}
+  .chev{transition:transform .36s cubic-bezier(.2,.9,.3,1);opacity:.95}
+  .accordion .acc-body{max-height:0;overflow:hidden;padding:0 18px;transition:max-height .45s cubic-bezier(.2,.9,.3,1), padding .28s; background:linear-gradient(180deg, rgba(255,255,255,0.01), transparent);border-top:1px solid rgba(255,255,255,0.02)}
+  .accordion.open .acc-body{padding:16px 18px}
+
+  /* dynamic content height handled in JS for smoothness */
+  .accordion.open .chev{transform:rotate(180deg)}
+
+  /* small helpers for panels */
+  .panel{background:var(--card);padding:12px;border-radius:8px;color:#cfe6ff}
+  .muted{color:var(--muted);font-size:.95rem}
+
+  /***********************
+   * Styles for each type
+   * Types: type-1 .. type-20
+   ***********************/
+
+  /* 1 Microwave Door — quick pop with shine */
+  .type-1 .acc-header{background:linear-gradient(90deg, rgba(255,255,255,0.01), rgba(255,255,255,0.02))}
+  .type-1.open{animation:microwave-ding .36s ease}
+  @keyframes microwave-ding{0%{transform:translateY(0)}50%{transform:translateY(-6px)}100%{transform:translateY(0)}}
+  .type-1 .acc-header::after{content:"DING!";font-weight:700;color:var(--accent);margin-left:8px;opacity:.0;transition:opacity .2s}
+  .type-1.open .acc-header::after{opacity:1}
+
+  /* 2 Parachute Drop */
+  .type-2 .acc-body{transform-origin:top center;transition:transform .6s cubic-bezier(.2,.8,.2,1), opacity .4s}
+  .type-2.open .acc-body{transform:translateY(0) scaleY(1);opacity:1}
+  .type-2 .acc-body{transform:translateY(-30px) scaleY(.95);opacity:0}
+
+  /* 3 Rickroll — shows lyric snippet (no audio; ironically safer) */
+  .type-3 .acc-title{color:#ffd166}
+  .type-3 .lyric{font-style:italic;margin-top:6px;color:#ffe8b6}
+
+  /* 4 Drama Queen — slow fade + crescendo */
+  .type-4 .acc-body{opacity:0;transform:translateY(6px);transition:opacity .9s ease, transform .9s ease}
+  .type-4.open .acc-body{opacity:1;transform:none}
+
+  /* 5 Angry Office Printer — stutter open */
+  .type-5.open{animation:printer-stutter .6s steps(3)}
+  @keyframes printer-stutter{0%{transform:translateX(0)}25%{transform:translateX(-4px)}50%{transform:translateX(2px)}75%{transform:translateX(-1px)}100%{transform:none}}
+
+  /* 6 Slinky Toy — stretch + bounce */
+  .type-6 .acc-body{transform-origin:top;transition:transform .55s cubic-bezier(.2,.8,.3,1)}
+  .type-6.open .acc-body{animation:slinky 550ms cubic-bezier(.25,.9,.3,1)}
+  @keyframes slinky{0%{transform:scaleY(.2)}60%{transform:scaleY(1.08)}80%{transform:scaleY(.95)}100%{transform:scaleY(1)}}
+
+  /* 7 Bollywood Dance — rotate + glitter (subtle) */
+  .type-7.open .acc-header{animation:thumka .6s ease}
+  @keyframes thumka{0%{transform:rotate(0)}30%{transform:rotate(-8deg) translateX(-2px)}60%{transform:rotate(6deg)}100%{transform:none}}
+  .type-7 .accent-dot{display:inline-block;width:8px;height:8px;border-radius:50%;background:linear-gradient(45deg,#ff6b6b,#ffd166);margin-left:8px}
+
+  /* 8 Space Rocket — flies up then content arrives */
+  .type-8.open{animation:rocket 520ms cubic-bezier(.2,.9,.3,1)}
+  @keyframes rocket{0%{transform:translateY(0)}50%{transform:translateY(-12px)}100%{transform:none}}
+
+  /* 9 Trapdoor — content falls away (we flip direction) */
+  .type-9 .acc-body{transform-origin:top;transition:transform .6s ease,opacity .4s}
+  .type-9.open .acc-body{transform:perspective(500px) rotateX(0);opacity:1}
+  .type-9 .acc-body{transform:perspective(500px) rotateX(-75deg);opacity:0}
+
+  /* 10 Zombie Apocalypse — creepy hands reveal */
+  .type-10{position:relative}
+  .type-10::before,.type-10::after{content:"";position:absolute;left:6px;top:8px;width:26px;height:26px;border-radius:6px;background:linear-gradient(180deg,#18313a,#092023);opacity:0;transform:translateY(-6px) rotate(-20deg)}
+  .type-10.open::before,.type-10.open::after{opacity:1;transform:none;transition:all .6s}
+  .type-10 .muted{font-style:italic}
+
+  /* 11 Origami Ninja — folding reveal */
+  .type-11 .acc-body{transform-origin:top;transition:transform .55s cubic-bezier(.2,.9,.2,1),opacity .45s}
+  .type-11 .acc-body{transform:skewY(-8deg) scaleY(.85);opacity:0}
+  .type-11.open .acc-body{transform:none;opacity:1}
+
+  /* 12 Jealous Girlfriend — auto-opens if hover other (JS handles) */
+  .type-12 .acc-title{color:#ff9aa2}
+
+  /* 13 Las Vegas Casino — neon flash */
+  .type-13.open .acc-header{box-shadow:0 0 18px rgba(255,107,107,0.12)}
+  .type-13 .acc-title{letter-spacing:.6px}
+
+  /* 14 Jelly Belly — wobbly content */
+  .type-14 .acc-body{transition:transform .7s cubic-bezier(.2,.8,.25,1)}
+  .type-14.open .acc-body{animation:jelly .7s}
+  @keyframes jelly{0%{transform:scaleX(0.98) scaleY(1.02)}30%{transform:scaleX(1.02) scaleY(.96)}60%{transform:scaleX(.98) scaleY(1.02)}100%{transform:none}}
+
+  /* 15 Slow Internet Explorer — slow reveal */
+  .type-15 .acc-body{transition-duration:3s}
+  .type-15 .acc-sub{font-size:.8rem;color:#c9cfe0}
+
+  /* 16 Harry Potter — puff + sparkle */
+  .type-16.open .acc-header{position:relative}
+  .type-16.open .acc-header::after{content:"✨";position:absolute;right:12px;top:4px;animation:twinkle 1s infinite}
+  @keyframes twinkle{0%{opacity:.8;transform:scale(.9)}50%{opacity:1;transform:scale(1.1)}100%{opacity:.8;transform:scale(.9)}}
+
+  /* 17 Earthquake Mode — shake intense then open */
+  .type-17.open{animation:quake .45s cubic-bezier(.4,.1,.4,1)}
+  @keyframes quake{0%{transform:none}20%{transform:translateX(-6px)}40%{transform:translateX(6px)}60%{transform:translateX(-3px)}80%{transform:translateX(3px)}100%{transform:none}}
+
+  /* 18 Matrix Bullet Time — slow-mo ease */
+  .type-18.open .acc-body{transition-timing-function:cubic-bezier(.1,.05,.2,1);transition-duration:1.4s}
+  .type-18 .acc-title{font-family:monospace;color:#7ef3aa}
+
+  /* 19 Grandma’s Rusty Cupboard — squeak */
+  .type-19.open .acc-header{animation:squeak .8s}
+  @keyframes squeak{0%{transform:rotate(0)}50%{transform:rotate(-2deg)}100%{transform:none}}
+
+  /* 20 Mic Drop — open with attitude and slam closed quickly */
+  .type-20 .acc-header{font-weight:700}
+  .type-20.open .acc-body{animation:mic-drop-open .34s cubic-bezier(.2,.9,.3,1)}
+  @keyframes mic-drop-open{0%{transform:translateY(8px);opacity:0}100%{transform:none;opacity:1}}
+  .type-20.closing .acc-body{transition:transform .12s ease;transform:translateY(10px);opacity:0}
+
+  /* small responsive */
+  @media (max-width:720px){
+    .wrap{padding:12px}
+    .acc-title{font-size:0.95rem}
+  }
+
+  /* little decorative number badges */
+  .badge{display:inline-block;background:var(--glass);border-radius:10px;padding:6px 8px;font-weight:700;color:var(--muted);font-size:.82rem;margin-right:8px}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <h1>Accordion Olympics 2025 — 20 Animated Accordions</h1>
+  <p class="lead muted">A ridiculous collection of accordions for developers who like drama, jazz hands, and subtle destruction of user expectations. Click any header to open.</p>
+
+  <!-- We'll produce 20 accordions with different classes -->
+  <div id="arena">
+
+    <!-- 1 Microwave Door -->
+    <div class="accordion type-1" data-type="1" aria-expanded="false">
+      <div class="acc-header">
+        <div>
+          <span class="badge">1</span><span class="acc-title">Microwave Door</span>
+          <div class="acc-sub">Opens with dignity, leaves no crumbs.</div>
+        </div>
+        <div class="chev">▾</div>
+      </div>
+      <div class="acc-body"><div class="panel">Quick pop & a shine. Treat it gently — it's reheating leftovers of code.</div></div>
+    </div>
+
+    <!-- 2 Parachute Drop -->
+    <div class="accordion type-2" data-type="2" aria-expanded="false">
+      <div class="acc-header">
+        <div><span class="badge">2</span><span class="acc-title">Parachute Drop</span>
+        <div class="acc-sub">Content gently parachutes into view. Parachute not included.</div></div>
+        <div class="chev">▾</div>
+      </div>
+      <div class="acc-body"><div class="panel">Ooooh — soft landing. Please clap politely.</div></div>
+    </div>
+
+    <!-- 3 Rickroll -->
+    <div class="accordion type-3" data-type="3" aria-expanded="false">
+      <div class="acc-header">
+        <div><span class="badge">3</span><span class="acc-title">Rickroll (lyric-safe)</span>
+        <div class="acc-sub">A lyric snippet pops out, but we keep it PG (no audio). </div></div>
+        <div class="chev">▾</div>
+      </div>
+      <div class="acc-body">
+        <div class="panel">
+          <div class="lyric">♪ Never gonna give you up... (well, just a line — no streaming court cases here) ♪</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 4 Drama Queen -->
+    <div class="accordion type-4" data-type="4" aria-expanded="false">
+      <div class="acc-header">
+        <div><span class="badge">4</span><span class="acc-title">Drama Queen</span>
+        <div class="acc-sub">Slow fade, violin optional (you provide the violin).</div></div>
+        <div class="chev">▾</div>
+      </div>
+      <div class="acc-body"><div class="panel">Takes its time to emote. Will cry on hover.</div></div>
+    </div>
+
+    <!-- 5 Angry Office Printer -->
+    <div class="accordion type-5" data-type="5" aria-expanded="false">
+      <div class="acc-header">
+        <div><span class="badge">5</span><span class="acc-title">Angry Office Printer</span>
+        <div class="acc-sub">Stutters, jams, then succumbs to human fury.</div></div>
+        <div class="chev">▾</div>
+      </div>
+      <div class="acc-body"><div class="panel">Try slapping it — works in folklore, not recommended in real life.</div></div>
+    </div>
+
+    <!-- 6 Slinky Toy -->
+    <div class="accordion type-6" data-type="6" aria-expanded="false">
+      <div class="acc-header">
+        <div><span class="badge">6</span><span class="acc-title">Slinky Toy</span>
+        <div class="acc-sub">Stretchy, bouncy, highly nostalgic.</div></div>
+        <div class="chev">▾</div>
+      </div>
+      <div class="acc-body"><div class="panel">Boing! Physics optional, fun guaranteed.</div></div>
+    </div>
+
+    <!-- 7 Bollywood Dance -->
+    <div class="accordion type-7" data-type="7" aria-expanded="false">
+      <div class="acc-header">
+        <div><span class="badge">7</span><span class="acc-title">Bollywood Dance</span><span class="accent-dot"></span>
+        <div class="acc-sub">Does a little thumka when opened.</div></div>
+        <div class="chev">▾</div>
+      </div>
+      <div class="acc-body"><div class="panel">Disco lights sold separately. May require sunglasses.</div></div>
+    </div>
+
+    <!-- 8 Space Rocket -->
+    <div class="accordion type-8" data-type="8" aria-expanded="false">
+      <div class="acc-header">
+        <div><span class="badge">8</span><span class="acc-title">Space Rocket</span>
+        <div class="acc-sub">Launch sequence initiated — countdown optional.</div></div>
+        <div class="chev">▾</div>
+      </div>
+      <div class="acc-body"><div class="panel">Houston, we've got delightful content.</div></div>
+    </div>
+
+    <!-- 9 Trapdoor -->
+    <div class="accordion type-9" data-type="9" aria-expanded="false">
+      <div class="acc-header">
+        <div><span class="badge">9</span><span class="acc-title">Trapdoor</span>
+        <div class="acc-sub">Content falls very dramatically.</div></div>
+        <div class="chev">▾</div>
+      </div>
+      <div class="acc-body"><div class="panel">Abra-cadabra — down you go.</div></div>
+    </div>
+
+    <!-- 10 Zombie Apocalypse -->
+    <div class="accordion type-10" data-type="10" aria-expanded="false">
+      <div class="acc-header">
+        <div><span class="badge">10</span><span class="acc-title">Zombie Apocalypse</span>
+        <div class="acc-sub">Creepy hands reveal the content (safely fictional).</div></div>
+        <div class="chev">▾</div>
+      </div>
+      <div class="acc-body"><div class="panel">Brains? No. Great UI though.</div></div>
+    </div>
+
+    <!-- 11 Origami Ninja -->
+    <div class="accordion type-11" data-type="11" aria-expanded="false">
+      <div class="acc-header">
+        <div><span class="badge">11</span><span class="acc-title">Origami Ninja</span>
+        <div class="acc-sub">Folds open like artful paper.</div></div>
+        <div class="chev">▾</div>
+      </div>
+      <div class="acc-body"><div class="panel">Silent, precise, suspiciously sharp corners.</div></div>
+    </div>
+
+    <!-- 12 Jealous Girlfriend -->
+    <div class="accordion type-12" data-type="12" aria-expanded="false">
+      <div class="acc-header">
+        <div><span class="badge">12</span><span class="acc-title">Jealous Girlfriend</span>
+        <div class="acc-sub">Opens when other accordions get attention. Drama guaranteed.</div></div>
+        <div class="chev">▾</div>
+      </div>
+      <div class="acc-body"><div class="panel">“Who is she?!” — it whispers whenever you open another panel.</div></div>
+    </div>
+
+    <!-- 13 Las Vegas Casino -->
+    <div class="accordion type-13" data-type="13" aria-expanded="false">
+      <div class="acc-header">
+        <div><span class="badge">13</span><span class="acc-title">Las Vegas Casino</span>
+        <div class="acc-sub">Neon vibes, bright promises, questionable odds.</div></div>
+        <div class="chev">▾</div>
+      </div>
+      <div class="acc-body"><div class="panel">Win big. Lose bigger. Or just enjoy the lights.</div></div>
+    </div>
+
+    <!-- 14 Jelly Belly -->
+    <div class="accordion type-14" data-type="14" aria-expanded="false">
+      <div class="acc-header">
+        <div><span class="badge">14</span><span class="acc-title">Jelly Belly</span>
+        <div class="acc-sub">Wobble and jiggle like dessert on a trampoline.</div></div>
+        <div class="chev">▾</div>
+      </div>
+      <div class="acc-body"><div class="panel">Jelly wobble engaged. Dietary restrictions apply.</div></div>
+    </div>
+
+    <!-- 15 Slow Internet Explorer -->
+    <div class="accordion type-15" data-type="15" aria-expanded="false">
+      <div class="acc-header">
+        <div><span class="badge">15</span><span class="acc-title">Slow Internet Explorer</span>
+        <div class="acc-sub">It will open. Eventually. Please be patient (or not).</div></div>
+        <div class="chev">▾</div>
+      </div>
+      <div class="acc-body"><div class="panel">Downloaded in 2003, opening now in 2025.</div></div>
+    </div>
+
+    <!-- 16 Harry Potter -->
+    <div class="accordion type-16" data-type="16" aria-expanded="false">
+      <div class="acc-header">
+        <div><span class="badge">16</span><span class="acc-title">Harry Potter</span>
+        <div class="acc-sub">Alohomora! Unlocks with a sparkly flourish.</div></div>
+        <div class="chev">▾</div>
+      </div>
+      <div class="acc-body"><div class="panel">Magic is mostly CSS. Also a little JavaScript mischief.</div></div>
+    </div>
+
+    <!-- 17 Earthquake Mode -->
+    <div class="accordion type-17" data-type="17" aria-expanded="false">
+      <div class="acc-header">
+        <div><span class="badge">17</span><span class="acc-title">Earthquake Mode</span>
+        <div class="acc-sub">It shakes ... then apologizes.</div></div>
+        <div class="chev">▾</div>
+      </div>
+      <div class="acc-body"><div class="panel">Grab onto your coffee. This one likes drama.</div></div>
+    </div>
+
+    <!-- 18 Matrix Bullet Time -->
+    <div class="accordion type-18" data-type="18" aria-expanded="false">
+      <div class="acc-header">
+        <div><span class="badge">18</span><span class="acc-title">Matrix Bullet Time</span>
+        <div class="acc-sub">Everything slows to admire the detail.</div></div>
+        <div class="chev">▾</div>
+      </div>
+      <div class="acc-body"><div class="panel">Time dilation included. Sunglasses not included.</div></div>
+    </div>
+
+    <!-- 19 Grandma’s Rusty Cupboard -->
+    <div class="accordion type-19" data-type="19" aria-expanded="false">
+      <div class="acc-header">
+        <div><span class="badge">19</span><span class="acc-title">Grandma's Rusty Cupboard</span>
+        <div class="acc-sub">Squeaks, smells faintly of pickles, full of secrets.</div></div>
+        <div class="chev">▾</div>
+      </div>
+      <div class="acc-body"><div class="panel">Mothball & anecdote seasoning present.</div></div>
+    </div>
+
+    <!-- 20 Mic Drop -->
+    <div class="accordion type-20" data-type="20" aria-expanded="false">
+      <div class="acc-header">
+        <div><span class="badge">20</span><span class="acc-title">Mic Drop</span>
+        <div class="acc-sub">Opens like a showstopper. Closes with attitude.</div></div>
+        <div class="chev">▾</div>
+      </div>
+      <div class="acc-body"><div class="panel">Mic has been dropped. Audience stunned. Credits roll.</div></div>
+    </div>
+
+  </div>
+</div>
+
+<script>
+/*
+  Accordion Olympics controller:
+  - toggles panels
+  - measures content height for smooth transitions
+  - manages special behaviours (jealous girlfriend auto-open)
+  - comedic, compact, slightly chaotic JS
+*/
+
+(function(){
+  const accordions = document.querySelectorAll('.accordion');
+
+  function setMaxHeight(el){
+    const body = el.querySelector('.acc-body');
+    // compute natural height
+    body.style.maxHeight = body.scrollHeight + 'px';
+  }
+  function clearMaxHeight(el){
+    const body = el.querySelector('.acc-body');
+    body.style.maxHeight = null;
+  }
+
+  // open/close with class toggling and aria
+  function toggleAcc(acc){
+    const isOpen = acc.classList.contains('open');
+    const type = acc.dataset.type | 0;
+
+    // special quick-close behavior for type-20 (mic drop)
+    if(!isOpen && type == 20){
+      acc.classList.remove('closing');
+      // open
+      acc.classList.add('open');
+      setTimeout(()=> setMaxHeight(acc), 20);
+      acc.setAttribute('aria-expanded','true');
+    } else if(isOpen && type == 20){
+      // slam close
+      acc.classList.add('closing');
+      clearMaxHeight(acc);
+      setTimeout(()=> { acc.classList.remove('open'); acc.classList.remove('closing'); acc.setAttribute('aria-expanded','false'); }, 140);
+      return;
+    } else {
+      if(isOpen){
+        // closing
+        // animate height to 0 for smooth closing
+        clearMaxHeight(acc);
+        acc.classList.remove('open');
+        acc.setAttribute('aria-expanded','false');
+      } else {
+        // open
+        acc.classList.add('open');
+        setMaxHeight(acc);
+        acc.setAttribute('aria-expanded','true');
+      }
+    }
+
+    // Jealous girlfriend behavior: type-12 auto-opens when others get opened
+    if(!isOpen){
+      triggerJealousy(acc);
+    }
+  }
+
+  function triggerJealousy(opener){
+    const jealous = document.querySelector('.type-12');
+    if(!jealous) return;
+    // if the jealous panel is not the one opened, open it briefly
+    if(opener !== jealous){
+      // open for a theatrical moment
+      if(!jealous.classList.contains('open')){
+        jealous.classList.add('open');
+        setMaxHeight(jealous);
+        jealous.setAttribute('aria-expanded','true');
+        // then close after a short dramatic pause
+        setTimeout(()=>{
+          clearMaxHeight(jealous);
+          jealous.classList.remove('open');
+          jealous.setAttribute('aria-expanded','false');
+        }, 1200);
+      }
+    }
+  }
+
+  // initialize heights and listeners
+  accordions.forEach(acc=>{
+    const header = acc.querySelector('.acc-header');
+    // make sure the body is at proper measured height when reopened
+    header.addEventListener('click', ()=>{
+      toggleAcc(acc);
+    });
+
+    // on window resize adjust heights for open ones
+    window.addEventListener('resize', ()=>{
+      if(acc.classList.contains('open')){
+        setMaxHeight(acc);
+      }
+    });
+  });
+
+  // Accessibility: allow keyboard Enter/Space to toggle when focused on header
+  document.querySelectorAll('.acc-header').forEach(h=>{
+    h.setAttribute('tabindex','0');
+    h.addEventListener('keydown', (e)=>{
+      if(e.key === 'Enter' || e.key === ' '){
+        e.preventDefault();
+        h.click();
+      }
+    });
+  });
+
+  // bonus: set some initial decorative states (none open)
+  // (developer: open a random one for demo? Nah — keep control in user's hands)
+})();
+</script>
+</body>
+</html>

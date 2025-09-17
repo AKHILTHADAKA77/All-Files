@@ -1,0 +1,249 @@
+<!DOCTYPE html>
+<html lang="en" >
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Code Snippet Cards</title>
+
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" />
+  <link href="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/themes/prism-tomorrow.css" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Source+Code+Pro&display=swap" rel="stylesheet" />
+
+  <style>
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background-color: #f8f9fa;
+      padding: 2rem;
+    }
+    .card-custom {
+      background: #2b2c44;
+      border-radius: 0.5rem;
+      box-shadow: 0 4px 12px rgb(0 0 0 / 0.1);
+      color: #e0e0e0;
+      display: flex;
+      flex-direction: column;
+      height: 600px;
+    }
+    .card-header-custom {
+      background: #32334a;
+      border-radius: 0.5rem 0.5rem 0 0;
+      padding: 1rem 1.5rem;
+      font-weight: 700;
+      font-size: 1.25rem;
+      color: #4ea8ff;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      user-select: none;
+    }
+    .copyBtn {
+      background-color: #4ea8ff;
+      border: none;
+      color: white;
+      padding: 0.35rem 0.75rem;
+      font-weight: 600;
+      font-size: 0.9rem;
+      border-radius: 0.4rem;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 0.4rem;
+      transition: background-color 0.3s ease;
+      user-select: none;
+    }
+    .copyBtn:hover {
+      background-color: #1c7ed6;
+    }
+    .copyBtn:focus-visible {
+      outline: 3px solid #70cfff;
+      outline-offset: 2px;
+    }
+    .copyBtn.success {
+      background-color: #28a745 !important;
+    }
+    .copyBtn svg {
+      transition: transform 0.3s ease;
+    }
+    .copyBtn.success svg {
+      animation: pop 0.4s ease forwards;
+    }
+    @keyframes pop {
+      0% { transform: scale(1); }
+      50% { transform: scale(1.2); }
+      100% { transform: scale(1); }
+    }
+    pre.code-block {
+      flex-grow: 1;
+      margin: 0;
+      padding: 1rem 1.25rem;
+      background-color: #2b2c44;
+      border-radius: 0 0 0.5rem 0.5rem;
+      font-family: 'Source Code Pro', monospace;
+      font-size: 0.9rem;
+      line-height: 1.4;
+      color: #e0e0e0;
+      overflow: auto;
+      scrollbar-width: thin;
+      scrollbar-color: #4ea8ff #1f1f33;
+      user-select: text;
+      scroll-behavior: smooth;
+    }
+    pre.code-block::-webkit-scrollbar {
+      width: 10px;
+      height: 10px;
+    }
+    pre.code-block::-webkit-scrollbar-track {
+      background: #1f1f33;
+      border-radius: 10px;
+    }
+    pre.code-block::-webkit-scrollbar-thumb {
+      background-color: #4ea8ff;
+      border-radius: 10px;
+      border: 2px solid #1f1f33;
+    }
+    a.edit-link {
+      margin-bottom: 2rem;
+      display: inline-block;
+      font-weight: 600;
+      color: #4ea8ff;
+      text-decoration: none;
+      user-select: none;
+      border: 2px solid transparent;
+      padding: 0.3rem 0.7rem;
+      border-radius: 0.4rem;
+      transition: border-color 0.3s ease;
+    }
+    a.edit-link:hover, a.edit-link:focus-visible {
+      border-color: #4ea8ff;
+      outline: none;
+    }
+  </style>
+</head>
+<body>
+
+  <a href="edit.html" class="edit-link" aria-label="Go to edit code snippets page">Edit Code Snippets</a>
+
+  <div class="container">
+    <div class="row" id="cardsContainer" aria-live="polite" aria-relevant="additions">
+      <!-- Cards inserted here -->
+    </div>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/prism.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-markup.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-css.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-javascript.min.js"></script>
+
+  <script>
+    const defaultSnippets = {
+      markup: {
+        title: 'HTML Example',
+        code: `<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Example</title>
+</head>
+<body>
+  <h1>Hello World!</h1>
+</body>
+</html>`
+      },
+      css: {
+        title: 'CSS Example',
+        code: `body {
+  background-color: #f0f0f0;
+  font-family: Arial, sans-serif;
+}
+h1 {
+  color: #333333;
+  text-align: center;
+}`
+      },
+      javascript: {
+        title: 'JavaScript Example',
+        code: `function helloWorld() {
+  console.log("Hello, world!");
+}
+// Scrollable example content:
+for (let i = 0; i < 100; i++) {
+  console.log(i);
+}`
+      }
+    };
+
+    function loadSnippets() {
+      const saved = localStorage.getItem('codeSnippets');
+      if (saved) {
+        try {
+          return JSON.parse(saved);
+        } catch {
+          return {...defaultSnippets};
+        }
+      }
+      return {...defaultSnippets};
+    }
+
+    function createCard(lang, snippet, id) {
+      const col = document.createElement('div');
+      col.className = 'col-lg-4 col-md-6 mb-4';
+
+      const cardDiv = document.createElement('div');
+      cardDiv.className = 'card-custom d-flex flex-column h-100';
+      cardDiv.setAttribute('data-lang', lang);
+
+      cardDiv.innerHTML = `
+        <div class="card-header-custom" id="codeTitle${id}">
+          ${snippet.title}
+          <button class="copyBtn" aria-describedby="copyStatus${id}" aria-live="polite" aria-label="Copy ${snippet.title} code to clipboard" title="Copy ${snippet.title} code">
+            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" fill="currentColor" class="bi bi-clipboard" viewBox="0 0 16 16" aria-hidden="true">
+              <path d="M10 1.5v1a.5.5 0 0 1-.5.5h-3a.5.5 0 0 1-.5-.5v-1A1.5 1.5 0 0 0 4.5 3h7A1.5 1.5 0 0 0 13 1.5h-3z"/>
+              <path d="M4 4h8a1 1 0 0 1 1 1v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a1 1 0 0 1 1-1z"/>
+            </svg>
+            <span>Copy</span>
+          </button>
+        </div>
+        <pre tabindex="0" class="code-block language-${lang}" role="region" aria-labelledby="codeTitle${id}"><code class="language-${lang}"></code></pre>
+      `;
+
+      const codeEl = cardDiv.querySelector('code');
+      codeEl.textContent = snippet.code;
+
+      col.appendChild(cardDiv);
+      return col;
+    }
+
+    function renderCards() {
+      const container = document.getElementById('cardsContainer');
+      container.innerHTML = '';
+
+      const snippets = loadSnippets();
+      let id = 1;
+      for (const lang in snippets) {
+        const card = createCard(lang, snippets[lang], id);
+        container.appendChild(card);
+        id++;
+      }
+
+      Prism.highlightAll();
+
+      container.querySelectorAll('.copyBtn').forEach(btn => {
+        btn.addEventListener('click', () => {
+          const card = btn.closest('.card-custom');
+          const code = card.querySelector('pre code').textContent;
+          navigator.clipboard.writeText(code).then(() => {
+            btn.classList.add('success');
+            btn.querySelector('span').textContent = 'Copied!';
+            setTimeout(() => {
+              btn.classList.remove('success');
+              btn.querySelector('span').textContent = 'Copy';
+            }, 1500);
+          });
+        });
+      });
+    }
+
+    renderCards();
+  </script>
+</body>
+</html>

@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Scrolling Words</title>
+  <style>
+    body {
+      height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: Arial, sans-serif;
+    }
+
+    .scrolling-words-container {
+      display: flex;
+      align-items: center;
+      font-size: 2rem;
+      font-weight: 600;
+    }
+
+    .scrolling-words-box {
+      height: 3rem;
+      margin: auto;
+      overflow: hidden;
+    }
+
+    .scrolling-words-box ul {
+      margin: 0 0.625rem;
+      padding: 0;
+      animation: scrollUp 10s infinite;
+    }
+
+    .scrolling-words-box li {
+      display: flex;
+      align-items: center;
+      justify-content: flex-end;
+      height: 3rem;
+      list-style: none;
+    }
+
+    /* Pure CSS animation (5 items) */
+    @keyframes scrollUp {
+      0%, 20% {
+        transform: translateY(0);
+      }
+      25%, 40% {
+        transform: translateY(-3rem);
+      }
+      45%, 60% {
+        transform: translateY(-6rem);
+      }
+      65%, 80% {
+        transform: translateY(-9rem);
+      }
+      85%, 100% {
+        transform: translateY(-12rem);
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="scrolling-words-container">
+    <div class="scrolling-words-box">
+      <ul>
+        <li style="color: #ea4335">Code</li>
+        <li style="color: #4285f4">Build</li>
+        <li style="color: #34a853">Create</li>
+        <li style="color: #fbbc04">Design</li>
+        <li style="color: #ea4335">Code</li>
+      </ul>
+    </div>
+    <span style="color: #5f6368">for everyone</span>
+  </div>
+</body>
+</html>

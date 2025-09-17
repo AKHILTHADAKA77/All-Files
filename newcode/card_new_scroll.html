@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>The Scroll-Triggering Comedy Show</title>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
+  <style>
+    @import url('https://fonts.googleapis.com/css?family=Signika+Negative:300,400&display=swap');
+    body {
+      font-family: "Signika Negative", sans-serif;
+      padding: 0;
+      margin: 0;
+      background-color: grey;
+      height: 100%;
+    }
+    .pin-up {
+      height: 100vh;
+      display: flex;
+      flex-direction: row;
+      justify-content: center;
+      align-items: center;
+      background-color: green;
+    }
+    .content-wrap {
+      position: relative;
+      width: 333px;
+      height: 222px;
+      border-radius: 4px;
+      background-color: limegreen;
+      margin-right: 111px;
+      margin-top: -10px;
+    }
+    .content {
+      width: 100%;
+      height: 100%;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      position: absolute;
+      background-color: limegreen;
+      border-radius: 4px;
+      font-size: 30px;
+      color: white;
+    }
+    .sideline {
+      position: absolute;
+      top: calc(50vh - 111px - 7px);
+      left: calc(50vw + 0px);
+      height: 222px;
+      width: 3px;
+      background-color: orange;
+      transform: scaleY(0);
+      transform-origin: top center;
+      z-index: 1;
+    }
+    .text-wrap {
+      height: 100vh;
+      width: 333px;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: flex-start;
+      background-color: green;
+    }
+    .text {
+      font-size: 30px;
+      width: 100px;
+      height: 50px;
+      text-transform: uppercase;
+      color: white;
+    }
+    .below {
+      height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background-color: white;
+    }
+    .below span {
+      color: green;
+      font-size: 30px;
+      opacity: 0;
+      visibility: hidden;
+      transform: translateY(-50vh);
+    }
+    .footer {
+      height: 5vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background-color: lightgrey;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="pin-up">
+    <div class="content-wrap">
+      <span class="content content-0">Greensock</span>
+      <span class="content content-1">ScrollTrigger</span>
+      <span class="content content-2">Creativity</span>
+      <span class="content content-3">Versatility</span>
+      <span class="content content-4">Awesomeness</span>
+    </div>
+    <div class="sideline"></div>
+    <div class="text-wrap">
+      <div class="text">Greensock</div>
+      <div class="text">ScrollTrigger</div>
+      <div class="text">Creativity</div>
+      <div class="text">Versatility</div>
+      <div class="text">Awesomeness</div>
+    </div>
+  </div>
+
+  <div class="below">
+    <span>Yowza!</span>
+  </div>
+  <!-- <div class="footer">
+    <span>Nothing to see here!</span>
+  </div> -->
+
+  <script>
+    // The script where we summon the animation gods
+    gsap.set('.content',{ autoAlpha: 0 });
+
+    var headlines = gsap.utils.toArray(".text");
+    var totalDuration = 1000;
+    var singleDuration = totalDuration / headlines.length;
+
+    const lineTimeline = gsap.timeline();
+    ScrollTrigger.create({
+      trigger: ".pin-up",
+      start: "top top",
+      end: "+=" + totalDuration,
+      pin: true,
+      scrub: true,
+      animation: lineTimeline,
+    });
+
+    lineTimeline
+      .to('.sideline', { duration: 1 }, 0)
+      .to('.sideline', { duration: 0.9, scaleY: 1, ease: "none" }, 0);
+
+    // Each headline gets its own little ego-trip
+    headlines.forEach((elem, i) => {
+      const smallTimeline = gsap.timeline();
+      const content = document.querySelector('.content-wrap');
+      const relevantContent = content.querySelector('span.content-' + i);
+
+      ScrollTrigger.create({
+        trigger: "body",
+        start: "top -=" + ( singleDuration * i ),
+        end: "+=" + singleDuration,
+        animation: smallTimeline,
+        toggleActions: "play reverse play reverse",
+      });
+
+      smallTimeline
+        .to(elem,{ duration: 0.25, color: "orange"}, 0)
+        .set(relevantContent,{ autoAlpha: 1 }, 0);
+    });
+
+    // Surprise at the bottom – tada!
+    var showYowza = gsap.timeline();
+    showYowza.to('.below span', { autoAlpha: 1, y: 0 });
+
+    ScrollTrigger.create({
+      trigger: ".below",
+      start: "top center",
+      animation: showYowza,
+      toggleActions: "none play none reverse"
+    });
+  </script>
+</body>
+</html>

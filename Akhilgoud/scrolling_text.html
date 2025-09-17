@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Scroll Move Text</title>
+  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+  <style>
+    body {
+      margin: 0;
+      padding: 0;
+      overflow-x: hidden;
+      font-family: Arial, sans-serif;
+    }
+
+    .spancediv {
+      height: 300px;
+      border-radius: 30px;
+      color: #fff;
+      font-size: 50px;
+      text-align: center;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .spancediv {
+      background-color: #000;
+    }
+
+    .spancediv2 {
+      background-color: #50915e;
+    }
+
+    .spancediv3 {
+      background-color: #485c8b;
+    }
+
+    .spancediv4 {
+      background-color: #e15858;
+    }
+
+    .big-title,
+    .big-titles,
+    .big-titlesw {
+      font-size: 150px;
+      position: relative;
+      left: 10px;
+      white-space: nowrap;
+      right: 81vw;
+      transition: transform 0.1s linear;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="spancediv">Move text on scroll :)</div>
+
+  <section class="Frist">
+    <h1 class="big-title">Text move left right</h1>
+  </section>
+
+  <div class="spancediv spancediv4">One More Time Scroll :)</div>
+
+  <section class="Frists">
+    <h1 class="big-title">Our project</h1>
+  </section>
+
+  <div class="spancediv spancediv3">Scroll :)</div>
+
+  <section class="Fristss">
+    <h1 class="big-title">Our project</h1>
+  </section>
+
+  <div class="spancediv spancediv2">Scroll :)</div>
+
+  <section class="Fristsss">
+    <h1 class="big-title">Our project</h1>
+  </section>
+
+  <div class="spancediv spancediv4">Scroll :)</div>
+
+  <section class="Fristssss">
+    <h1 class="big-title">Our project</h1>
+  </section>
+
+  <div class="spancediv spancediv3"></div>
+
+  <script>
+    // Function to animate text on scroll
+    function letterCarousel(parent_cls, child_cls) {
+      var e = jQuery(parent_cls + ' ' + child_cls),
+        t = jQuery(window).height();
+
+      jQuery(window).on("scroll", function () {
+        if (jQuery(parent_cls).length) {
+          var t = jQuery(document).scrollTop() + jQuery(window).height(),
+            n = jQuery(parent_cls).offset().top;
+
+          if (n <= t) {
+            var i = jQuery(document).scrollTop() - n + jQuery(window).height();
+            var scroll = i - 150;
+            var scroll_slow = scroll + ((scroll / 70) / 100);
+            var img_scroll = scroll_slow * 30 / 100;
+            e.css({
+              transform: "translateX(" + img_scroll + "px)"
+            })
+          }
+        }
+      });
+    }
+
+    // Apply to all sections
+    letterCarousel('.Frist', '.big-title');
+    letterCarousel('.Frists', '.big-title');
+    letterCarousel('.Fristss', '.big-title');
+    letterCarousel('.Fristsss', '.big-title');
+    letterCarousel('.Fristssss', '.big-title');
+  </script>
+</body>
+</html>

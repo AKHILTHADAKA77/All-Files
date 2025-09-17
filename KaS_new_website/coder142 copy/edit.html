@@ -1,0 +1,253 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Edit Code Snippets</title>
+
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Source+Code+Pro&display=swap" rel="stylesheet" />
+
+  <style>
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background-color: #f8f9fa;
+      padding: 2rem;
+    }
+
+    .form-container {
+      background: #2b2c44;
+      border-radius: 0.5rem;
+      padding: 1.5rem 2rem;
+      margin-bottom: 2rem;
+      color: #e0e0e0;
+      max-width: 700px;
+      box-shadow: 0 4px 12px rgb(0 0 0 / 0.1);
+    }
+
+    .form-label {
+      font-weight: 600;
+      color: #4ea8ff;
+    }
+
+    input, select, textarea {
+      background-color: #1f1f33;
+      border: none;
+      border-radius: 0.4rem;
+      color: #ccc;
+      font-family: 'Source Code Pro', monospace;
+      font-size: 1rem;
+      padding: 0.5rem 0.75rem;
+      resize: vertical;
+      margin-bottom: 1.5rem;
+      transition: background-color 0.3s ease;
+    }
+
+    input::placeholder, textarea::placeholder {
+      color: #555672;
+      font-family: 'Source Code Pro', monospace;
+    }
+
+    input:focus, select:focus, textarea:focus {
+      outline: 2px solid #4ea8ff;
+      background-color: #292b44;
+    }
+
+    button.btn-primary {
+      background-color: #4ea8ff;
+      border: none;
+      padding: 0.5rem 1.25rem;
+      font-weight: 600;
+      font-size: 1rem;
+      border-radius: 0.4rem;
+      cursor: pointer;
+      user-select: none;
+      transition: background-color 0.3s ease;
+    }
+
+    button.btn-primary:hover {
+      background-color: #1c7ed6;
+    }
+
+    a.back-link {
+      margin-bottom: 1rem;
+      display: inline-block;
+      font-weight: 600;
+      color: #4ea8ff;
+      text-decoration: none;
+      user-select: none;
+      border: 2px solid transparent;
+      padding: 0.3rem 0.7rem;
+      border-radius: 0.4rem;
+      transition: border-color 0.3s ease;
+    }
+
+    a.back-link:hover, a.back-link:focus-visible {
+      border-color: #4ea8ff;
+      outline: none;
+    }
+
+    #successMessage {
+      max-width: 700px;
+      margin-bottom: 1.5rem;
+    }
+  </style>
+</head>
+<body>
+
+  <a href="cards.html" class="back-link" aria-label="Go back to code snippets cards page">← Back to Cards</a>
+
+  <!-- Success Message Box -->
+  <div id="successMessage" class="alert alert-success d-none" role="alert">
+    Snippet updated successfully!
+  </div>
+
+  <form class="form-container" id="codeForm" aria-label="Edit code snippet form" novalidate>
+    <label for="codeTitle" class="form-label">Code Title</label>
+    <input
+      id="codeTitle"
+      name="codeTitle"
+      type="text"
+      placeholder="Example: JavaScript Example"
+      required
+      autocomplete="off"
+    />
+
+    <label for="codeLanguage" class="form-label">Language</label>
+    <select id="codeLanguage" name="codeLanguage" required>
+      <option value="" disabled selected>Select language</option>
+      <option value="markup">HTML</option>
+      <option value="css">CSS</option>
+      <option value="javascript">JavaScript</option>
+    </select>
+
+    <label for="codeContent" class="form-label">Code Content</label>
+    <textarea
+      id="codeContent"
+      name="codeContent"
+      placeholder="Paste your code here..."
+      rows="15"
+      required
+      spellcheck="false"
+    ></textarea>
+
+    <button type="submit" class="btn btn-primary" aria-label="Update code snippet">Update Code Snippet</button>
+  </form>
+
+  <script>
+    const form = document.getElementById('codeForm');
+    const titleInput = document.getElementById('codeTitle');
+    const languageSelect = document.getElementById('codeLanguage');
+    const contentInput = document.getElementById('codeContent');
+    const successMessage = document.getElementById('successMessage');
+
+    const defaultSnippets = {
+      markup: {
+        title: 'HTML Example',
+        code: `<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Example</title>
+</head>
+<body>
+  <h1>Hello World!</h1>
+</body>
+</html>`
+      },
+      css: {
+        title: 'CSS Example',
+        code: `body {
+  background-color: #f0f0f0;
+  font-family: Arial, sans-serif;
+}
+h1 {
+  color: #333333;
+  text-align: center;
+}`
+      },
+      javascript: {
+        title: 'JavaScript Example',
+        code: `function helloWorld() {
+  console.log("Hello, world!");
+}
+// Scrollable example content:
+for (let i = 0; i < 100; i++) {
+  console.log(i);
+}`
+      }
+    };
+
+    // Load snippets from localStorage or use default
+    function loadSnippets() {
+      const saved = localStorage.getItem('codeSnippets');
+      if (saved) {
+        try {
+          return JSON.parse(saved);
+        } catch {
+          return {...defaultSnippets};
+        }
+      }
+      return {...defaultSnippets};
+    }
+
+    // Save snippets to localStorage
+    function saveSnippets(snippets) {
+      localStorage.setItem('codeSnippets', JSON.stringify(snippets));
+    }
+
+    // Update form fields when language changes
+    languageSelect.addEventListener('change', () => {
+      const lang = languageSelect.value;
+      if (!lang) {
+        titleInput.value = '';
+        contentInput.value = '';
+        return;
+      }
+      const snippets = loadSnippets();
+      if (snippets[lang]) {
+        titleInput.value = snippets[lang].title;
+        contentInput.value = snippets[lang].code;
+      } else {
+        titleInput.value = '';
+        contentInput.value = '';
+      }
+    });
+
+    // Handle form submission
+    form.addEventListener('submit', e => {
+      e.preventDefault();
+      const lang = languageSelect.value;
+      if (!lang) {
+        alert('Please select a language');
+        return;
+      }
+
+      const title = titleInput.value.trim();
+      const code = contentInput.value;
+
+      if (!title) {
+        alert('Please enter a code title');
+        return;
+      }
+      if (!code) {
+        alert('Please enter code content');
+        return;
+      }
+
+      const snippets = loadSnippets();
+      snippets[lang] = { title, code };
+      saveSnippets(snippets);
+
+      // Show success message
+      successMessage.textContent = `Snippet for "${title}" updated successfully!`;
+      successMessage.classList.remove('d-none');
+
+      // Hide it after 3 seconds
+      setTimeout(() => {
+        successMessage.classList.add('d-none');
+      }, 3000);
+    });
+  </script>
+</body>
+</html>

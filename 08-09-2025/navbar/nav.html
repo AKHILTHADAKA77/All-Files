@@ -1,0 +1,251 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Navbar with Dropdown</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css" rel="stylesheet">
+  <style>
+    body {
+      margin: 0;
+      background: #000;
+    }
+
+    /* Navbar Base */
+    .navbar {
+      background: #000;
+      padding: 1rem 2rem;
+    }
+
+    .navbar-nav .nav-link {
+      color: #fff !important;
+      font-weight: 600;
+      margin: 0 0.8rem;
+      position: relative;
+    }
+
+    .navbar-nav .nav-link:hover,
+    .navbar-nav .nav-link.active {
+      color: #d7ff3c !important; /* neon green highlight */
+    }
+
+    /* Dropdown styling */
+    .dropdown-menu {
+      border: none;
+      border-radius: 0;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+      margin-top: 0.8rem;
+      padding: 0.5rem 0;
+    }
+
+    /* Arrow above dropdown */
+    .dropdown-menu::before {
+      content: "";
+      position: absolute;
+      top: -10px;
+      left: 30px;
+      border-left: 10px solid transparent;
+      border-right: 10px solid transparent;
+      border-bottom: 10px solid #fff;
+    }
+
+    .dropdown-item {
+      padding: 0.5rem 1.2rem;
+      font-weight: 500;
+    }
+
+    .dropdown-item:hover {
+      background: #f8f9fa;
+    }
+
+    /* Button (Let's Talk) */
+    .btn-talk {
+      background: #d7ff3c;
+      border: none;
+      font-weight: 600;
+      padding: 0.6rem 1.2rem;
+      border-radius: 5px;
+      color: #000;
+    }
+
+    .btn-talk:hover {
+      background: #c4eb28;
+      color: #000;
+    }
+
+    /* Hamburger */
+    .navbar-toggler {
+      border: none;
+      font-size: 1.5rem;
+    }
+
+    /* Hover dropdown (show without click) */
+    .nav-item.dropdown:hover .dropdown-menu {
+      display: block;
+    }
+    .navbar{
+      border-bottom: 1px solid rgb(71, 71, 71);
+    }
+.banner_fluid {
+  position: relative;
+  background-image: url("https://i.postimg.cc/T3RVsFPS/banner-page-img.jpg");
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  width: 100%;
+  height: 100vh;
+  z-index: 1;
+}
+
+.banner_fluid::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.4); /* adjust opacity: 0.1 - 0.9 */
+  z-index: -1; /* keeps overlay behind content */
+}
+
+    /* img.me-2 {
+    width: 40px;
+} */
+/* .navbar-brand p{
+  font-size: 1.5rem; 
+  text-align: center;
+  align-items: center;
+  padding-bottom: 0px;
+  margin: auto;
+
+} */
+ .navbar-brand img{
+  width: 120px;
+ }
+
+ .banner__content{
+  padding: 140px 0 180px;
+ }
+ .banner__content .bn__currently {
+    font-size: 24px;
+    margin-bottom: 50px;
+    border-bottom: 1px solid white;
+    color: white;
+    display: inline-block;
+    padding-bottom: 16px;
+    text-decoration: none;
+}
+
+.banner__content h1 {
+    font-size: 116px;
+    margin-bottom: 50px;
+}
+h1 {
+    font-size: 48px;
+    font-weight: 600;
+    line-height: 120%;
+    font-family: Kanit, sans-serif;
+    color: white;
+}
+.designers {
+    -webkit-text-stroke-width: 1px;
+    -webkit-text-stroke-color: white;
+    color: transparent;
+    transition: all .5s;
+    position: relative;
+}
+.designers:before {
+    content: attr(data-text);
+    position: absolute;
+    color: #d7ff3c;
+    width: 0px;
+    overflow: hidden;
+    -webkit-text-stroke-width: 1px;
+    -webkit-text-stroke-color: #d7ff3c;
+      animation: fillAnimate 2s linear infinite;
+}
+  @keyframes fillAnimate {
+      0% { width: 0%; }
+      25% { width: 50%; }
+      50% { width: 100%; }
+      75% { width: 50%; }
+      100%{width: 0%;}
+    }
+  </style>
+</head>
+<body>
+<header>
+<nav class="navbar navbar-expand-lg">
+  <div class="container-fluid">
+    <!-- Logo -->
+    <a class="navbar-brand text-white fw-bold" href="#">
+      <img src="https://i.postimg.cc/3J5KBHwX/download.png" alt="">
+      <!-- <p> <img src="https://i.postimg.cc/j2c1VNzY/slasa-removebg-preview.png" alt="Logo" class="me-2" style="border-radius:50%;">
+      Akhil Goud
+      </p> -->
+    </a>
+
+    <!-- Right side button & hamburger -->
+    <div class="d-flex align-items-center order-lg-2">
+      <button class="btn btn-talk me-2">Let's Talk →</button>
+      <button class="navbar-toggler text-white" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+        <i class="bi bi-list"></i>
+      </button>
+    </div>
+
+    <!-- Menu -->
+    <div class="collapse navbar-collapse justify-content-center order-lg-1" id="navbarNav">
+      <ul class="navbar-nav">
+        <li class="nav-item"><a class="nav-link active" href="#">HOME</a></li>
+        <li class="nav-item"><a class="nav-link" href="#">ABOUT</a></li>
+        <li class="nav-item"><a class="nav-link" href="#">WORK</a></li>
+        
+        <!-- Dropdown -->
+        <li class="nav-item dropdown">
+          <a class="nav-link dropdown-toggle" href="#" data-bs-toggle="dropdown">SERVICES</a>
+          <ul class="dropdown-menu">
+            <li><a class="dropdown-item" href="#">Services</a></li>
+            <li><a class="dropdown-item" href="#">Service Details</a></li>
+          </ul>
+        </li>
+
+        <li class="nav-item"><a class="nav-link" href="#">TESTIMONIAL</a></li>
+        <li class="nav-item"><a class="nav-link" href="#">BLOG</a></li>
+        <li class="nav-item"><a class="nav-link" href="#">CONTACT</a></li>
+      </ul>
+    </div>
+  </div>
+</nav>
+</header>
+
+<main>
+  <section class="banner_section">
+ <div class="container-fluid banner_fluid">
+  <div class="container banner_container">
+    <div class="row banner_row">
+      <div class="col-lg-8 banner_col">
+      <div class="banner__content">
+        <a class="bn__currently" href="/">
+          <span class="d-block">Currently available for freelance</span>
+          <span class="d-flex gap-4 align-items-center">worldwide
+            <i><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" width="1em" height="1em" fill="currentColor">
+              <path fill-rule="evenodd" d="M14 2.5a.5.5 0 0 0-.5-.5h-6a.5.5 0 0 0 0 1h4.793L2.146 13.146a.5.5 0 0 0 .708.708L13 3.707V8.5a.5.5 0 0 0 1 0v-6z"></path></svg></i></span></a><h1><span class="hone"> Creative Web</span><span class="d-block designers" data-text="Developer">Developer</span></h1>
+              <div class="video__area">
+                <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADcAAABECAYAAAAlba0pAAADuElEQVRogd2a8XHaMBTGX7n+X2eCOhvABHUnKJ2g7gSlE5BOEDKByQSQCSATwAbQCcwG6unuKX15Z9mSebJkvjtdDDi2fn7yk/RJH5RS0FM5AFywJKmJR6UyAFgAwA4AagA44d8KQdOTjlxHyZRSS6VUrf7roJRa4G8u14hSum5aKKVOBEofz1MGoqXtx6V6r1XqkXKFo2A1RnA0UG1wS9YM8zGC6cK7ggKzIWCKnwHAOdVU3yXaFWSY1o1+jxkMGNwv0l+tsYxaplnm2BwN3P3YowYkcgWL2ujBgMD9IN+9RKqLuEyzpCnzLuXBsI8m2CSNzrcCBgiXkc838a4ZcbibEp/PpTkv6ykOd1NR1HBH8lnDfY5YH1FNGpLI95EzvWmCqZ8CfotcJzGZd46OSopbSSwGbsu+LyPURVx0snoAgCkeX3BmMOrRCu0KnsixzpqPEeojKm4znNj79hUA9sL3zLDkmMjCDfmYqVIwO+8kZOfp6z4yD5Rqp5Qqh3C/VuzGmytukCGUq0TdNttCCE0uWis0jHzErQvAJvhCRkVT7Ff5OTORZGahzhua0NIzYvT/6w4bfsHWIh5CNUtTpuyGPoC0Kbo2tZK9g0HhbIC7jsrm7HwfK95Eux4CzgZ4aql0Rc6rPCtUk+sPAmcAm9J4xaJ4TdToGsV2SDiwJBnzlBd4Tsm+7wPm+1BE4Ex5aAA0MBTe5ekX+A5TrSTA+sK1RZFqh5XnI5wcI8yhtNZSYNfAmVI6QLpKLGJScKbMLZFw0S7Uyu01+1CaxGcVNplh2DbArONNH4WvdyZwTzgm5ePGwTbmSMP9Jcefgs/XOuSzg8hF1AO9GwrCppBwX4Sv7a2QcNHda2m4C8t+P4Wv7yVpOK1Xchy1aUr3c4Cp/0Q+h3DQnBQicmcGswxwDyeFgNP6Q46LWPZ8iGZptCObCaLsIwsVOWBWoO4WNkOv3IaEOzLAac/1hwr/r3A4971CTDVYWbNpz8HTVd6w2b72bZymSEPANQH62OY2c6pG0NK2njEUHFi8F+6e2Ure8IC4zGJKHgMOGna706YmBanQ8Q7aFbSpxJ2CPEkccQDwit3Gkf2eY8YtcfNrm2ax4Ghl57jS458N7dIP5j42HFWG3UWBA+5pj37xQuyNS0pwTSocO/89Gk5r6s9IeyiSmmPnbQMzUdpbZx0DZ8uukuG6Q5vR6+xzphS5KTbBJt+zsdl1KZV3Lsd1eNoEu5tdh1KJXIVgF3ShnyVm76lETnfKxlyScaMB4B9LQLHGWQdpggAAAABJRU5ErkJggg==" class="vid__arrow" alt="img">
+                <div class="video__80 video-btn"><i><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" width="1em" height="1em" fill="currentColor"><path d="m11.596 8.697-6.363 3.692c-.54.313-1.233-.066-1.233-.697V4.308c0-.63.692-1.01 1.233-.696l6.363 3.692a.802.802 0 0 1 0 1.393z"></path></svg></i></div><span class="proces">Work Process</span></div></div>
+      </div>
+      <div class="col-lg-4 banner_col" >
+      <div class="banner_img">
+
+      </div>
+      </div>
+    </div>
+  </div>
+ </div>
+  </section>
+
+</main>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

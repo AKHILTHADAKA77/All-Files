@@ -1,0 +1,488 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Audio Gallery</title>
+    <!-- Bootstrap 5.3.3 CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <style>
+        body {
+            background-color: #f8f9fa;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        .card {
+            transition: transform 0.3s, box-shadow 0.3s;
+            border: none;
+            border-radius: 12px;
+            overflow: hidden;
+        }
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+        }
+        .album-art {
+            height: 180px;
+            object-fit: cover;
+        }
+        .player-container {
+            background: linear-gradient(135deg, #6a11cb 0%, #2575fc 100%);
+            border-radius: 15px;
+            color: white;
+        }
+        .progress {
+            height: 6px;
+            cursor: pointer;
+        }
+        .song-item {
+            transition: background-color 0.2s;
+            border-radius: 8px;
+        }
+        .song-item:hover {
+            background-color: rgba(0,0,0,0.03);
+        }
+        .ai-badge {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            background: linear-gradient(45deg, #ff6b6b, #ff9e7d);
+            color: white;
+            font-size: 0.7rem;
+            padding: 3px 8px;
+            border-radius: 10px;
+        }
+        .mood-indicator {
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            display: inline-block;
+            margin-right: 8px;
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <header class="bg-dark text-white py-4 mb-4">
+        <div class="container">
+            <div class="row align-items-center">
+                <div class="col-md-6">
+                    <h1><i class="fas fa-music me-2"></i>AI Audio Gallery</h1>
+                    <p class="mb-0">Discover music with AI-powered recommendations</p>
+                </div>
+                <div class="col-md-6 text-md-end">
+                    <div class="input-group mt-3 mt-md-0">
+                        <input type="text" class="form-control" placeholder="Search songs..." id="searchInput">
+                        <button class="btn btn-primary" type="button">
+                            <i class="fas fa-search"></i>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <div class="container mb-5">
+        <!-- Now Playing Section -->
+        <div class="row mb-4">
+            <div class="col-12">
+                <div class="player-container p-4 shadow">
+                    <div class="row align-items-center">
+                        <div class="col-md-3 text-center">
+                            <img src="https://placehold.co/300x300/6a11cb/FFFFFF?text=Now+Playing" id="currentAlbumArt" class="img-fluid rounded shadow" alt="Album Art">
+                        </div>
+                        <div class="col-md-9 mt-3 mt-md-0">
+                            <h3 id="currentSong">Select a song to play</h3>
+                            <p id="currentArtist" class="mb-2">Artist Name</p>
+                            <div class="d-flex align-items-center mb-2">
+                                <span class="me-3" id="currentTime">0:00</span>
+                                <div class="progress flex-grow-1 me-3" id="progressBar">
+                                    <div class="progress-bar" role="progressbar" style="width: 0%"></div>
+                                </div>
+                                <span id="duration">0:00</span>
+                            </div>
+                            <div class="d-flex justify-content-between">
+                                <button class="btn btn-light" id="prevBtn">
+                                    <i class="fas fa-step-backward"></i>
+                                </button>
+                                <button class="btn btn-light btn-lg px-4" id="playPauseBtn">
+                                    <i class="fas fa-play"></i>
+                                </button>
+                                <button class="btn btn-light" id="nextBtn">
+                                    <i class="fas fa-step-forward"></i>
+                                </button>
+                                <div class="dropdown">
+                                    <button class="btn btn-light dropdown-toggle" type="button" data-bs-toggle="dropdown">
+                                        <i class="fas fa-robot"></i> AI Features
+                                    </button>
+                                    <ul class="dropdown-menu">
+                                        <li><a class="dropdown-item" href="#" id="recommendBtn"><i class="fas fa-star me-2"></i>Get Recommendations</a></li>
+                                        <li><a class="dropdown-item" href="#" id="moodBtn"><i class="fas fa-smile me-2"></i>Detect Mood</a></li>
+                                        <li><a class="dropdown-item" href="#" id="similarBtn"><i class="fas fa-compress-alt me-2"></i>Find Similar</a></li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- AI Recommendation Section -->
+        <div class="row mb-4 d-none" id="aiRecommendation">
+            <div class="col-12">
+                <div class="card bg-light border-0">
+                    <div class="card-body">
+                        <div class="d-flex justify-content-between align-items-center mb-3">
+                            <h4 class="card-title mb-0"><i class="fas fa-robot text-primary me-2"></i>AI Recommendations</h4>
+                            <button type="button" class="btn-close" id="closeRecommendation"></button>
+                        </div>
+                        <p class="text-muted">Based on your current selection, we think you'll enjoy these songs:</p>
+                        <div class="row" id="recommendationList">
+                            <!-- AI recommendations will be inserted here -->
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Songs Gallery -->
+        <div class="row">
+            <div class="col-12 mb-4">
+                <h3>Music Library</h3>
+                <p class="text-muted">Browse our collection of songs</p>
+            </div>
+        </div>
+
+        <div class="row" id="songGallery">
+            <!-- Songs will be dynamically inserted here -->
+        </div>
+    </div>
+
+    <!-- Audio Element -->
+    <audio id="audioPlayer"></audio>
+
+    <!-- Bootstrap & jQuery JS -->
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+    
+    <script>
+        // Sample song data
+        const songs = [
+            { id: 1, title: "Summer Breeze", artist: "Ocean Waves", duration: "3:45", cover: "https://placehold.co/300x300/4e54c8/FFFFFF?text=Summer+Breeze", mood: "happy", genre: "Pop" },
+            { id: 2, title: "Mountain Top", artist: "Forest Sounds", duration: "4:20", cover: "https://placehold.co/300x300/2193b0/FFFFFF?text=Mountain+Top", mood: "calm", genre: "Ambient" },
+            { id: 3, title: "City Lights", artist: "Urban Beats", duration: "3:15", cover: "https://placehold.co/300x300/cc2b5e/FFFFFF?text=City+Lights", mood: "energetic", genre: "Electronic" },
+            { id: 4, title: "Desert Wind", artist: "Sandy Dunes", duration: "5:10", cover: "https://placehold.co/300x300/42275a/FFFFFF?text=Desert+Wind", mood: "relaxed", genre: "World" },
+            { id: 5, title: "Rainy Days", artist: "Cloudy Skies", duration: "4:05", cover: "https://placehold.co/300x300/2b5876/FFFFFF?text=Rainy+Days", mood: "melancholy", genre: "Jazz" },
+            { id: 6, title: "Night Drive", artist: "Midnight Cruisers", duration: "3:50", cover: "https://placehold.co/300x300/1488cc/FFFFFF?text=Night+Drive", mood: "dreamy", genre: "Synthwave" },
+            { id: 7, title: "Sunrise", artist: "Morning Birds", duration: "2:55", cover: "https://placehold.co/300x300/bbd2c5/FFFFFF?text=Sunrise", mood: "peaceful", genre: "Ambient" },
+            { id: 8, title: "Deep Blue", artist: "Ocean Depths", duration: "4:30", cover: "https://placehold.co/300x300/1d976c/FFFFFF?text=Deep+Blue", mood: "calm", genre: "Chillout" },
+            { id: 9, title: "Electric Dream", artist: "Neon Lights", duration: "3:20", cover: "https://placehold.co/300x300/614385/FFFFFF?text=Electric+Dream", mood: "energetic", genre: "EDM" },
+            { id: 10, title: "Autumn Leaves", artist: "Fall Season", duration: "3:40", cover: "https://placehold.co/300x300/da4453/FFFFFF?text=Autumn+Leaves", mood: "melancholy", genre: "Acoustic" },
+            { id: 11, title: "Winter Chill", artist: "Frosty Mornings", duration: "4:15", cover: "https://placehold.co/300x300/3a7bd5/FFFFFF?text=Winter+Chill", mood: "calm", genre: "Ambient" },
+            { id: 12, title: "Spring Bloom", artist: "Flowering Fields", duration: "3:10", cover: "https://placehold.co/300x300/56ab2f/FFFFFF?text=Spring+Bloom", mood: "happy", genre: "Pop" },
+            { id: 13, title: "Starlight", artist: "Cosmic Travelers", duration: "5:25", cover: "https://placehold.co/300x300/0f0c29/FFFFFF?text=Starlight", mood: "dreamy", genre: "Ambient" },
+            { id: 14, title: "Fire Dance", artist: "Ritual Beats", duration: "3:55", cover: "https://placehold.co/300x300/c04848/FFFFFF?text=Fire+Dance", mood: "energetic", genre: "World" },
+            { id: 15, title: "Waterfall", artist: "Mountain Stream", duration: "4:10", cover: "https://placehold.co/300x300/36d1dc/FFFFFF?text=Waterfall", mood: "relaxed", genre: "New Age" }
+        ];
+
+        // Current player state
+        let currentSongId = null;
+        let isPlaying = false;
+        let currentTime = 0;
+
+        // Initialize the gallery
+        function initGallery() {
+            const gallery = document.getElementById('songGallery');
+            
+            songs.forEach(song => {
+                const col = document.createElement('div');
+                col.className = 'col-md-4 col-lg-3 mb-4';
+                
+                col.innerHTML = `
+                    <div class="card h-100 shadow-sm">
+                        <span class="ai-badge">AI Enhanced</span>
+                        <img src="${song.cover}" class="card-img-top album-art" alt="${song.title}">
+                        <div class="card-body">
+                            <h5 class="card-title">${song.title}</h5>
+                            <p class="card-text text-muted">${song.artist}</p>
+                            <div class="d-flex justify-content-between align-items-center">
+                                <small class="text-muted">${song.duration}</small>
+                                <button class="btn btn-sm btn-outline-primary play-btn" data-id="${song.id}">
+                                    <i class="fas fa-play"></i> Play
+                                </button>
+                            </div>
+                        </div>
+                        <div class="card-footer bg-transparent">
+                            <small class="text-muted">
+                                <span class="mood-indicator" style="background-color: ${getMoodColor(song.mood)}"></span>
+                                ${capitalizeFirstLetter(song.mood)} • ${song.genre}
+                            </small>
+                        </div>
+                    </div>
+                `;
+                
+                gallery.appendChild(col);
+            });
+
+            // Add event listeners to play buttons
+            document.querySelectorAll('.play-btn').forEach(btn => {
+                btn.addEventListener('click', function() {
+                    const songId = parseInt(this.getAttribute('data-id'));
+                    playSong(songId);
+                });
+            });
+        }
+
+        // Play a song
+        function playSong(songId) {
+            const song = songs.find(s => s.id === songId);
+            if (!song) return;
+
+            const audioPlayer = document.getElementById('audioPlayer');
+            const playPauseBtn = document.getElementById('playPauseBtn');
+            
+            // Update current song ID
+            currentSongId = songId;
+            
+            // Update UI
+            document.getElementById('currentSong').textContent = song.title;
+            document.getElementById('currentArtist').textContent = song.artist;
+            document.getElementById('currentAlbumArt').src = song.cover;
+            document.getElementById('duration').textContent = song.duration;
+            
+            // In a real app, we would set the audio source
+            // audioPlayer.src = song.audioFile;
+            
+            // Simulate playing
+            audioPlayer.play();
+            isPlaying = true;
+            playPauseBtn.innerHTML = '<i class="fas fa-pause"></i>';
+            
+            // Start updating progress bar
+            simulatePlayback();
+        }
+
+        // Simulate playback for demo purposes
+        function simulatePlayback() {
+            const progressBar = document.querySelector('.progress-bar');
+            const currentTimeElement = document.getElementById('currentTime');
+            
+            // Reset if starting new song
+            if (currentTime === 0) {
+                progressBar.style.width = '0%';
+                currentTimeElement.textContent = '0:00';
+            }
+            
+            // Simulate progress
+            const interval = setInterval(() => {
+                if (!isPlaying) {
+                    clearInterval(interval);
+                    return;
+                }
+                
+                currentTime += 1;
+                const duration = 220; // 3:40 in seconds
+                
+                if (currentTime >= duration) {
+                    currentTime = 0;
+                    playNextSong();
+                    return;
+                }
+                
+                // Update progress bar
+                const progressPercent = (currentTime / duration) * 100;
+                progressBar.style.width = `${progressPercent}%`;
+                
+                // Update time display
+                const minutes = Math.floor(currentTime / 60);
+                const seconds = currentTime % 60;
+                currentTimeElement.textContent = `${minutes}:${seconds.toString().padStart(2, '0')}`;
+            }, 1000);
+        }
+
+        // Play next song
+        function playNextSong() {
+            if (!currentSongId) return;
+            
+            const currentIndex = songs.findIndex(song => song.id === currentSongId);
+            const nextIndex = (currentIndex + 1) % songs.length;
+            playSong(songs[nextIndex].id);
+        }
+
+        // Play previous song
+        function playPrevSong() {
+            if (!currentSongId) return;
+            
+            const currentIndex = songs.findIndex(song => song.id === currentSongId);
+            const prevIndex = (currentIndex - 1 + songs.length) % songs.length;
+            playSong(songs[prevIndex].id);
+        }
+
+        // Toggle play/pause
+        function togglePlayPause() {
+            const audioPlayer = document.getElementById('audioPlayer');
+            const playPauseBtn = document.getElementById('playPauseBtn');
+            
+            isPlaying = !isPlaying;
+            
+            if (isPlaying) {
+                audioPlayer.play();
+                playPauseBtn.innerHTML = '<i class="fas fa-pause"></i>';
+                simulatePlayback();
+            } else {
+                audioPlayer.pause();
+                playPauseBtn.innerHTML = '<i class="fas fa-play"></i>';
+            }
+        }
+
+        // Get mood color
+        function getMoodColor(mood) {
+            const moodColors = {
+                happy: '#f9c74f',
+                calm: '#90be6d',
+                energetic: '#f94144',
+                relaxed: '#43aa8b',
+                melancholy: '#577590',
+                dreamy: '#7b2cbf',
+                peaceful: '#98c1d9'
+            };
+            
+            return moodColors[mood] || '#6c757d';
+        }
+
+        // Capitalize first letter
+        function capitalizeFirstLetter(string) {
+            return string.charAt(0).toUpperCase() + string.slice(1);
+        }
+
+        // AI Recommendation feature
+        function getRecommendations() {
+            if (!currentSongId) return;
+            
+            const currentSong = songs.find(s => s.id === currentSongId);
+            const recommendations = songs
+                .filter(song => song.id !== currentSongId && 
+                       (song.genre === currentSong.genre || song.mood === currentSong.mood))
+                .sort(() => 0.5 - Math.random())
+                .slice(0, 3);
+            
+            const recommendationList = document.getElementById('recommendationList');
+            recommendationList.innerHTML = '';
+            
+            recommendations.forEach(song => {
+                const col = document.createElement('div');
+                col.className = 'col-md-4';
+                
+                col.innerHTML = `
+                    <div class="card song-item mb-3">
+                        <div class="card-body">
+                            <div class="d-flex align-items-center">
+                                <img src="${song.cover}" alt="${song.title}" width="50" height="50" class="rounded me-3">
+                                <div class="flex-grow-1">
+                                    <h6 class="mb-0">${song.title}</h6>
+                                    <small class="text-muted">${song.artist}</small>
+                                </div>
+                                <button class="btn btn-sm btn-outline-primary play-btn" data-id="${song.id}">
+                                    <i class="fas fa-play"></i>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                `;
+                
+                recommendationList.appendChild(col);
+            });
+            
+            // Add event listeners to play buttons in recommendations
+            recommendationList.querySelectorAll('.play-btn').forEach(btn => {
+                btn.addEventListener('click', function() {
+                    const songId = parseInt(this.getAttribute('data-id'));
+                    playSong(songId);
+                });
+            });
+            
+            // Show recommendation section
+            document.getElementById('aiRecommendation').classList.remove('d-none');
+        }
+
+        // Detect mood of current song
+        function detectMood() {
+            if (!currentSongId) return;
+            
+            const currentSong = songs.find(s => s.id === currentSongId);
+            alert(`Our AI detects this song as: ${capitalizeFirstLetter(currentSong.mood)} mood`);
+        }
+
+        // Find similar songs
+        function findSimilar() {
+            if (!currentSongId) return;
+            
+            const currentSong = songs.find(s => s.id === currentSongId);
+            const similarSongs = songs.filter(song => 
+                song.id !== currentSongId && song.genre === currentSong.genre
+            ).slice(0, 5);
+            
+            let message = `Songs similar to "${currentSong.title}":\n`;
+            similarSongs.forEach((song, index) => {
+                message += `${index + 1}. ${song.title} by ${song.artist}\n`;
+            });
+            
+            alert(message);
+        }
+
+        // Initialize when page loads
+        document.addEventListener('DOMContentLoaded', function() {
+            initGallery();
+            
+            // Add event listeners
+            document.getElementById('playPauseBtn').addEventListener('click', togglePlayPause);
+            document.getElementById('nextBtn').addEventListener('click', playNextSong);
+            document.getElementById('prevBtn').addEventListener('click', playPrevSong);
+            document.getElementById('recommendBtn').addEventListener('click', getRecommendations);
+            document.getElementById('moodBtn').addEventListener('click', detectMood);
+            document.getElementById('similarBtn').addEventListener('click', findSimilar);
+            document.getElementById('closeRecommendation').addEventListener('click', function() {
+                document.getElementById('aiRecommendation').classList.add('d-none');
+            });
+            
+            // Progress bar seeking
+            document.getElementById('progressBar').addEventListener('click', function(e) {
+                const progressBar = this;
+                const clickPosition = e.pageX - progressBar.getBoundingClientRect().left;
+                const progressBarWidth = progressBar.offsetWidth;
+                const percent = (clickPosition / progressBarWidth) * 100;
+                
+                // Update progress
+                document.querySelector('.progress-bar').style.width = `${percent}%`;
+                
+                // Update time (simulated)
+                const duration = 220; // 3:40 in seconds
+                currentTime = Math.floor((percent / 100) * duration);
+                
+                const minutes = Math.floor(currentTime / 60);
+                const seconds = currentTime % 60;
+                document.getElementById('currentTime').textContent = `${minutes}:${seconds.toString().padStart(2, '0')}`;
+            });
+            
+            // Search functionality
+            document.getElementById('searchInput').addEventListener('input', function() {
+                const searchTerm = this.value.toLowerCase();
+                const songCards = document.querySelectorAll('#songGallery .card');
+                
+                songCards.forEach(card => {
+                    const title = card.querySelector('.card-title').textContent.toLowerCase();
+                    const artist = card.querySelector('.card-text').textContent.toLowerCase();
+                    
+                    if (title.includes(searchTerm) || artist.includes(searchTerm)) {
+                        card.parentElement.style.display = 'block';
+                    } else {
+                        card.parentElement.style.display = 'none';
+                    }
+                });
+            });
+        });
+    </script>
+</body>
+</html>

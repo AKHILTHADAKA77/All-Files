@@ -1,0 +1,717 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Song Gallery</title>
+    <!-- Bootstrap 5.3.3 CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Bootstrap Icons -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css">
+    <style>
+        .song-card {
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            height: 100%;
+        }
+        .song-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+        }
+        .song-img {
+            height: 200px;
+            object-fit: cover;
+        }
+        .play-btn {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+        .img-container:hover .play-btn {
+            opacity: 1;
+        }
+        .filter-btn.active {
+            background-color: #0d6efd;
+            color: white;
+        }
+        .duration-badge {
+            position: absolute;
+            bottom: 10px;
+            right: 10px;
+            background-color: rgba(0,0,0,0.7);
+            color: white;
+            padding: 2px 8px;
+            border-radius: 4px;
+            font-size: 0.8rem;
+        }
+        .player-progress {
+            height: 5px;
+            cursor: pointer;
+        }
+        .volume-slider {
+            width: 100px;
+        }
+        .modal-backdrop {
+            background-color: rgba(0, 0, 0, 0.8);
+        }
+        .audio-player-modal .modal-dialog {
+            max-width: 700px;
+        }
+        .audio-player-modal .modal-content {
+            background: linear-gradient(135deg, #1e1e2e, #2d2d44);
+            color: white;
+            border: none;
+            border-radius: 15px;
+        }
+        .audio-player-modal .modal-header {
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        .audio-player-modal .modal-footer {
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        .album-art {
+            width: 250px;
+            height: 250px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+        }
+        .player-control-btn {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .main-play-btn {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+        }
+        .time-display {
+            font-size: 0.9rem;
+            min-width: 45px;
+        }
+        .queue-item {
+            padding: 10px;
+            border-radius: 8px;
+            transition: background-color 0.2s;
+        }
+        .queue-item:hover {
+            background-color: rgba(255, 255, 255, 0.1);
+        }
+        .queue-item.active {
+            background-color: rgba(13, 110, 253, 0.3);
+        }
+        .queue-item img {
+            width: 40px;
+            height: 40px;
+            border-radius: 4px;
+        }
+    </style>
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+        <div class="container">
+            <a class="navbar-brand" href="#"><i class="bi bi-music-note-beamed"></i> Song Gallery</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item">
+                        <a class="nav-link active" href="#">Home</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#">Playlist</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#">Artists</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#">About</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Header -->
+    <header class="bg-primary text-white py-5">
+        <div class="container">
+            <h1 class="display-4">Song Gallery</h1>
+            <p class="lead">Discover and explore your favorite music collection</p>
+        </div>
+    </header>
+
+    <!-- Filter Section -->
+    <section class="py-4 bg-light">
+        <div class="container">
+            <div class="d-flex flex-wrap justify-content-center gap-2">
+                <button class="btn btn-outline-primary filter-btn active" data-filter="all">All Songs</button>
+                <button class="btn btn-outline-primary filter-btn" data-filter="pop">Pop</button>
+                <button class="btn btn-outline-primary filter-btn" data-filter="rock">Rock</button>
+                <button class="btn btn-outline-primary filter-btn" data-filter="jazz">Jazz</button>
+                <button class="btn btn-outline-primary filter-btn" data-filter="electronic">Electronic</button>
+                <button class="btn btn-outline-primary filter-btn" data-filter="classical">Classical</button>
+            </div>
+        </div>
+    </section>
+
+    <!-- Song Gallery -->
+    <main class="py-5">
+        <div class="container">
+            <div class="row g-4" id="songGallery">
+                <!-- Song Card 1 -->
+                <div class="col-md-6 col-lg-4 col-xl-3 song-item" data-genre="pop">
+                    <div class="card song-card">
+                        <div class="img-container position-relative">
+                            <img src="https://picsum.photos/seed/song1/400/300.jpg" class="card-img-top song-img" alt="Song Cover">
+                            <button class="btn btn-primary rounded-circle play-btn" data-bs-toggle="modal" data-bs-target="#audioPlayerModal" data-song="Summer Vibes" data-artist="Ocean Waves" data-img="https://picsum.photos/seed/song1/400/300.jpg" data-duration="3:45">
+                                <i class="bi bi-play-fill"></i>
+                            </button>
+                            <span class="duration-badge">3:45</span>
+                        </div>
+                        <div class="card-body">
+                            <h5 class="card-title">Summer Vibes</h5>
+                            <p class="card-text text-muted">Artist: Ocean Waves</p>
+                            <div class="d-flex justify-content-between align-items-center">
+                                <span class="badge bg-primary">Pop</span>
+                                <div>
+                                    <button class="btn btn-sm btn-outline-secondary"><i class="bi bi-heart"></i></button>
+                                    <button class="btn btn-sm btn-outline-secondary"><i class="bi bi-plus"></i></button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Song Card 2 -->
+                <div class="col-md-6 col-lg-4 col-xl-3 song-item" data-genre="rock">
+                    <div class="card song-card">
+                        <div class="img-container position-relative">
+                            <img src="https://picsum.photos/seed/song2/400/300.jpg" class="card-img-top song-img" alt="Song Cover">
+                            <button class="btn btn-primary rounded-circle play-btn" data-bs-toggle="modal" data-bs-target="#audioPlayerModal" data-song="Thunder Road" data-artist="Lightning Strike" data-img="https://picsum.photos/seed/song2/400/300.jpg" data-duration="4:20">
+                                <i class="bi bi-play-fill"></i>
+                            </button>
+                            <span class="duration-badge">4:20</span>
+                        </div>
+                        <div class="card-body">
+                            <h5 class="card-title">Thunder Road</h5>
+                            <p class="card-text text-muted">Artist: Lightning Strike</p>
+                            <div class="d-flex justify-content-between align-items-center">
+                                <span class="badge bg-danger">Rock</span>
+                                <div>
+                                    <button class="btn btn-sm btn-outline-secondary"><i class="bi bi-heart"></i></button>
+                                    <button class="btn btn-sm btn-outline-secondary"><i class="bi bi-plus"></i></button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Song Card 3 -->
+                <div class="col-md-6 col-lg-4 col-xl-3 song-item" data-genre="jazz">
+                    <div class="card song-card">
+                        <div class="img-container position-relative">
+                            <img src="https://picsum.photos/seed/song3/400/300.jpg" class="card-img-top song-img" alt="Song Cover">
+                            <button class="btn btn-primary rounded-circle play-btn" data-bs-toggle="modal" data-bs-target="#audioPlayerModal" data-song="Midnight Jazz" data-artist="Blue Note Trio" data-img="https://picsum.photos/seed/song3/400/300.jpg" data-duration="5:15">
+                                <i class="bi bi-play-fill"></i>
+                            </button>
+                            <span class="duration-badge">5:15</span>
+                        </div>
+                        <div class="card-body">
+                            <h5 class="card-title">Midnight Jazz</h5>
+                            <p class="card-text text-muted">Artist: Blue Note Trio</p>
+                            <div class="d-flex justify-content-between align-items-center">
+                                <span class="badge bg-info">Jazz</span>
+                                <div>
+                                    <button class="btn btn-sm btn-outline-secondary"><i class="bi bi-heart"></i></button>
+                                    <button class="btn btn-sm btn-outline-secondary"><i class="bi bi-plus"></i></button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Song Card 4 -->
+                <div class="col-md-6 col-lg-4 col-xl-3 song-item" data-genre="electronic">
+                    <div class="card song-card">
+                        <div class="img-container position-relative">
+                            <img src="https://picsum.photos/seed/song4/400/300.jpg" class="card-img-top song-img" alt="Song Cover">
+                            <button class="btn btn-primary rounded-circle play-btn" data-bs-toggle="modal" data-bs-target="#audioPlayerModal" data-song="Digital Dreams" data-artist="Cyber Sound" data-img="https://picsum.photos/seed/song4/400/300.jpg" data-duration="3:30">
+                                <i class="bi bi-play-fill"></i>
+                            </button>
+                            <span class="duration-badge">3:30</span>
+                        </div>
+                        <div class="card-body">
+                            <h5 class="card-title">Digital Dreams</h5>
+                            <p class="card-text text-muted">Artist: Cyber Sound</p>
+                            <div class="d-flex justify-content-between align-items-center">
+                                <span class="badge bg-success">Electronic</span>
+                                <div>
+                                    <button class="btn btn-sm btn-outline-secondary"><i class="bi bi-heart"></i></button>
+                                    <button class="btn btn-sm btn-outline-secondary"><i class="bi bi-plus"></i></button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Song Card 5 -->
+                <div class="col-md-6 col-lg-4 col-xl-3 song-item" data-genre="classical">
+                    <div class="card song-card">
+                        <div class="img-container position-relative">
+                            <img src="https://picsum.photos/seed/song5/400/300.jpg" class="card-img-top song-img" alt="Song Cover">
+                            <button class="btn btn-primary rounded-circle play-btn" data-bs-toggle="modal" data-bs-target="#audioPlayerModal" data-song="Symphony No. 5" data-artist="Philharmonic Orchestra" data-img="https://picsum.photos/seed/song5/400/300.jpg" data-duration="7:45">
+                                <i class="bi bi-play-fill"></i>
+                            </button>
+                            <span class="duration-badge">7:45</span>
+                        </div>
+                        <div class="card-body">
+                            <h5 class="card-title">Symphony No. 5</h5>
+                            <p class="card-text text-muted">Artist: Philharmonic Orchestra</p>
+                            <div class="d-flex justify-content-between align-items-center">
+                                <span class="badge bg-warning text-dark">Classical</span>
+                                <div>
+                                    <button class="btn btn-sm btn-outline-secondary"><i class="bi bi-heart"></i></button>
+                                    <button class="btn btn-sm btn-outline-secondary"><i class="bi bi-plus"></i></button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Song Card 6 -->
+                <div class="col-md-6 col-lg-4 col-xl-3 song-item" data-genre="pop">
+                    <div class="card song-card">
+                        <div class="img-container position-relative">
+                            <img src="https://picsum.photos/seed/song6/400/300.jpg" class="card-img-top song-img" alt="Song Cover">
+                            <button class="btn btn-primary rounded-circle play-btn" data-bs-toggle="modal" data-bs-target="#audioPlayerModal" data-song="Starlight" data-artist="Luna Park" data-img="https://picsum.photos/seed/song6/400/300.jpg" data-duration="3:15">
+                                <i class="bi bi-play-fill"></i>
+                            </button>
+                            <span class="duration-badge">3:15</span>
+                        </div>
+                        <div class="card-body">
+                            <h5 class="card-title">Starlight</h5>
+                            <p class="card-text text-muted">Artist: Luna Park</p>
+                            <div class="d-flex justify-content-between align-items-center">
+                                <span class="badge bg-primary">Pop</span>
+                                <div>
+                                    <button class="btn btn-sm btn-outline-secondary"><i class="bi bi-heart"></i></button>
+                                    <button class="btn btn-sm btn-outline-secondary"><i class="bi bi-plus"></i></button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Song Card 7 -->
+                <div class="col-md-6 col-lg-4 col-xl-3 song-item" data-genre="rock">
+                    <div class="card song-card">
+                        <div class="img-container position-relative">
+                            <img src="https://picsum.photos/seed/song7/400/300.jpg" class="card-img-top song-img" alt="Song Cover">
+                            <button class="btn btn-primary rounded-circle play-btn" data-bs-toggle="modal" data-bs-target="#audioPlayerModal" data-song="Rebel Yell" data-artist="Steel Hearts" data-img="https://picsum.photos/seed/song7/400/300.jpg" data-duration="4:45">
+                                <i class="bi bi-play-fill"></i>
+                            </button>
+                            <span class="duration-badge">4:45</span>
+                        </div>
+                        <div class="card-body">
+                            <h5 class="card-title">Rebel Yell</h5>
+                            <p class="card-text text-muted">Artist: Steel Hearts</p>
+                            <div class="d-flex justify-content-between align-items-center">
+                                <span class="badge bg-danger">Rock</span>
+                                <div>
+                                    <button class="btn btn-sm btn-outline-secondary"><i class="bi bi-heart"></i></button>
+                                    <button class="btn btn-sm btn-outline-secondary"><i class="bi bi-plus"></i></button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Song Card 8 -->
+                <div class="col-md-6 col-lg-4 col-xl-3 song-item" data-genre="electronic">
+                    <div class="card song-card">
+                        <div class="img-container position-relative">
+                            <img src="https://picsum.photos/seed/song8/400/300.jpg" class="card-img-top song-img" alt="Song Cover">
+                            <button class="btn btn-primary rounded-circle play-btn" data-bs-toggle="modal" data-bs-target="#audioPlayerModal" data-song="Neon Nights" data-artist="Synth Wave" data-img="https://picsum.photos/seed/song8/400/300.jpg" data-duration="5:00">
+                                <i class="bi bi-play-fill"></i>
+                            </button>
+                            <span class="duration-badge">5:00</span>
+                        </div>
+                        <div class="card-body">
+                            <h5 class="card-title">Neon Nights</h5>
+                            <p class="card-text text-muted">Artist: Synth Wave</p>
+                            <div class="d-flex justify-content-between align-items-center">
+                                <span class="badge bg-success">Electronic</span>
+                                <div>
+                                    <button class="btn btn-sm btn-outline-secondary"><i class="bi bi-heart"></i></button>
+                                    <button class="btn btn-sm btn-outline-secondary"><i class="bi bi-plus"></i></button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-dark text-white py-4">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-6">
+                    <h5>Song Gallery</h5>
+                    <p>Your ultimate music collection platform</p>
+                </div>
+                <div class="col-md-6 text-md-end">
+                    <div class="d-flex justify-content-md-end gap-3">
+                        <a href="#" class="text-white"><i class="bi bi-facebook"></i></a>
+                        <a href="#" class="text-white"><i class="bi bi-twitter"></i></a>
+                        <a href="#" class="text-white"><i class="bi bi-instagram"></i></a>
+                        <a href="#" class="text-white"><i class="bi bi-youtube"></i></a>
+                    </div>
+                    <p class="mt-2">&copy; 2023 Song Gallery. All rights reserved.</p>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Audio Player Modal -->
+    <div class="modal fade audio-player-modal" id="audioPlayerModal" tabindex="-1" aria-labelledby="audioPlayerModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="audioPlayerModalLabel">Now Playing</h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="container-fluid">
+                        <div class="row">
+                            <div class="col-md-5 d-flex flex-column align-items-center justify-content-center">
+                                <img id="modalAlbumArt" src="https://picsum.photos/seed/song1/400/300.jpg" alt="Album Art" class="album-art mb-4">
+                                <h4 id="modalSongTitle">Summer Vibes</h4>
+                                <p id="modalArtist" class="text-muted">Ocean Waves</p>
+                            </div>
+                            <div class="col-md-7">
+                                <!-- Progress Bar -->
+                                <div class="mb-4">
+                                    <div class="d-flex justify-content-between mb-1">
+                                        <span id="modalCurrentTime" class="time-display">0:00</span>
+                                        <span id="modalTotalTime" class="time-display">3:45</span>
+                                    </div>
+                                    <div class="progress player-progress" id="modalProgressBar">
+                                        <div class="progress-bar bg-primary" role="progressbar" style="width: 0%;" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100"></div>
+                                    </div>
+                                </div>
+                                
+                                <!-- Player Controls -->
+                                <div class="d-flex justify-content-center align-items-center mb-4">
+                                    <button class="btn btn-link text-white player-control-btn" id="modalShuffleBtn">
+                                        <i class="bi bi-shuffle"></i>
+                                    </button>
+                                    <button class="btn btn-link text-white player-control-btn" id="modalPrevBtn">
+                                        <i class="bi bi-skip-start-fill"></i>
+                                    </button>
+                                    <button class="btn btn-primary main-play-btn" id="modalPlayPauseBtn">
+                                        <i class="bi bi-play-fill"></i>
+                                    </button>
+                                    <button class="btn btn-link text-white player-control-btn" id="modalNextBtn">
+                                        <i class="bi bi-skip-end-fill"></i>
+                                    </button>
+                                    <button class="btn btn-link text-white player-control-btn" id="modalRepeatBtn">
+                                        <i class="bi bi-repeat"></i>
+                                    </button>
+                                </div>
+                                
+                                <!-- Volume Control -->
+                                <div class="d-flex align-items-center mb-4">
+                                    <i class="bi bi-volume-down me-2"></i>
+                                    <input type="range" class="form-range volume-slider" id="modalVolumeSlider" min="0" max="100" value="70">
+                                    <i class="bi bi-volume-up ms-2"></i>
+                                </div>
+                                
+                                <!-- Queue -->
+                                <div>
+                                    <h6>Up Next</h6>
+                                    <div class="queue-container" style="max-height: 200px; overflow-y: auto;">
+                                        <div class="queue-item active d-flex align-items-center mb-2">
+                                            <img src="https://picsum.photos/seed/song1/400/300.jpg" alt="Song" class="me-2">
+                                            <div class="flex-grow-1">
+                                                <div class="fw-bold">Summer Vibes</div>
+                                                <div class="small text-muted">Ocean Waves</div>
+                                            </div>
+                                            <span class="small">3:45</span>
+                                        </div>
+                                        <div class="queue-item d-flex align-items-center mb-2">
+                                            <img src="https://picsum.photos/seed/song2/400/300.jpg" alt="Song" class="me-2">
+                                            <div class="flex-grow-1">
+                                                <div class="fw-bold">Thunder Road</div>
+                                                <div class="small text-muted">Lightning Strike</div>
+                                            </div>
+                                            <span class="small">4:20</span>
+                                        </div>
+                                        <div class="queue-item d-flex align-items-center mb-2">
+                                            <img src="https://picsum.photos/seed/song3/400/300.jpg" alt="Song" class="me-2">
+                                            <div class="flex-grow-1">
+                                                <div class="fw-bold">Midnight Jazz</div>
+                                                <div class="small text-muted">Blue Note Trio</div>
+                                            </div>
+                                            <span class="small">5:15</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-outline-light" id="modalLikeBtn">
+                        <i class="bi bi-heart"></i> Like
+                    </button>
+                    <button type="button" class="btn btn-outline-light" id="modalAddToPlaylistBtn">
+                        <i class="bi bi-plus-circle"></i> Add to Playlist
+                    </button>
+                    <button type="button" class="btn btn-outline-light" id="modalShareBtn">
+                        <i class="bi bi-share"></i> Share
+                    </button>
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Music Player (Fixed at bottom) -->
+    <div class="fixed-bottom bg-white border-top p-3 d-none" id="musicPlayer">
+        <div class="container">
+            <div class="row align-items-center">
+                <div class="col-3">
+                    <div class="d-flex align-items-center">
+                        <img src="https://picsum.photos/seed/currentsong/50/50.jpg" alt="Current Song" class="me-2">
+                        <div>
+                            <div class="fw-bold">Now Playing</div>
+                            <div class="small text-muted" id="currentSongTitle">Song Title</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-6">
+                    <div class="d-flex justify-content-center align-items-center">
+                        <button class="btn btn-sm btn-outline-secondary me-2"><i class="bi bi-skip-start-fill"></i></button>
+                        <button class="btn btn-primary rounded-circle" id="playPauseBtn"><i class="bi bi-pause-fill"></i></button>
+                        <button class="btn btn-sm btn-outline-secondary ms-2"><i class="bi bi-skip-end-fill"></i></button>
+                    </div>
+                    <div class="progress mt-2" style="height: 5px;">
+                        <div class="progress-bar" role="progressbar" style="width: 30%;" aria-valuenow="30" aria-valuemin="0" aria-valuemax="100"></div>
+                    </div>
+                </div>
+                <div class="col-3 text-end">
+                    <div class="d-flex justify-content-end align-items-center">
+                        <button class="btn btn-sm btn-outline-secondary me-2"><i class="bi bi-volume-up"></i></button>
+                        <span id="currentTime">1:25</span> / <span id="totalTime">3:45</span>
+                        <button class="btn btn-sm btn-outline-secondary ms-2" data-bs-toggle="modal" data-bs-target="#audioPlayerModal">
+                            <i class="bi bi-arrows-angle-expand"></i>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Bootstrap 5.3.3 JS Bundle with Popper -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        // Filter functionality
+        document.querySelectorAll('.filter-btn').forEach(button => {
+            button.addEventListener('click', () => {
+                // Update active button
+                document.querySelectorAll('.filter-btn').forEach(btn => btn.classList.remove('active'));
+                button.classList.add('active');
+                
+                const filter = button.getAttribute('data-filter');
+                const songs = document.querySelectorAll('.song-item');
+                
+                songs.forEach(song => {
+                    if (filter === 'all' || song.getAttribute('data-genre') === filter) {
+                        song.style.display = 'block';
+                    } else {
+                        song.style.display = 'none';
+                    }
+                });
+            });
+        });
+
+        // Modal player functionality
+        const audioPlayerModal = document.getElementById('audioPlayerModal');
+        const modalPlayPauseBtn = document.getElementById('modalPlayPauseBtn');
+        const modalProgressBar = document.getElementById('modalProgressBar');
+        const modalCurrentTime = document.getElementById('modalCurrentTime');
+        const modalVolumeSlider = document.getElementById('modalVolumeSlider');
+        let isPlaying = false;
+        let currentProgress = 0;
+        let progressInterval;
+
+        // Update modal with song data when opened
+        audioPlayerModal.addEventListener('show.bs.modal', function(event) {
+            const button = event.relatedTarget;
+            const songTitle = button.getAttribute('data-song');
+            const artist = button.getAttribute('data-artist');
+            const img = button.getAttribute('data-img');
+            const duration = button.getAttribute('data-duration');
+            
+            document.getElementById('modalSongTitle').textContent = songTitle;
+            document.getElementById('modalArtist').textContent = artist;
+            document.getElementById('modalAlbumArt').src = img;
+            document.getElementById('modalTotalTime').textContent = duration;
+            
+            // Update mini player
+            document.getElementById('currentSongTitle').textContent = songTitle;
+            document.querySelector('#musicPlayer img').src = img;
+            document.getElementById('totalTime').textContent = duration;
+            
+            // Show mini player
+            document.getElementById('musicPlayer').classList.remove('d-none');
+            
+            // Reset player state
+            isPlaying = true;
+            currentProgress = 0;
+            updatePlayPauseButton();
+            startProgressSimulation();
+        });
+
+        // Reset player when modal is closed
+        audioPlayerModal.addEventListener('hidden.bs.modal', function() {
+            stopProgressSimulation();
+            isPlaying = false;
+            updatePlayPauseButton();
+        });
+
+        // Play/Pause functionality
+        modalPlayPauseBtn.addEventListener('click', function() {
+            isPlaying = !isPlaying;
+            updatePlayPauseButton();
+            
+            if (isPlaying) {
+                startProgressSimulation();
+            } else {
+                stopProgressSimulation();
+            }
+        });
+
+        function updatePlayPauseButton() {
+            const icon = modalPlayPauseBtn.querySelector('i');
+            if (isPlaying) {
+                icon.classList.remove('bi-play-fill');
+                icon.classList.add('bi-pause-fill');
+            } else {
+                icon.classList.remove('bi-pause-fill');
+                icon.classList.add('bi-play-fill');
+            }
+            
+            // Update mini player button
+            const miniPlayerIcon = document.querySelector('#playPauseBtn i');
+            if (isPlaying) {
+                miniPlayerIcon.classList.remove('bi-play-fill');
+                miniPlayerIcon.classList.add('bi-pause-fill');
+            } else {
+                miniPlayerIcon.classList.remove('bi-pause-fill');
+                miniPlayerIcon.classList.add('bi-play-fill');
+            }
+        }
+
+        // Progress bar simulation
+        function startProgressSimulation() {
+            stopProgressSimulation();
+            progressInterval = setInterval(() => {
+                if (currentProgress < 100) {
+                    currentProgress += 0.5;
+                    updateProgressBar();
+                } else {
+                    // Song ended, reset
+                    currentProgress = 0;
+                    updateProgressBar();
+                    // You could add logic here to play the next song
+                }
+            }, 1000);
+        }
+
+        function stopProgressSimulation() {
+            clearInterval(progressInterval);
+        }
+
+        function updateProgressBar() {
+            modalProgressBar.querySelector('.progress-bar').style.width = currentProgress + '%';
+            modalProgressBar.setAttribute('aria-valuenow', currentProgress);
+            
+            // Update current time display (simplified)
+            const totalSeconds = 225; // 3:45 in seconds
+            const currentSeconds = Math.floor((currentProgress / 100) * totalSeconds);
+            const minutes = Math.floor(currentSeconds / 60);
+            const seconds = currentSeconds % 60;
+            modalCurrentTime.textContent = `${minutes}:${seconds.toString().padStart(2, '0')}`;
+            
+            // Update mini player progress
+            document.querySelector('#musicPlayer .progress-bar').style.width = currentProgress + '%';
+            document.getElementById('currentTime').textContent = `${minutes}:${seconds.toString().padStart(2, '0')}`;
+        }
+
+        // Allow clicking on progress bar to seek
+        modalProgressBar.addEventListener('click', function(e) {
+            const rect = this.getBoundingClientRect();
+            const offsetX = e.clientX - rect.left;
+            const width = rect.width;
+            currentProgress = (offsetX / width) * 100;
+            updateProgressBar();
+        });
+
+        // Volume control
+        modalVolumeSlider.addEventListener('input', function() {
+            // In a real implementation, this would control the actual audio volume
+            console.log('Volume set to:', this.value);
+        });
+
+        // Like button functionality
+        document.getElementById('modalLikeBtn').addEventListener('click', function() {
+            const icon = this.querySelector('i');
+            if (icon.classList.contains('bi-heart')) {
+                icon.classList.remove('bi-heart');
+                icon.classList.add('bi-heart-fill');
+                this.classList.add('text-danger');
+            } else {
+                icon.classList.remove('bi-heart-fill');
+                icon.classList.add('bi-heart');
+                this.classList.remove('text-danger');
+            }
+        });
+
+        // Mini player play/pause button
+        document.getElementById('playPauseBtn').addEventListener('click', function() {
+            isPlaying = !isPlaying;
+            updatePlayPauseButton();
+            
+            if (isPlaying) {
+                startProgressSimulation();
+            } else {
+                stopProgressSimulation();
+            }
+        });
+
+        // Like button functionality in gallery
+        document.querySelectorAll('.btn-outline-secondary .bi-heart').forEach(heart => {
+            heart.parentElement.addEventListener('click', function() {
+                if (heart.classList.contains('text-danger')) {
+                    heart.classList.remove('text-danger');
+                } else {
+                    heart.classList.add('text-danger');
+                }
+            });
+        });
+    </script>
+</body>
+</html>

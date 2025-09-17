@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Marriage Tribunal – Warangal Diocese</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+  <style>
+    :root {
+      --primary-color: #004aad; /* Royal blue for fancy bishop vibes */
+      --secondary-color: #eaf3ff; /* Light blue for angelic tables */
+      --highlight-color: #ff6f61; /* Pop of dramatic flair */
+    }
+
+    body {
+      font-family: "Comic Sans MS", cursive, sans-serif;
+      background: #f9f9f9;
+      margin: 30px;
+      color: #222;
+    }
+
+    .page-title {
+      text-align: center;
+      font-size: 32px;
+      font-weight: bold;
+      color: var(--primary-color);
+      margin-bottom: 5px;
+      text-transform: uppercase;
+      letter-spacing: 2px;
+    }
+
+    .subtitle {
+      text-align: center;
+      font-size: 20px;
+      color: var(--highlight-color);
+      margin-bottom: 15px;
+      font-weight: bold;
+      text-transform: capitalize;
+    }
+
+    .description {
+      text-align: center;
+      font-size: 15px;
+      line-height: 1.6;
+      margin-bottom: 25px;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      background: #fff;
+      box-shadow: 0px 3px 6px rgba(0,0,0,0.15);
+      border-radius: 8px;
+      overflow: hidden;
+      box-shadow: 0px 3px 6px rgba(0,0,0,0.15);
+      box-shadow: 0px 0px 15px rgba(0,74,173,0.5);
+    }
+
+    th, td {
+      border: 1px solid var(--primary-color);
+      padding: 10px;
+      text-align: left;
+      vertical-align: top;
+    }
+
+    th {
+      background-color: var(--secondary-color);
+      color: var(--primary-color);
+      font-weight: bold;
+    }
+
+    tr:nth-child(even) td {
+      background: #f9f9f9;
+    }
+
+    tr:hover td {
+      background: #e6f2ff;
+      cursor: pointer;
+      transition: 0.2s;
+    }
+
+    @media (max-width: 768px) {
+      th, td {
+        font-size: 14px;
+        padding: 8px;
+      }
+    }
+
+    @media (max-width: 480px) {
+      table, thead, tbody, th, td, tr { display: block; }
+      th { position: absolute; top: -9999px; left: -9999px; }
+      tr { margin-bottom: 15px; }
+      td {
+        border: none;
+        position: relative;
+        padding-left: 50%;
+        text-align: left;
+      }
+      td::before {
+        position: absolute;
+        top: 10px;
+        left: 10px;
+        width: 45%;
+        white-space: nowrap;
+        font-weight: bold;
+      }
+      td:nth-of-type(1)::before { content: "Role"; }
+      td:nth-of-type(2)::before { content: ":"; }
+      td:nth-of-type(3)::before { content: "Name"; }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="row justify-content-center">
+      <div class="col-12 col-md-10">
+        <div class="page-title">Marriage Tribunal</div>
+        <div class="subtitle">Reconstitution of the Diocesan Tribunal</div>
+        <p class="description">
+          According to the canons 1420 and 1421§1 with the necessary dispensation and approval from
+          'Supermo Tribunal della Segnatura Apostolica', the Bishop of Warangal and the judge at first
+          instance of the diocese of Warangal appoint the following members for a period of 5 years
+          from 1st of June 2014 to 31st of May, 2019.
+        </p>
+        <table class="table table-responsive">
+          <tbody>
+            <tr>
+              <th>Judicial Vicar</th>
+              <td>:</td>
+              <td>Rev. Fr. Yetukuti Thomas Kiran, MCL</td>
+            </tr>
+            <tr>
+              <th>Defender of the Bond</th>
+              <td>:</td>
+              <td>Rev. Fr. Thatikonda Joseph, MCI</td>
+            </tr>
+            <tr>
+              <th rowspan="4">Judges</th>
+              <td>:</td>
+              <td>Rev. Fr. Singareddy Bala Showry</td>
+            </tr>
+            <tr>
+              <td>:</td>
+              <td>Rev. Fr. A. Anthony Swamy, SVD</td>
+            </tr>
+            <tr>
+              <td>:</td>
+              <td>Rev. Fr. Thumma Yaga Reddy</td>
+            </tr>
+            <tr>
+              <td>:</td>
+              <td>Dr. Prathap Reddy, M.S</td>
+            </tr>
+            <tr>
+              <th rowspan="4">Advocates</th>
+              <td>:</td>
+              <td>Mr. Prasangi, LLB</td>
+            </tr>
+            <tr>
+              <td>:</td>
+              <td>Rev. Fr. Jyothis IMS</td>
+            </tr>
+            <tr>
+              <td>:</td>
+              <td>Rev. Fr. Pasala Anthony</td>
+            </tr>
+            <tr>
+              <td>:</td>
+              <td>Rev. Fr. Yeruva Lourdu Rddy M.S(dev.com)</td>
+            </tr>
+            <tr>
+              <th>Notary</th>
+              <td>:</td>
+              <td>Rev. Fr. Yeruva Lourdu Rddy M.S(dev.com)</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>AI Video Gallery</title>
+  <!-- Bootstrap CSS -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" />
+  <style>
+    body { background: #f8f9fa; }
+    .video-card {
+      border-radius: 12px;
+      overflow: hidden;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+      cursor: pointer;
+      transition: transform 0.3s, box-shadow 0.3s;
+    }
+    .video-card:hover {
+      transform: translateY(-6px);
+      box-shadow: 0 12px 24px rgba(0,0,0,0.2);
+    }
+    .video-card video {
+      width: 100%;
+      height: 180px;
+      object-fit: cover;
+      display: block;
+    }
+    .video-info {
+      padding: 0.75rem;
+      background: #fff;
+    }
+    .modal-video {
+      width: 100%;
+      max-height: 80vh;
+      background: #000;
+      border-radius: 8px;
+    }
+  </style>
+</head>
+<body>
+
+<div class="container py-5">
+  <h2 class="text-center mb-4"> AI-Generated / AI-Themed Videos</h2>
+  <div class="row g-4">
+
+    <!-- Video Cards -->
+    <div class="col-md-4">
+      <div class="video-card" data-bs-toggle="modal" data-bs-target="#videoModal"
+           data-video="book store/diocese/11.mp4">
+        <video preload="metadata" >
+          <source src="book store/diocese/11.mp4" type="video/mp4">
+        </video>
+        <div class="video-info">
+          <h5>AI Brain Visualization</h5>
+          <p>Abstract AI brain animations</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="col-md-4">
+      <div class="video-card" data-bs-toggle="modal" data-bs-target="#videoModal"
+           data-video="https://youtu.be/5BNGhmztq1g">
+        <video preload="metadata" >
+          <source src="book store/diocese/11.mp4" type="video/mp4">
+        </video>
+        <div class="video-info">
+          <h5>Neon AI Grid</h5>
+          <p>Futuristic neural net scene</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="col-md-4">
+      <div class="video-card" data-bs-toggle="modal" data-bs-target="#videoModal"
+           data-video="https://cdn.pixabay.com/video/2021/08/05/07/16/circuit-6524293_1280.mp4">
+        <video preload="metadata" >
+          <source src="https://cdn.pixabay.com/video/2021/08/05/07/16/circuit-6524293_1280.mp4" type="video/mp4">
+        </video>
+        <div class="video-info">
+          <h5>Digital Circuit</h5>
+          <p>High-tech circuit animation</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="col-md-4">
+      <div class="video-card" data-bs-toggle="modal" data-bs-target="#videoModal"
+           data-video="https://cdn.pixabay.com/video/2021/12/27/12/52/ai-6890369_1280.mp4">
+        <video preload="metadata" >
+          <source src="https://cdn.pixabay.com/video/2021/12/27/12/52/ai-6890369_1280.mp4" type="video/mp4">
+        </video>
+        <div class="video-info">
+          <h5>AI Face Render</h5>
+          <p>Abstract face modeling</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="col-md-4">
+      <div class="video-card" data-bs-toggle="modal" data-bs-target="#videoModal"
+           data-video="https://cdn.pixabay.com/video/2021/07/28/15/37/innovation-6493602_1280.mp4">
+        <video preload="metadata" >
+          <source src="https://cdn.pixabay.com/video/2021/07/28/15/37/innovation-6493602_1280.mp4" type="video/mp4">
+        </video>
+        <div class="video-info">
+          <h5>AI Innovation Flow</h5>
+          <p>Liquid animation visualizing flow</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="col-md-4">
+      <div class="video-card" data-bs-toggle="modal" data-bs-target="#videoModal"
+           data-video="https://cdn.pixabay.com/video/2022/02/09/11/52/technology-6990357_1280.mp4">
+        <video preload="metadata" >
+          <source src="https://cdn.pixabay.com/video/2022/02/09/11/52/technology-6990357_1280.mp4" type="video/mp4">
+        </video>
+        <div class="video-info">
+          <h5>AI Data Stream</h5>
+          <p>Flowing digital data stream</p>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<!-- Modal -->
+<div class="modal fade" id="videoModal" tabindex="-1" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered modal-xl">
+    <div class="modal-content bg-dark">
+      <div class="modal-header border-0">
+        <h5 class="modal-title text-white">Now Playing</h5>
+        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body p-0 text-center">
+        <video id="modalVideo" class="modal-video" controls></video>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Bootstrap JS Bundle -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+
+<script>
+  const videoModal = document.getElementById('videoModal');
+  const modalVideo = document.getElementById('modalVideo');
+
+  videoModal.addEventListener('show.bs.modal', event => {
+    const trigger = event.relatedTarget;
+    const src = trigger.getAttribute('data-video');
+    modalVideo.src = src;
+    modalVideo.muted = true; // Start muted to allow autoplay in some browsers
+    modalVideo.play().catch(() => {
+      // autoplay with sound blocked; user must play manually to hear sound
+    });
+  });
+
+  modalVideo.addEventListener('play', () => {
+    if (modalVideo.muted) {
+      modalVideo.muted = false; // unmute after user plays
+    }
+  });
+
+  videoModal.addEventListener('hidden.bs.modal', () => {
+    modalVideo.pause();
+    modalVideo.currentTime = 0;
+    modalVideo.src = "";
+  });
+</script>
+
+</body>
+</html>

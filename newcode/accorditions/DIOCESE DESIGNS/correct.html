@@ -1,0 +1,235 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Pixabay Music Player</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+  <style>
+    body {
+      background: #f5f5f5;
+      font-family: Arial, sans-serif;
+    }
+    .song-card {
+      position: relative;
+      overflow: hidden;
+      border-radius: 12px;
+      cursor: pointer;
+      transition: transform 0.3s;
+    }
+    .song-card:hover {
+      transform: scale(1.05);
+    }
+    .song-card img {
+      width: 100%;
+      height: 220px;
+      object-fit: cover;
+    }
+    .song-overlay {
+      position: absolute;
+      inset: 0;
+      background: rgba(0,0,0,0.6);
+      opacity: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: opacity 0.3s;
+    }
+    .song-card:hover .song-overlay {
+      opacity: 1;
+    }
+    .song-overlay i {
+      font-size: 48px;
+      color: white;
+    }
+    /* Modal styling */
+    .modal-body {
+      text-align: center;
+    }
+    .modal-body img {
+      width: 100%;
+      max-height: 250px;
+      object-fit: cover;
+      border-radius: 10px;
+      margin-bottom: 15px;
+    }
+    .song-info {
+      text-align: left;
+      margin-top: 10px;
+    }
+    .controls {
+      display: flex;
+      justify-content: center;
+      gap: 15px;
+      margin-top: 10px;
+    }
+    .progress-container {
+      width: 100%;
+      margin: 15px 0;
+    }
+    input[type="range"] {
+      width: 100%;
+    }
+  </style>
+</head>
+<body>
+
+<div class="container py-4">
+  <h2 class="mb-4 text-center">🎵 Free Pixabay Songs</h2>
+  <div class="row g-4">
+    <!-- Song cards -->
+  </div>
+</div>
+
+<!-- Modal -->
+<div class="modal fade" id="musicModal" tabindex="-1">
+  <div class="modal-dialog modal-lg modal-dialog-centered">
+    <div class="modal-content p-3">
+      <div class="modal-header">
+        <h5 class="modal-title">Now Playing</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+      </div>
+      <div class="modal-body">
+        <img id="modalImage" src="" alt="Album Art">
+        <h4 id="songTitle"></h4>
+        <div class="song-info">
+          <p><b>Album:</b> <span id="albumName"></span></p>
+          <p><b>Composer:</b> <span id="composer"></span></p>
+          <p><b>Director:</b> <span id="director"></span></p>
+          <p><b>Genre:</b> <span id="genre"></span></p>
+        </div>
+        <div class="progress-container">
+          <input type="range" id="progressBar" value="0" step="1">
+        </div>
+        <div class="controls">
+          <button class="btn btn-secondary" onclick="prevSong()">⏮ Prev</button>
+          <button class="btn btn-primary" onclick="playPauseSong()" id="playPauseBtn">▶️ Play</button>
+          <button class="btn btn-warning" onclick="stopSong()">⏹ Stop</button>
+          <button class="btn btn-secondary" onclick="nextSong()">Next ⏭</button>
+        </div>
+        <div class="mt-3">
+          <label>Volume</label>
+          <input type="range" id="volumeControl" min="0" max="1" step="0.01" value="1">
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+<script>
+// Song list (Pixabay free songs)
+const songs = [
+  {
+    title: "Inspiring Background",
+    album: "Free Album",
+    composer: "AudioCoffee",
+    director: "Pixabay",
+    genre: "Corporate",
+    image: "https://picsum.photos/seed/song1/600/300",
+    src: "https://cdn.pixabay.com/download/audio/2022/03/15/audio_5c5fcb6f12.mp3?filename=inspiring-background-11271.mp3"
+  },
+  {
+    title: "Happy Clappy Ukulele",
+    album: "Fun Album",
+    composer: "PenguinMusic",
+    director: "Pixabay",
+    genre: "Ukulele / Happy",
+    image: "https://picsum.photos/seed/song2/600/300",
+    src: "https://cdn.pixabay.com/download/audio/2021/09/30/audio_50985b0dd4.mp3?filename=happy-clappy-ukulele-15037.mp3"
+  },
+  {
+    title: "Relaxing Piano",
+    album: "Calm Vibes",
+    composer: "Alex-Productions",
+    director: "Pixabay",
+    genre: "Piano / Relax",
+    image: "https://picsum.photos/seed/song3/600/300",
+    src: "https://cdn.pixabay.com/download/audio/2021/09/30/audio_3f0dbccf6f.mp3?filename=relaxing-piano-15057.mp3"
+  }
+];
+
+let currentSongIndex = 0;
+let audio = new Audio();
+const modal = new bootstrap.Modal(document.getElementById('musicModal'));
+
+// Render song cards
+const row = document.querySelector('.row');
+songs.forEach((song, index) => {
+  const col = document.createElement('div');
+  col.className = "col-md-4";
+  col.innerHTML = `
+    <div class="song-card" onclick="openSong(${index})">
+      <img src="${song.image}" alt="${song.title}">
+      <div class="song-overlay">
+        <i class="bi bi-play-circle-fill">▶️</i>
+      </div>
+    </div>
+    <h6 class="mt-2 text-center">${song.title}</h6>
+  `;
+  row.appendChild(col);
+});
+
+function openSong(index) {
+  currentSongIndex = index;
+  loadSong(songs[index]);
+  modal.show();
+  playSong();
+}
+
+function loadSong(song) {
+  document.getElementById('modalImage').src = song.image;
+  document.getElementById('songTitle').innerText = song.title;
+  document.getElementById('albumName').innerText = song.album;
+  document.getElementById('composer').innerText = song.composer;
+  document.getElementById('director').innerText = song.director;
+  document.getElementById('genre').innerText = song.genre;
+
+  audio.src = song.src;
+  audio.load();
+
+  // Progress
+  audio.ontimeupdate = () => {
+    document.getElementById('progressBar').max = audio.duration;
+    document.getElementById('progressBar').value = audio.currentTime;
+  };
+}
+
+function playSong() {
+  audio.play();
+  document.getElementById('playPauseBtn').innerText = "⏸ Pause";
+}
+function pauseSong() {
+  audio.pause();
+  document.getElementById('playPauseBtn').innerText = "▶️ Play";
+}
+function playPauseSong() {
+  if (audio.paused) playSong();
+  else pauseSong();
+}
+function stopSong() {
+  audio.pause();
+  audio.currentTime = 0;
+  document.getElementById('playPauseBtn').innerText = "▶️ Play";
+}
+function nextSong() {
+  currentSongIndex = (currentSongIndex + 1) % songs.length;
+  loadSong(songs[currentSongIndex]);
+  playSong();
+}
+function prevSong() {
+  currentSongIndex = (currentSongIndex - 1 + songs.length) % songs.length;
+  loadSong(songs[currentSongIndex]);
+  playSong();
+}
+// Seek
+document.getElementById('progressBar').addEventListener('input', (e) => {
+  audio.currentTime = e.target.value;
+});
+// Volume
+document.getElementById('volumeControl').addEventListener('input', (e) => {
+  audio.volume = e.target.value;
+});
+</script>
+</body>
+</html>

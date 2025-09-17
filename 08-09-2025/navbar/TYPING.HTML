@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Infinite Text Fill Animation</title>
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+    body {
+      font-family: Arial, Tahoma, sans-serif;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      background: #111;
+    }
+    .fill {
+      font-size: 140px;
+      -webkit-text-fill-color: white;
+      -webkit-text-stroke: 1px black;
+      position: relative;
+    }
+    .fill::before {
+      content: attr(data-text);
+      position: absolute;
+      top: 0;
+      left: 0;
+      -webkit-text-fill-color: #ff5722;
+      width: 0;
+      white-space: nowrap;
+      overflow: hidden;
+    }
+    /* Animation runs automatically if .animate class is added */
+    .fill.animate::before {
+      animation: fillAnimate 2s linear infinite;
+    }
+    @keyframes fillAnimate {
+      0% { width: 0; }
+      50% { width: 100%; }
+      100% { width: 0; }
+    }
+  </style>
+</head>
+<body>
+  <!-- Just add class="fill animate" for auto animation -->
+  <h2 class="fill animate" data-text="Osama">Osama</h2>
+</body>
+</html>

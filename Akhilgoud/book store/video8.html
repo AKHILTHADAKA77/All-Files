@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Video Gallery</title>
+  <!-- Bootstrap 5.3.3 CSS -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+
+  <style>
+    body {
+      background-color: #f8f9fa;
+    }
+
+    .video-card {
+      width: 300px;
+      height: 300px;
+      margin: 10px auto;
+      overflow: hidden;
+      border-radius: 10px;
+      box-shadow: 0 4px 8px rgba(0,0,0,0.15);
+      cursor: pointer;
+      transition: transform 0.3s ease;
+      background: #000;
+    }
+
+    .video-card:hover {
+      transform: scale(1.05);
+    }
+
+    .video-card video {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    /* Responsive grid */
+    @media (min-width: 1200px) {
+      .video-col { flex: 0 0 25%; max-width: 25%; }
+    }
+    @media (min-width: 992px) and (max-width: 1199px) {
+      .video-col { flex: 0 0 33.3333%; max-width: 33.3333%; }
+    }
+    @media (min-width: 576px) and (max-width: 991px) {
+      .video-col { flex: 0 0 50%; max-width: 50%; }
+    }
+    @media (max-width: 575px) {
+      .video-col { flex: 0 0 100%; max-width: 100%; }
+    }
+
+    .modal-content {
+      /* background-color: transparent; */
+       background-color:white;
+      border: none;
+    }
+
+    .btn-close-white {
+      filter: invert(1);
+    }
+  </style>
+</head>
+<body>
+
+<div class="container py-5">
+  <h2 class="text-center mb-4">Video Gallery</h2>
+  <div class="row justify-content-center">
+
+    <!-- Video Card 1 -->
+    <div class="video-col d-flex justify-content-center">
+      <div class="video-card" data-bs-toggle="modal" data-bs-target="#videoModal"
+           data-src="https://www.w3schools.com/html/mov_bbb.mp4"
+           data-title="Big Buck Bunny">
+        <video muted>
+          <source src="https://www.w3schools.com/html/mov_bbb.mp4" type="video/mp4">
+        </video>
+        
+      </div>
+      
+    </div>
+
+    <!-- Video Card 2 -->
+    <div class="video-col d-flex justify-content-center">
+      <div class="video-card" data-bs-toggle="modal" data-bs-target="#videoModal"
+           data-src="https://www.w3schools.com/html/movie.mp4"
+           data-title="Bear Video">
+        <video muted>
+          <source src="https://www.w3schools.com/html/movie.mp4" type="video/mp4">
+        </video>
+      </div>
+    </div>
+
+    <!-- Video Card 3 -->
+    <div class="video-col d-flex justify-content-center">
+      <div class="video-card" data-bs-toggle="modal" data-bs-target="#videoModal"
+           data-src="https://interactive-examples.mdn.mozilla.net/media/cc0-videos/flower.mp4"
+           data-title="Flower Video">
+        <video muted>
+          <source src="https://interactive-examples.mdn.mozilla.net/media/cc0-videos/flower.mp4" type="video/mp4">
+        </video>
+      </div>
+    </div>
+
+    <!-- Video Card 4 -->
+    <div class="video-col d-flex justify-content-center">
+      <div class="video-card" data-bs-toggle="modal" data-bs-target="#videoModal"
+           data-src="https://www.html5rocks.com/en/tutorials/video/basics/devstories.webm"
+           data-title="Dev Stories">
+        <video muted>
+          <source src="https://www.html5rocks.com/en/tutorials/video/basics/devstories.webm" type="video/webm">
+        </video>
+      </div>
+    </div>
+
+    
+    <!-- Video Card 3 -->
+    <div class="video-col d-flex justify-content-center">
+      <div class="video-card" data-bs-toggle="modal" data-bs-target="#videoModal"
+           data-src="https://interactive-examples.mdn.mozilla.net/media/cc0-videos/flower.mp4"
+           data-title="Flower Video">
+        <video muted>
+          <source src="https://interactive-examples.mdn.mozilla.net/media/cc0-videos/flower.mp4" type="video/mp4">
+        </video>
+      </div>
+    </div>
+
+    <!-- Video Card 4 -->
+    <div class="video-col d-flex justify-content-center">
+      <div class="video-card" data-bs-toggle="modal" data-bs-target="#videoModal"
+           data-src="https://www.html5rocks.com/en/tutorials/video/basics/devstories.webm"
+           data-title="Dev Stories">
+        <video muted>
+          <source src="https://www.html5rocks.com/en/tutorials/video/basics/devstories.webm" type="video/webm">
+        </video>
+      </div>
+    </div>
+    
+    <!-- Video Card 3 -->
+    <div class="video-col d-flex justify-content-center">
+      <div class="video-card" data-bs-toggle="modal" data-bs-target="#videoModal"
+           data-src="https://interactive-examples.mdn.mozilla.net/media/cc0-videos/flower.mp4"
+           data-title="Flower Video">
+        <video muted>
+          <source src="https://interactive-examples.mdn.mozilla.net/media/cc0-videos/flower.mp4" type="video/mp4">
+        </video>
+      </div>
+    </div>
+
+    <!-- Video Card 4 -->
+    <div class="video-col d-flex justify-content-center">
+      <div class="video-card" data-bs-toggle="modal" data-bs-target="#videoModal"
+           data-src="https://www.html5rocks.com/en/tutorials/video/basics/devstories.webm"
+           data-title="Dev Stories">
+        <video muted>
+          <source src="https://www.html5rocks.com/en/tutorials/video/basics/devstories.webm" type="video/webm">
+        </video>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Modal -->
+<div class="modal fade" id="videoModal" tabindex="-1" aria-labelledby="videoModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered modal-lg">
+    <div class="modal-content">
+      <div class="modal-header border-0 justify-content-end">
+        <button type="button" class="btn-close btn-close-black" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <div class="ratio ratio-16x9">
+          <video id="modalVideo" controls playsinline>
+            <source src="" type="video/mp4">
+          </video>
+        </div>
+      </div>
+      <div class="modal-footer text-white bg-dark bg-opacity-75">
+        <span id="modalVideoTitle" class="fs-5 mx-auto"></span>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Bootstrap 5.3.3 JS -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+<script>
+  const videoModal = document.getElementById('videoModal');
+  const modalVideo = document.getElementById('modalVideo');
+  const modalVideoTitle = document.getElementById('modalVideoTitle');
+
+  videoModal.addEventListener('show.bs.modal', event => {
+    const button = event.relatedTarget;
+    const videoSrc = button.getAttribute('data-src');
+    const videoTitle = button.getAttribute('data-title');
+    modalVideo.querySelector('source').src = videoSrc;
+    modalVideo.load();
+    modalVideo.play();
+    modalVideoTitle.textContent = videoTitle;
+  });
+
+  videoModal.addEventListener('hidden.bs.modal', () => {
+    modalVideo.pause();
+    modalVideo.currentTime = 0;
+  });
+</script>
+</body>
+</html>

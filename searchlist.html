@@ -1,0 +1,365 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Diocesan Priests Directory</title>
+    <!-- Bootstrap 5.3.3 CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Bootstrap Icons -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+    <style>
+        body {
+            background-color: #f8f9fa;
+            padding-top: 20px;
+            padding-bottom: 40px;
+        }
+        .page-header {
+            border-bottom: 3px solid #6c757d;
+            padding-bottom: 10px;
+            margin-bottom: 25px;
+        }
+        .card {
+            box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.15);
+            border: none;
+        }
+        .table th {
+            background-color: #6c757d;
+            color: white;
+            font-weight: 600;
+        }
+        .pagination {
+            margin-bottom: 0;
+        }
+        .page-item.active .page-link {
+            background-color: #6c757d;
+            border-color: #6c757d;
+        }
+        .page-link {
+            color: #6c757d;
+        }
+        .page-link:hover {
+            color: #495057;
+        }
+        .priest-count {
+            color: #6c757d;
+            font-weight: 500;
+        }
+        @media (max-width: 768px) {
+            .table-responsive {
+                font-size: 0.875rem;
+            }
+            .table th, .table td {
+                padding: 0.5rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="row">
+            <div class="col-12">
+                <div class="page-header">
+                    <h1 class="text-center"><i class="bi bi-person-badge"></i> Diocesan Priests Directory</h1>
+                </div>
+            </div>
+        </div>
+
+        <div class="row mb-4">
+            <div class="col-md-6">
+                <div class="d-flex align-items-center h-100">
+                    <span class="priest-count">Total Priests: <strong>97</strong></span>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="input-group">
+                    <input type="text" id="searchInput" class="form-control" placeholder="Search priests...">
+                    <button class="btn btn-outline-secondary" type="button" id="clearSearch">
+                        <i class="bi bi-x-circle"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-12">
+                <div class="card">
+                    <div class="card-body p-0">
+                        <div class="table-responsive">
+                            <table class="table table-striped table-hover mb-0">
+                                <thead>
+                                    <tr>
+                                        <th>S.No</th>
+                                        <th>Name</th>
+                                        <th>Date of Birth</th>
+                                        <th>Date of Ordination</th>
+                                        <th>Years of Service</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="priestsTableBody">
+                                    <!-- Data will be populated by JavaScript -->
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="row mt-4">
+            <div class="col-12">
+                <nav aria-label="Priests pagination">
+                    <ul class="pagination justify-content-center" id="pagination">
+                        <!-- Pagination will be populated by JavaScript -->
+                    </ul>
+                </nav>
+            </div>
+        </div>
+    </div>
+
+    <!-- Bootstrap 5.3.3 JS with Popper -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+    
+    <script>
+        // Priest data
+        const priests = [
+            { id: 1, name: "Fr. Kariyil Varghese", dob: "11/10/1931", ordination: "10/08/1958" },
+            { id: 2, name: "Fr. Yeruva Sebastian", dob: "11/08/1938", ordination: "12/04/1966" },
+            { id: 3, name: "Fr. Idara Abraham", dob: "04/02/1940", ordination: "21/12/1967" },
+            { id: 4, name: "Fr. Basani Mathias", dob: "13/03/1943", ordination: "18/12/1970" },
+            { id: 5, name: "Fr. Arlagadda Prakash", dob: "14/02/1941", ordination: "29/12/1970" },
+            { id: 6, name: "Fr. Yeruva Chinnappa", dob: "15/02/1949", ordination: "02/03/1977" },
+            { id: 7, name: "Fr. Basani Prakash", dob: "20/02/1957", ordination: "03/04/1983" },
+            { id: 8, name: "Fr. KommareedyVijaya kumar", dob: "06/10/1955", ordination: "08/04/1985" },
+            { id: 9, name: "Fr. Pudota Prakash", dob: "09/07/1958", ordination: "12/03/1986" },
+            { id: 10, name: "Fr. Singareddy Balashowry", dob: "14/02/1959", ordination: "12/03/1986" },
+            { id: 11, name: "Fr. Pudota Chinnaiah", dob: "08/06/1959", ordination: "12/03/1986" },
+            { id: 12, name: "Fr. Dodda Raja", dob: "26/07/1959", ordination: "26/03/1987" },
+            { id: 13, name: "Fr. Thanugundla Jerome", dob: "10/07/1961", ordination: "24/04/1988" },
+            { id: 14, name: "Fr. Annapareddy Jaya Raja", dob: "08/01/1962", ordination: "27/04/1988" },
+            { id: 15, name: "Fr. Yeruva Inna", dob: "28/10/1961", ordination: "24/04/1989" },
+            { id: 16, name: "Fr. Rachumalla Inna", dob: "10/05/1964", ordination: "12/03/1990" },
+            { id: 17, name: "Fr. Basani Chinnappa", dob: "02/12/1962", ordination: "01/05/1990" },
+            { id: 18, name: "Fr. Dasari Joseph", dob: "11/06/1963", ordination: "03/05/1990" },
+            { id: 19, name: "Fr. Reddimasu Thomas", dob: "29/10/1961", ordination: "04/05/1990" },
+            { id: 20, name: "Fr. Pentareddy Raja", dob: "29/10/1961", ordination: "04/05/1990" },
+            { id: 21, name: "Fr. Gali Rayappa", dob: "6/05/1961", ordination: "05/04/1991" },
+            { id: 22, name: "Fr. Kasu Showreddy", dob: "05/05/1963", ordination: "02/04/1992" },
+            { id: 23, name: "Fr. Duggimpudi Vijayapaul", dob: "08/01/1965", ordination: "02/04/1992" },
+            { id: 24, name: "Fr. Thirumalareddy Rayappa", dob: "29/11/1964", ordination: "06/04/1992" },
+            { id: 25, name: "Fr. Allam Inna", dob: "15/08/1965", ordination: "16/04/1993" },
+            { id: 26, name: "Fr. Thirumalareddy Augustine", dob: "02/11/1963", ordination: "13/04/1993" },
+            { id: 27, name: "Fr. Ambati Bala", dob: "21/08/1958", ordination: "20/04/1993" },
+            { id: 28, name: "Fr. Madanu Jaya", dob: "07/06/1968", ordination: "25/04/1994" },
+            { id: 29, name: "Fr. Golamari BalaMartin", dob: "08/02/1967", ordination: "27/04/1994" },
+            { id: 30, name: "Fr. Allam Vincent", dob: "17/07/1964", ordination: "29/04/1994" },
+            { id: 31, name: "Fr. Mekala Anand", dob: "02/03/1964", ordination: "02/05/1994" },
+            { id: 32, name: "Fr. Pentareddy Johnpaul", dob: "14/04/1967", ordination: "09/05/1994" },
+            { id: 33, name: "Fr. Yeruva Bala", dob: "19/12/1967", ordination: "12/05/1994" },
+            { id: 34, name: "Fr. Golamari Sudhakar", dob: "10/07/1966", ordination: "16/05/1994" },
+            { id: 35, name: "Fr. Gali Balaswamy", dob: "19/12/1965", ordination: "20/03/1995" },
+            { id: 36, name: "Fr. Pentareddy BalthaRaj", dob: "25/11/1965", ordination: "22/03/1995" },
+            { id: 37, name: "Fr. Yeruva Papi Reddy", dob: "04/05/1968", ordination: "03/04/1995" },
+            { id: 38, name: "Fr. Golamari Rayappa", dob: "25/05/1967", ordination: "04/04/1995" },
+            { id: 39, name: "Fr. Thirumalareddy Joji", dob: "05/01/1970", ordination: "18/04/1996" },
+            { id: 40, name: "Fr. Gade Prakash", dob: "14/05/1969", ordination: "07/04/1997" },
+            { id: 41, name: "Fr. Thumma Yaga Reddy", dob: "10/06/1969", ordination: "13/04/1998" },
+            { id: 42, name: "Fr. Duggimpudi Prathap", dob: "15/08/1971", ordination: "03/06/1999" },
+            { id: 43, name: "Fr. Singareddy Inna Reddy", dob: "14/07/1972", ordination: "12/04/1999" },
+            { id: 44, name: "Fr. Singareddy Shobhan Reddy", dob: "03/08/1970", ordination: "06/03/2000" },
+            { id: 45, name: "Fr. Devarapu Sudhakar", dob: "26/02/1973", ordination: "06/03/2000" },
+            { id: 46, name: "Fr. Salibindla Arogya Reddy", dob: "09/04/1972", ordination: "06/03/2000" },
+            { id: 47, name: "Fr. Vatti Albeen Reddy", dob: "29/09/1971", ordination: "06/03/2000" },
+            { id: 48, name: "Fr. Narisetti Balaswamy", dob: "29/09/1969", ordination: "25/02/2002" },
+            { id: 49, name: "Fr. Yetukuri Thomas Kiran", dob: "21/11/1973", ordination: "25/04/2002" },
+            { id: 50, name: "Fr. Pentareddy Kirankumar", dob: "08/10/1977", ordination: "30/04/2003" },
+            { id: 51, name: "Fr. Thirumalareddy Tharunkumar", dob: "10/04/1975", ordination: "28/04/2003" },
+            { id: 52, name: "Fr. Gopu Suresh", dob: "08/01/1977", ordination: "18/04/2005" },
+            { id: 53, name: "Fr. Thatikonda Joseph", dob: "10/11/1974", ordination: "18/04/2005" },
+            { id: 54, name: "Fr. Thanugundla Vijaya Manohar", dob: "31/08/1972", ordination: "18/04/2005" },
+            { id: 55, name: "Fr. Thumma Kiran", dob: "16/09/1977", ordination: "18/04/2006" },
+            { id: 56, name: "Fr. Chatta Ravi Kumar", dob: "19/04/2006", ordination: "-" },
+            { id: 57, name: "Fr. Macherla Naveenkumar", dob: "05/06/1979", ordination: "20/04/2006" },
+            { id: 58, name: "Fr. Gopu Anand", dob: "03/01/1978", ordination: "21/04/2006" },
+            { id: 59, name: "Fr. Duggimpudi Prashanth", dob: "16/09/1977", ordination: "11/04/2007" },
+            { id: 60, name: "Fr. Pudota Dasaiah", dob: "15/08/1979", ordination: "09/07/2007" },
+            { id: 61, name: "Fr. Thirumalareddy Pradeep", dob: "14/06/1977", ordination: "10/04/2007" },
+            { id: 62, name: "Fr. Basani Kishore", dob: "16/07/1979", ordination: "21/04/2008" },
+            { id: 63, name: "Fr. Gangarapu Naveen", dob: "05/06/1976", ordination: "16/04/2008" },
+            { id: 64, name: "Fr. Gopu Thomas", dob: "30/12/1978", ordination: "14/04/2008" },
+            { id: 65, name: "Fr. Marapalli Praveen", dob: "24/04/1980", ordination: "15/04/2008" },
+            { id: 66, name: "Fr. Thirumalareddy Anthony", dob: "20/03/1980", ordination: "17/04/2008" },
+            { id: 67, name: "Fr. Nagothu Mariajoseph", dob: "08/02/1981", ordination: "20/04/2009" },
+            { id: 68, name: "Fr. Nagothu Vinod kumar", dob: "10/04/1979", ordination: "18/04/2009" },
+            { id: 69, name: "Fr. Thumma Sunil", dob: "15/08/1977", ordination: "13/04/2009" },
+            { id: 70, name: "Fr. Macherla Raju", dob: "16/08/1981", ordination: "12/04/2010" },
+            { id: 71, name: "Fr. Polumari Suresh", dob: "25/06/1981", ordination: "12/04/2010" },
+            { id: 72, name: "Fr. Gopu Kamal Kumar", dob: "02/09/1982", ordination: "02/09/1982" },
+            { id: 73, name: "Fr. Polumari Anil", dob: "01/01/1983", ordination: "25/04/2011" },
+            { id: 74, name: "Fr. Kommareddy Joseph", dob: "30/01/1981", ordination: "26/04/2011" },
+            { id: 75, name: "Fr. Bellamkonda Joseph Praveen", dob: "25/10/1983", ordination: "26/04/2011" },
+            { id: 76, name: "Fr. Gangarpu Suresh", dob: "02/05/1984", ordination: "19/04/2012" },
+            { id: 77, name: "Fr. Kasu Marreddy", dob: "13/11/1982", ordination: "19/04/2012" },
+            { id: 78, name: "Fr. Namindla Surendar", dob: "05/07/1980", ordination: "19.04.2012" },
+            { id: 79, name: "Fr. Singaredy Prabhakar", dob: "10/10/1984", ordination: "19/04/2012" },
+            { id: 80, name: "Fr. Thumma Ashok", dob: "12/04/1985", ordination: "19/04/2012" },
+            { id: 81, name: "Fr. Yerra Kiran Kuamr", dob: "11/09/1982", ordination: "19/04/2012" },
+            { id: 82, name: "Fr. Eedara Vijay Kumar", dob: "25/08/1985", ordination: "09/04/2013" },
+            { id: 83, name: "Fr. Allam Sravan Kumar", dob: "22/04/1985", ordination: "10/04/2013" },
+            { id: 84, name: "Fr. Gade Chinnappa", dob: "12/12/1985", ordination: "07/05/2014" },
+            { id: 85, name: "Fr. G. Prashanth", dob: "08/10/1987", ordination: "05/05/2014" },
+            { id: 86, name: "Fr. Yeruva. Sathish", dob: "26/08/1984", ordination: "08/05/2014" },
+            { id: 87, name: "Fr. Thumma Santhosh", dob: "19/08/1987", ordination: "09/04/2015" },
+            { id: 88, name: "Fr. Golamari Joseph", dob: "27/03/1987", ordination: "13/04/2015" },
+            { id: 89, name: "Fr. Narisetti Sampath", dob: "09/05/1987", ordination: "14/04/2015" },
+            { id: 90, name: "Fr. Golamari Ranjith", dob: "20/04/1987", ordination: "30/03/2016" },
+            { id: 91, name: "Fr. Salibindla Mahipaul", dob: "09/08/1988", ordination: "31/03/2016" },
+            { id: 92, name: "Fr. Gopu Thomas", dob: "10/10/1981", ordination: "26/04/2017" },
+            { id: 93, name: "Fr. Vatti Simon", dob: "12/11/1988", ordination: "27/04/2018" },
+            { id: 94, name: "Fr. Thumma Sharan Teja", dob: "29/04/1992", ordination: "22/04/2019" },
+            { id: 95, name: "Fr. Gopu Prakash Pradeep", dob: "25/02/1986", ordination: "05/06/2020" },
+            { id: 96, name: "Fr. Mettu Sravan", dob: "21/08/1991", ordination: "16/08/2021" },
+            { id: 97, name: "Fr. Gangarapu Anukiran", dob: "25/01/1995", ordination: "14/09/2021" }
+        ];
+
+        // Calculate years of service
+        function calculateYearsOfService(ordinationDate) {
+            if (!ordinationDate || ordinationDate === "-") return "N/A";
+            
+            const ordination = new Date(ordinationDate);
+            if (isNaN(ordination.getTime())) return "Invalid date";
+            
+            const today = new Date();
+            let years = today.getFullYear() - ordination.getFullYear();
+            const monthDiff = today.getMonth() - ordination.getMonth();
+            
+            if (monthDiff < 0 || (monthDiff === 0 && today.getDate() < ordination.getDate())) {
+                years--;
+            }
+            
+            return years;
+        }
+
+        // Initialize
+        document.addEventListener('DOMContentLoaded', function() {
+            // Initialize table with pagination
+            renderTable(1);
+            
+            // Add event listeners
+            document.getElementById('searchInput').addEventListener('input', handleSearch);
+            document.getElementById('clearSearch').addEventListener('click', clearSearch);
+        });
+
+        // Variables for search functionality
+        let filteredPriests = [...priests];
+        const itemsPerPage = 10;
+
+        // Render table with pagination
+        function renderTable(page) {
+            const startIndex = (page - 1) * itemsPerPage;
+            const endIndex = startIndex + itemsPerPage;
+            const priestsToShow = filteredPriests.slice(startIndex, endIndex);
+            
+            // Populate table body
+            const tableBody = document.getElementById('priestsTableBody');
+            tableBody.innerHTML = '';
+            
+            priestsToShow.forEach(priest => {
+                const row = document.createElement('tr');
+                const yearsOfService = calculateYearsOfService(priest.ordination);
+                
+                row.innerHTML = `
+                    <td>${priest.id}</td>
+                    <td>${priest.name}</td>
+                    <td>${priest.dob}</td>
+                    <td>${priest.ordination}</td>
+                    <td>${yearsOfService}</td>
+                `;
+                
+                tableBody.appendChild(row);
+            });
+            
+            // Update pagination
+            renderPagination(page);
+        }
+
+        // Render pagination controls
+        function renderPagination(currentPage) {
+            const totalPages = Math.ceil(filteredPriests.length / itemsPerPage);
+            const paginationElement = document.getElementById('pagination');
+            paginationElement.innerHTML = '';
+            
+            // Previous button
+            const prevLi = document.createElement('li');
+            prevLi.classList.add('page-item');
+            if (currentPage === 1) prevLi.classList.add('disabled');
+            
+            prevLi.innerHTML = `
+                <a class="page-link" href="#" aria-label="Previous" data-page="${currentPage - 1}">
+                    <span aria-hidden="true">&laquo;</span>
+                </a>
+            `;
+            
+            paginationElement.appendChild(prevLi);
+            
+            // Page numbers
+            for (let i = 1; i <= totalPages; i++) {
+                const pageLi = document.createElement('li');
+                pageLi.classList.add('page-item');
+                if (i === currentPage) pageLi.classList.add('active');
+                
+                pageLi.innerHTML = `<a class="page-link" href="#" data-page="${i}">${i}</a>`;
+                paginationElement.appendChild(pageLi);
+            }
+            
+            // Next button
+            const nextLi = document.createElement('li');
+            nextLi.classList.add('page-item');
+            if (currentPage === totalPages) nextLi.classList.add('disabled');
+            
+            nextLi.innerHTML = `
+                <a class="page-link" href="#" aria-label="Next" data-page="${currentPage + 1}">
+                    <span aria-hidden="true">&raquo;</span>
+                </a>
+            `;
+            
+            paginationElement.appendChild(nextLi);
+            
+            // Add event listeners to pagination links
+            document.querySelectorAll('.page-link').forEach(link => {
+                link.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    const page = parseInt(this.getAttribute('data-page'));
+                    if (!isNaN(page) && page >= 1 && page <= totalPages) {
+                        renderTable(page);
+                    }
+                });
+            });
+        }
+
+        // Handle search functionality
+        function handleSearch() {
+            const searchTerm = document.getElementById('searchInput').value.toLowerCase();
+            
+            if (searchTerm === '') {
+                filteredPriests = [...priests];
+            } else {
+                filteredPriests = priests.filter(priest => 
+                    priest.name.toLowerCase().includes(searchTerm) ||
+                    priest.dob.toLowerCase().includes(searchTerm) ||
+                    priest.ordination.toLowerCase().includes(searchTerm)
+                );
+            }
+            
+            renderTable(1);
+        }
+
+        // Clear search
+        function clearSearch() {
+            document.getElementById('searchInput').value = '';
+            filteredPriests = [...priests];
+            renderTable(1);
+        }
+    </script>
+</body>
+</html>

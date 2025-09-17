@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link href="https://unpkg.com/ionicons@4.2.2/dist/css/ionicons.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="//cdn.flowplayer.com/releases/native/stable/style/flowplayer.css">
+
+    <style>
+        .is-audio .cover {
+            background-image: url("//releases.flowplayer.org/data/national.jpg");
+            background-size: cover;
+            padding-top: 50%;
+        }
+
+        .music-note {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            font-size: 6em;
+            width: 1em;
+            text-align: center;
+            margin-left: -0.5em;
+            margin-top: -0.75em;
+            filter: drop-shadow(0 0 2px rgba(0,0,0,0.4));
+        }
+
+        .fp-ratio {
+            height: 3.2em;
+            padding: 0 !important;
+        }
+
+        video {
+            display: none;
+        }
+
+        .fp-header {
+            display: none;
+        }
+
+        .fp-controls {
+            visibility: visible !important;
+            opacity: 1;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            position: absolute;
+        }
+
+        .fp-middle {
+            display: none;
+        }
+
+        .is-starting .fp-btns .fp-small-play {
+            display: block;
+        }
+
+        #container {
+            max-width: 40em;
+            margin: 2em auto;
+        }
+    </style>
+</head>
+<body>
+
+<div id="container">
+    <div id="player" class="is-audio">
+        <div class="cover"></div>
+        <span class="ion-ios-musical-note music-note"></span>
+    </div>
+</div>
+
+<script src="//cdn.flowplayer.com/releases/native/stable/flowplayer.min.js"></script>
+<script src="//cdn.flowplayer.com/releases/native/stable/plugins/hls.min.js"></script>
+<script>
+    flowplayer('#player', {
+        src: "vlog-beat-background-349853.mp3"
+    });
+</script>
+
+</body>
+</html>

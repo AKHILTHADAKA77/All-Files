@@ -1,0 +1,335 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>Monthly Birthday Cards + Calendar</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#0f1724;
+    --card:#0b1220;
+    --muted:#94a3b8;
+    --accent:#06b6d4;
+    --glass: rgba(255,255,255,0.04);
+    font-family: "Inter", system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial;
+  }
+
+  html,body{height:100%;margin:0;background:linear-gradient(180deg,#071024 0%, #071729 100%);color:#e6eef6}
+  .container{
+    max-width:1200px;margin:28px auto;padding:18px;display:grid;grid-template-columns: 1fr 320px;gap:20px;
+  }
+
+  header{
+    grid-column:1/-1;display:flex;align-items:center;justify-content:space-between;margin-bottom:6px;
+  }
+  h1{font-size:20px;margin:0;font-weight:600}
+  .subtitle{color:var(--muted);font-size:13px}
+
+  /* Month tabs */
+  .months{display:flex;gap:8px;flex-wrap:wrap;margin:10px 0 16px}
+  .month-btn{
+    background:var(--glass);border:1px solid rgba(255,255,255,0.03);padding:8px 12px;border-radius:10px;color:var(--muted);cursor:pointer;font-weight:600;font-size:13px;
+  }
+  .month-btn.active{background:linear-gradient(90deg, rgba(6,182,212,0.14), rgba(6,182,212,0.06));color:var(--accent);box-shadow:0 6px 18px rgba(6,182,212,0.06);}
+
+  /* cards grid */
+  .cards-wrap{display:grid;grid-template-columns: repeat(auto-fill,minmax(220px,1fr));gap:16px}
+  .person-card{
+    position:relative;overflow:hidden;border-radius:12px;background:#111827;height:300px;display:block;
+    box-shadow: 0 8px 30px rgba(2,6,23,0.6);transition:transform .28s ease;
+  }
+  .person-card:hover{transform:translateY(-6px)}
+  .person-card .cover{
+    position:absolute;inset:0;background-size:cover;background-position:center;filter:contrast(0.95) saturate(0.9);
+  }
+  .person-card::after{
+    content:"";position:absolute;left:0;right:0;bottom:0;height:56%;background:linear-gradient(180deg, rgba(0,0,0,0) 0%, rgba(2,6,23,0.75) 60%);pointer-events:none;
+  }
+  .person-info{
+    position:absolute;left:12px;right:12px;bottom:12px;color:#fff;z-index:3;display:flex;align-items:flex-end;gap:10px;
+  }
+  .person-info .avatar{
+    width:56px;height:56px;border-radius:8px;overflow:hidden;flex:0 0 56px;border:2px solid rgba(255,255,255,0.08);
+  }
+  .person-info .avatar img{width:100%;height:100%;object-fit:cover;display:block}
+  .person-info .meta{flex:1}
+  .person-info .meta .name{font-weight:700;font-size:15px;margin-bottom:2px}
+  .person-info .meta .age-city{font-size:12px;color:var(--muted)}
+
+  /* date badge bottom-left */
+  .date-badge{
+    position:absolute;left:10px;bottom:12px;background:rgba(0,0,0,0.6);backdrop-filter: blur(4px);padding:8px 10px;border-radius:8px;border:1px solid rgba(255,255,255,0.04);
+    display:flex;flex-direction:column;align-items:flex-start;color:#fff;font-weight:700;font-size:13px;z-index:4;
+  }
+  .date-badge .day{font-size:18px;line-height:1}
+  .date-badge .mon{font-size:11px;color:var(--muted);font-weight:600;margin-top:2px}
+
+  /* Right sidebar */
+  .sidebar{background:rgba(255,255,255,0.02);border-radius:12px;padding:14px;height:100%;display:flex;flex-direction:column;gap:12px;box-shadow: 0 6px 18px rgba(2,6,23,0.6)}
+  .calendar-head{display:flex;align-items:center;justify-content:space-between}
+  .cal-nav button{background:none;border:0;color:var(--muted);cursor:pointer;font-weight:700;padding:6px 8px;border-radius:8px}
+  .cal-grid{display:grid;grid-template-columns:repeat(7,1fr);gap:6px;margin-top:10px}
+  .cal-cell{
+    min-height:40px;border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:13px;color:var(--muted);background:transparent;
+    cursor:pointer;padding:6px;position:relative;
+  }
+  .cal-cell.other{opacity:0.18}
+  .cal-cell.today{border:1px dashed rgba(255,255,255,0.06);color:#fff}
+  .cal-cell.has-bday::after{
+    content:"";position:absolute;right:6px;top:6px;width:8px;height:8px;border-radius:50%;background:var(--accent);
+  }
+
+  /* Birthday list */
+  .bday-list{overflow:auto;padding-right:4px}
+  .bday-item{display:flex;gap:10px;align-items:center;padding:8px;border-radius:8px;background:linear-gradient(180deg, rgba(255,255,255,0.01), rgba(255,255,255,0.00));margin-bottom:8px}
+  .bday-item img{width:48px;height:48px;border-radius:8px;object-fit:cover}
+  .bday-item .bmeta{font-size:13px}
+  .bday-item .bmeta .bname{font-weight:700}
+  .bday-item .bmeta .bdate{color:var(--muted);font-size:12px;margin-top:3px}
+
+  /* small screens */
+  @media (max-width:980px){
+    .container{grid-template-columns:1fr; padding:14px}
+    .sidebar{order:2}
+  }
+</style>
+</head>
+<body>
+  <div class="container">
+    <header>
+      <div>
+        <h1>Monthly Birthdays</h1>
+        <div class="subtitle">Browse birthdays by month — click calendar days or months</div>
+      </div>
+      <div style="font-size:13px;color:var(--muted)">Example UI • replace data as needed</div>
+    </header>
+
+    <main>
+      <!-- month tabs -->
+      <div class="months" id="monthTabs"></div>
+
+      <!-- cards grid -->
+      <div class="cards-wrap" id="cardsWrap" aria-live="polite"></div>
+    </main>
+
+    <aside class="sidebar">
+      <div>
+        <div class="calendar-head">
+          <div style="font-weight:700">Calendar</div>
+          <div class="cal-nav">
+            <button id="prevMonthBtn" aria-label="Previous month">◀</button>
+            <button id="nextMonthBtn" aria-label="Next month">▶</button>
+          </div>
+        </div>
+        <div style="font-size:13px;color:var(--muted);margin-top:4px" id="calTitle"></div>
+        <div style="display:grid;grid-template-columns:repeat(7,1fr);gap:6px;margin-top:8px;color:var(--muted);font-size:12px">
+          <div>Sun</div><div>Mon</div><div>Tue</div><div>Wed</div><div>Thu</div><div>Fri</div><div>Sat</div>
+        </div>
+        <div class="cal-grid" id="calGrid" aria-hidden="false"></div>
+      </div>
+
+      <div style="flex:1;display:flex;flex-direction:column">
+        <div style="font-weight:700;margin-bottom:6px">Birthday List</div>
+        <div class="bday-list" id="bdayList"></div>
+      </div>
+    </aside>
+  </div>
+
+<script>
+/* -------------------------
+   Sample birthday data
+   Replace images with your own URLs
+----------------------------*/
+const people = [
+  { id:1, name:"Akhil Thadaka", dob:"1996-08-29", city:"Hyderabad", img:"https://images.unsplash.com/photo-1544005313-94ddf0286df2?q=80&w=1000&auto=format&fit=crop"},
+  { id:2, name:"Sita R.", dob:"1990-01-05", city:"Chennai", img:"https://images.unsplash.com/photo-1545996124-1f1aa3a8d1a8?q=80&w=1000&auto=format&fit=crop"},
+  { id:3, name:"Rahul P.", dob:"1989-01-21", city:"Mumbai", img:"https://images.unsplash.com/photo-1527980965255-d3b416303d12?q=80&w=1000&auto=format&fit=crop"},
+  { id:4, name:"Priya M.", dob:"1992-02-14", city:"Bengaluru", img:"https://images.unsplash.com/photo-1531123414780-f0b2d2b5f8b7?q=80&w=1000&auto=format&fit=crop"},
+  { id:5, name:"Vikram", dob:"1994-02-28", city:"Delhi", img:"https://images.unsplash.com/photo-1531123414781-0c5b9a6c44b6?q=80&w=1000&auto=format&fit=crop"},
+  { id:6, name:"Radha K", dob:"2001-03-07", city:"Kolkata", img:"https://images.unsplash.com/photo-1547425260-76bcadfb4f2c?q=80&w=1000&auto=format&fit=crop"},
+  { id:7, name:"Sameer", dob:"1997-04-18", city:"Pune", img:"https://images.unsplash.com/photo-1527980965255-5d02c8b6b8c4?q=80&w=1000&auto=format&fit=crop"},
+  { id:8, name:"Ananya", dob:"1995-05-03", city:"Jaipur", img:"https://images.unsplash.com/photo-1544005313-1e9a2f3b2c5b?q=80&w=1000&auto=format&fit=crop"},
+  { id:9, name:"Rakesh", dob:"1993-06-12", city:"Lucknow", img:"https://images.unsplash.com/photo-1502685104226-ee32379fefbe?q=80&w=1000&auto=format&fit=crop"},
+  { id:10, name:"Meera", dob:"1998-07-22", city:"Goa", img:"https://images.unsplash.com/photo-1531123414782-2d5a1cf0f9a4?q=80&w=1000&auto=format&fit=crop"},
+  { id:11, name:"Sneha", dob:"2002-08-10", city:"Hyderabad", img:"https://images.unsplash.com/photo-1545996124-1e1aa3a8d1a8?q=80&w=1000&auto=format&fit=crop"},
+  { id:12, name:"Karan", dob:"1991-09-02", city:"Chandigarh", img:"https://images.unsplash.com/photo-1547425260-76bcadfb4f2d?q=80&w=1000&auto=format&fit=crop"},
+  // add more entries...
+];
+
+/* utilities */
+const monthNames = ["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"];
+const monthFull = ["January","February","March","April","May","June","July","August","September","October","November","December"];
+
+function parseDate(d){ // returns Date
+  return new Date(d + "T00:00:00");
+}
+function dayAndMonth(d){
+  const D = parseDate(d);
+  return { day: D.getDate(), month: D.getMonth() }; // month 0..11
+}
+
+/* state */
+let activeMonth = (new Date()).getMonth(); // current month index 0-11
+let calYear = (new Date()).getFullYear();
+let calMonth = activeMonth;
+
+/* render month tabs */
+const monthTabs = document.getElementById('monthTabs');
+for(let i=0;i<12;i++){
+  const btn = document.createElement('button');
+  btn.className = 'month-btn' + (i===activeMonth? ' active':'');
+  btn.innerText = monthFull[i];
+  btn.dataset.m = i;
+  btn.addEventListener('click', ()=>{
+    document.querySelectorAll('.month-btn').forEach(b=>b.classList.remove('active'));
+    btn.classList.add('active');
+    activeMonth = +btn.dataset.m;
+    calMonth = activeMonth;
+    // set calendar to that month
+    const today = new Date();
+    calYear = today.getFullYear();
+    renderCards();
+    renderCalendar();
+  });
+  monthTabs.appendChild(btn);
+}
+
+/* render cards for selected month */
+function renderCards(){
+  const wrap = document.getElementById('cardsWrap');
+  wrap.innerHTML = '';
+  const filtered = people.filter(p => dayAndMonth(p.dob).month === activeMonth);
+  if(filtered.length === 0){
+    const empty = document.createElement('div');
+    empty.style.color='var(--muted)';
+    empty.style.padding='20px';
+    empty.innerText = "No birthdays this month. Add more people to the data array.";
+    wrap.appendChild(empty);
+    return;
+  }
+
+  filtered.forEach(p => {
+    const d = parseDate(p.dob);
+    const card = document.createElement('a');
+    card.className = 'person-card';
+    card.href = 'javascript:void(0)';
+    card.innerHTML = `
+      <div class="cover" style="background-image:url('${p.img}');"></div>
+      <div class="date-badge"><div class="day">${d.getDate()}</div><div class="mon">${monthNames[d.getMonth()]}</div></div>
+      <div class="person-info">
+        <div class="avatar"><img src="${p.img}" alt="${p.name}"></div>
+        <div class="meta">
+          <div class="name">${p.name}</div>
+          <div class="age-city">${p.city} • ${d.getFullYear()}</div>
+        </div>
+      </div>
+    `;
+    wrap.appendChild(card);
+  });
+}
+
+/* Calendar rendering */
+const calGrid = document.getElementById('calGrid');
+const calTitle = document.getElementById('calTitle');
+document.getElementById('prevMonthBtn').addEventListener('click', ()=>{
+  calMonth--;
+  if(calMonth<0){calMonth=11; calYear--;}
+  renderCalendar();
+});
+document.getElementById('nextMonthBtn').addEventListener('click', ()=>{
+  calMonth++;
+  if(calMonth>11){calMonth=0; calYear++;}
+  renderCalendar();
+});
+
+function renderCalendar(){
+  calTitle.innerText = `${monthFull[calMonth]} ${calYear}`;
+  calGrid.innerHTML = '';
+
+  // first day of month
+  const first = new Date(calYear, calMonth, 1);
+  const startDay = first.getDay(); // 0..6
+  const daysInMonth = new Date(calYear, calMonth+1, 0).getDate();
+
+  // previous month tail
+  const prevDays = new Date(calYear, calMonth, 0).getDate();
+
+  // birthday map for quick lookup (day number -> array)
+  const bmap = {};
+  people.forEach(p=>{
+    const t = parseDate(p.dob);
+    if(t.getMonth() === calMonth){
+      const day = t.getDate();
+      bmap[day] = bmap[day] || [];
+      bmap[day].push(p);
+    }
+  });
+
+  // build cells (6 rows of 7)
+  let cells = [];
+  // fill from previous month
+  for(let i = startDay-1; i>=0; i--){
+    const dayNum = prevDays - i;
+    cells.push({day: dayNum, other:true});
+  }
+  // current month
+  for(let d=1; d<=daysInMonth; d++){
+    cells.push({day:d, other:false, has: !!bmap[d]});
+  }
+  // next month tail
+  while(cells.length < 42) cells.push({day: cells.length - (startDay + daysInMonth) + 1, other:true});
+
+  // render
+  const today = new Date();
+  cells.forEach(c=>{
+    const cell = document.createElement('div');
+    cell.className = 'cal-cell' + (c.other? ' other':'') + (c.has? ' has-bday':'');
+    cell.innerText = c.day;
+    if(!c.other && c.day === today.getDate() && calMonth === today.getMonth() && calYear === today.getFullYear()){
+      cell.classList.add('today');
+    }
+    // click behavior: if has birthday, set activeMonth and render cards; otherwise still jump to month
+    cell.addEventListener('click', ()=>{
+      if(!c.other){
+        activeMonth = calMonth;
+        document.querySelectorAll('.month-btn').forEach(b=>b.classList.toggle('active', +b.dataset.m === activeMonth));
+        renderCards();
+      }
+    });
+    calGrid.appendChild(cell);
+  });
+}
+
+/* Birthday list */
+function renderList(){
+  const list = document.getElementById('bdayList');
+  list.innerHTML = '';
+  // upcoming birthdays sorted by month/day, starting from current date
+  const today = new Date();
+  const sorted = people.slice().sort((a,b)=>{
+    const da = parseDate(a.dob), db = parseDate(b.dob);
+    const keyA = (da.getMonth()+12 - today.getMonth())%12 * 100 + da.getDate();
+    const keyB = (db.getMonth()+12 - today.getMonth())%12 * 100 + db.getDate();
+    return keyA - keyB;
+  });
+
+  sorted.forEach(p=>{
+    const d = parseDate(p.dob);
+    const item = document.createElement('div');
+    item.className = 'bday-item';
+    item.innerHTML = `<img src="${p.img}" alt="${p.name}"><div class="bmeta"><div class="bname">${p.name}</div><div class="bdate">${d.getDate()} ${monthNames[d.getMonth()]} • ${p.city}</div></div>`;
+    list.appendChild(item);
+  });
+}
+
+/* initial render */
+renderCards();
+renderCalendar();
+renderList();
+
+/* helper: refresh when window resizes (optional) */
+window.addEventListener('resize', ()=>{/* could add responsive tweaks here */});
+</script>
+</body>
+</html>

@@ -1,0 +1,252 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Divine 4 Accordions — Serial Colors</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+
+  <style>
+    :root{
+      --active-bg: #28a745;    /* saintly green for active */
+      --active-text: #ffffff;
+      --active-glow: rgba(40,167,69,0.6);
+
+      /* Serial base colors (used when collapsed) */
+      --serial-1: #007bff; /* blue */
+      --serial-2: #6f42c1; /* purple */
+      --serial-3: #20c997; /* teal */
+      --serial-4: #fd7e14; /* orange */
+    }
+
+    body { background: #fafafa; }
+
+    /* --- Accordion button base look --- */
+    .accordion-button {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      transition: background-color 300ms ease, color 300ms ease, box-shadow 300ms ease, transform 220ms ease;
+      border-radius: 10px;
+      padding: 0.9rem 1rem;
+      font-weight: 600;
+      color: #222;
+    }
+
+    /* Keep arrow visible on dark/light */
+    .accordion-button::after {
+      filter: invert(1);
+      transition: transform 300ms ease;
+    }
+
+    /* --- Serial badge (shared style) --- */
+    .serial-badge {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 42px;
+      height: 42px;
+      border-radius: 50%;
+      color: #fff;
+      font-weight: 700;
+      font-size: 18px;
+      box-shadow: 0 6px 14px rgba(0,0,0,0.08);
+      transition: transform 300ms ease, box-shadow 300ms ease, background 300ms ease;
+      flex-shrink: 0;
+    }
+
+    /* --- Collapsed (inactive) states by serial number --- */
+    /* Serial 1 — blue base */
+    .accordion-button.collapsed.serial-1 {
+      background: linear-gradient(180deg, color-mix(in srgb, var(--serial-1) 85%, white 15%), white 100%);
+      color: #0b2340;
+      box-shadow: 0 2px 6px rgba(2,27,70,0.06);
+    }
+    .accordion-button.collapsed.serial-1 .serial-badge { background: var(--serial-1); box-shadow: 0 6px 18px rgba(0,123,255,0.18); }
+
+    /* Serial 2 — purple base */
+    .accordion-button.collapsed.serial-2 {
+      background: linear-gradient(180deg, color-mix(in srgb, var(--serial-2) 85%, white 15%), white 100%);
+      color: #3b2a4d;
+      box-shadow: 0 2px 6px rgba(64,18,122,0.05);
+    }
+    .accordion-button.collapsed.serial-2 .serial-badge { background: var(--serial-2); box-shadow: 0 6px 18px rgba(111,66,193,0.18); }
+
+    /* Serial 3 — teal base */
+    .accordion-button.collapsed.serial-3 {
+      background: linear-gradient(180deg, color-mix(in srgb, var(--serial-3) 85%, white 15%), white 100%);
+      color: #0f4e43;
+      box-shadow: 0 2px 6px rgba(18,119,102,0.05);
+    }
+    .accordion-button.collapsed.serial-3 .serial-badge { background: var(--serial-3); box-shadow: 0 6px 18px rgba(32,201,151,0.18); }
+
+    /* Serial 4 — orange base */
+    .accordion-button.collapsed.serial-4 {
+      background: linear-gradient(180deg, color-mix(in srgb, var(--serial-4) 85%, white 15%), white 100%);
+      color: #53320b;
+      box-shadow: 0 2px 6px rgba(124,54,4,0.05);
+    }
+    .accordion-button.collapsed.serial-4 .serial-badge { background: var(--serial-4); box-shadow: 0 6px 18px rgba(253,126,20,0.18); }
+
+    /* --- Active (non-collapsed) holy style for any serial --- */
+    .accordion-button:not(.collapsed) {
+      background: linear-gradient(135deg, var(--active-bg), #7ee08a) !important;
+      color: var(--active-text) !important;
+      box-shadow: 0 8px 30px var(--active-glow);
+      transform: translateY(-2px);
+    }
+    .accordion-button:not(.collapsed) .serial-badge {
+      background: linear-gradient(135deg,#ffc107,#fd7e14);
+      transform: scale(1.12) rotate(8deg);
+      box-shadow: 0 10px 28px rgba(255,193,7,0.35);
+    }
+    .accordion-button:not(.collapsed)::after {
+      transform: rotate(-180deg);
+    }
+
+    /* Slight hover lift for collapsed buttons */
+    .accordion-button.collapsed:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 8px 22px rgba(0,0,0,0.08);
+    }
+
+    /* Table & history button styling (keeps the holiness tidy) */
+    .holy-table { border-collapse: collapse; width:100%; }
+    .holy-table td { padding: 8px 12px; border: 1px solid #e6e6e6; vertical-align: top; }
+    .btn-history {
+      background: transparent;
+      color: #0d6efd;
+      border: 1px solid rgba(13,110,253,0.12);
+      padding: 6px 12px;
+      border-radius: 8px;
+      font-weight: 600;
+    }
+    .btn-history:hover { background: rgba(13,110,253,0.06); color: #0b5ed7; }
+
+    /* Make accordion items spaced and neat */
+    .accordion .accordion-item {
+      border: none;
+      margin-bottom: 12px;
+      background: transparent;
+    }
+    .accordion-body {
+      background: #fff;
+      border-radius: 8px;
+      padding: 1rem;
+      box-shadow: 0 6px 18px rgba(23,23,23,0.03);
+    }
+
+    /* Responsiveness nicety */
+    @media (max-width:576px){
+      .serial-badge { width:36px; height:36px; font-size:16px; }
+      .accordion-button { padding: 0.75rem 0.8rem; font-size: 15px; }
+    }
+  </style>
+</head>
+<body class="p-4">
+
+  <h2 class="mb-3">Divine 4 Accordions — Now With Serial Personality 🙏✨</h2>
+
+  <div class="accordion" id="holyAccordion">
+
+    <!-- Seminary One -->
+    <div class="accordion-item">
+      <h2 class="accordion-header" id="headingOne">
+        <button class="accordion-button collapsed serial-1" type="button" data-bs-toggle="collapse" data-bs-target="#collapseOne" aria-expanded="false" aria-controls="collapseOne">
+          <span class="serial-badge">1</span>
+          <div>
+            <div>St. PIUS X SEMINARY</div>
+            <small class="d-block text-muted">Founded: 1956 — Warangal</small>
+          </div>
+        </button>
+      </h2>
+      <div id="collapseOne" class="accordion-collapse collapse" data-bs-parent="#holyAccordion">
+        <div class="accordion-body">
+          <table class="holy-table">
+            <tr><td><b>Name of the Institution</b></td><td>St. Pius X Seminary</td></tr>
+            <tr><td><b>Name of the Management</b></td><td>Warangal Diocesan Society</td></tr>
+            <tr><td><b>Name of the Rector</b></td><td>Rev. Fr. T. Yaga Reddy</td></tr>
+            <tr><td><b>Address</b></td><td>The Rector,<br>St. Pius X Seminary,<br>Fatimanagar, Warangal – 506 004,<br>Tel: (0870) 2459506</td></tr>
+            <tr><td><b>History</b></td><td><button class="btn-history">Click Here</button></td></tr>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <!-- Seminary Two -->
+    <div class="accordion-item">
+      <h2 class="accordion-header" id="headingTwo">
+        <button class="accordion-button collapsed serial-2" type="button" data-bs-toggle="collapse" data-bs-target="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">
+          <span class="serial-badge">2</span>
+          <div>
+            <div>St. JOSEPH’S SEMINARY</div>
+            <small class="d-block text-muted">Founded: 1962 — Fatimanagar</small>
+          </div>
+        </button>
+      </h2>
+      <div id="collapseTwo" class="accordion-collapse collapse" data-bs-parent="#holyAccordion">
+        <div class="accordion-body">
+          <table class="holy-table">
+            <tr><td><b>Name of the Institution</b></td><td>St. Joseph’s Seminary</td></tr>
+            <tr><td><b>Name of the Management</b></td><td>Warangal Diocesan Society</td></tr>
+            <tr><td><b>Name of the Rector</b></td><td>Rev. Fr. Michael Angelos</td></tr>
+            <tr><td><b>Address</b></td><td>The Rector,<br>St. Joseph’s Seminary,<br>Fatimanagar, Warangal – 506 004,<br>Tel: (0870) 2467890</td></tr>
+            <tr><td><b>History</b></td><td><button class="btn-history">Click Here</button></td></tr>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <!-- Seminary Three -->
+    <div class="accordion-item">
+      <h2 class="accordion-header" id="headingThree">
+        <button class="accordion-button collapsed serial-3" type="button" data-bs-toggle="collapse" data-bs-target="#collapseThree" aria-expanded="false" aria-controls="collapseThree">
+          <span class="serial-badge">3</span>
+          <div>
+            <div>HOLY TRINITY SEMINARY</div>
+            <small class="d-block text-muted">Founded: 1975 — Faith Nagar</small>
+          </div>
+        </button>
+      </h2>
+      <div id="collapseThree" class="accordion-collapse collapse" data-bs-parent="#holyAccordion">
+        <div class="accordion-body">
+          <table class="holy-table">
+            <tr><td><b>Name of the Institution</b></td><td>Holy Trinity Seminary</td></tr>
+            <tr><td><b>Name of the Management</b></td><td>Warangal Diocesan Society</td></tr>
+            <tr><td><b>Name of the Rector</b></td><td>Rev. Fr. John Blessings</td></tr>
+            <tr><td><b>Address</b></td><td>The Rector,<br>Holy Trinity Seminary,<br>Faith Nagar, Warangal – 506 005,<br>Tel: (0870) 2471234</td></tr>
+            <tr><td><b>History</b></td><td><button class="btn-history">Click Here</button></td></tr>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <!-- Seminary Four -->
+    <div class="accordion-item">
+      <h2 class="accordion-header" id="headingFour">
+        <button class="accordion-button collapsed serial-4" type="button" data-bs-toggle="collapse" data-bs-target="#collapseFour" aria-expanded="false" aria-controls="collapseFour">
+          <span class="serial-badge">4</span>
+          <div>
+            <div>ST. MARY’S SEMINARY</div>
+            <small class="d-block text-muted">Founded: 1980 — Grace Colony</small>
+          </div>
+        </button>
+      </h2>
+      <div id="collapseFour" class="accordion-collapse collapse" data-bs-parent="#holyAccordion">
+        <div class="accordion-body">
+          <table class="holy-table">
+            <tr><td><b>Name of the Institution</b></td><td>St. Mary’s Seminary</td></tr>
+            <tr><td><b>Name of the Management</b></td><td>Warangal Diocesan Society</td></tr>
+            <tr><td><b>Name of the Rector</b></td><td>Rev. Fr. Thomas Light</td></tr>
+            <tr><td><b>Address</b></td><td>The Rector,<br>St. Mary’s Seminary,<br>Grace Colony, Warangal – 506 006,<br>Tel: (0870) 2485678</td></tr>
+            <tr><td><b>History</b></td><td><button class="btn-history">Click Here</button></td></tr>
+          </table>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

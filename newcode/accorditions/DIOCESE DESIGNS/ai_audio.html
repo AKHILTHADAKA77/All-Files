@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>AI Music Cards</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: #111;
+      color: #fff;
+      margin: 0;
+      padding: 20px;
+    }
+    .music-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 20px;
+    }
+    .music-card {
+      position: relative;
+      background: #222;
+      border-radius: 12px;
+      overflow: hidden;
+      box-shadow: 0 4px 15px rgba(0,0,0,0.4);
+      text-align: center;
+      transition: transform 0.3s ease;
+    }
+    .music-card:hover {
+      transform: scale(1.05);
+    }
+    .music-card img {
+      width: 100%;
+      height: 200px;
+      object-fit: cover;
+    }
+    .play-btn {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      font-size: 40px;
+      color: white;
+      background: rgba(0,0,0,0.6);
+      border-radius: 50%;
+      padding: 15px;
+      cursor: pointer;
+      display: none;
+    }
+    .music-card:hover .play-btn {
+      display: block;
+    }
+    .song-info {
+      padding: 10px;
+      font-size: 14px;
+    }
+    .progress-container {
+      width: 90%;
+      height: 6px;
+      background: #444;
+      margin: 8px auto;
+      border-radius: 4px;
+      overflow: hidden;
+      display: none;
+    }
+    .progress {
+      height: 100%;
+      width: 0%;
+      background: #ff4757;
+    }
+    .time {
+      font-size: 12px;
+      margin-bottom: 10px;
+      display: none;
+    }
+  </style>
+</head>
+<body>
+  <h1>🎶 AI Music Collection</h1>
+  <div class="music-grid" id="musicGrid"></div>
+
+  <script>
+    const songs = [
+      { title: "Dreamy Sunset", src: "accorditions/DIOCESE DESIGNS/eona-emotional-ambient-pop-351436.mp3" },
+      { title: "Chill Beats", src: "accorditions/DIOCESE DESIGNS/eona-emotional-ambient-pop-351436.mp3" },
+      { title: "Piano Inspiration", src: "https://cdn.pixabay.com/download/audio/2021/09/08/audio_9ddfbeed52.mp3?filename=piano-inspiration-8074.mp3" },
+      { title: "Epic Motivation", src: "https://cdn.pixabay.com/download/audio/2021/09/15/audio_73a001be14.mp3?filename=epic-motivation-8430.mp3" },
+      { title: "Relaxing Guitar", src: "https://cdn.pixabay.com/download/audio/2022/01/28/audio_9cc8e36d3a.mp3?filename=relaxing-guitar-10672.mp3" },
+      { title: "Soft Piano", src: "https://cdn.pixabay.com/download/audio/2021/11/02/audio_99b0c94d67.mp3?filename=soft-piano-10616.mp3" },
+      { title: "LoFi Study", src: "https://cdn.pixabay.com/download/audio/2022/04/07/audio_6dbf7c2bb1.mp3?filename=lofi-study-11295.mp3" },
+      { title: "Jazz Vibes", src: "https://cdn.pixabay.com/download/audio/2022/05/12/audio_d6ee5d8b6b.mp3?filename=jazz-vibes-11385.mp3" },
+      { title: "Energetic EDM", src: "https://cdn.pixabay.com/download/audio/2022/02/28/audio_d917ddbbec.mp3?filename=energetic-edm-11099.mp3" },
+      { title: "Happy Ukulele", src: "https://cdn.pixabay.com/download/audio/2021/10/06/audio_f01b5e78df.mp3?filename=happy-ukulele-9087.mp3" },
+      { title: "Peaceful Nature", src: "https://cdn.pixabay.com/download/audio/2021/12/14/audio_5b8df08a63.mp3?filename=peaceful-nature-10076.mp3" },
+      { title: "Action Trailer", src: "https://cdn.pixabay.com/download/audio/2021/09/15/audio_dce3d6a0e3.mp3?filename=action-trailer-8432.mp3" },
+      { title: "Calm Meditation", src: "https://cdn.pixabay.com/download/audio/2022/02/01/audio_8c9c73383a.mp3?filename=calm-meditation-10981.mp3" },
+      { title: "Ambient Space", src: "https://cdn.pixabay.com/download/audio/2021/09/14/audio_7a2bcd2f67.mp3?filename=ambient-space-8411.mp3" },
+      { title: "Tech Future", src: "https://cdn.pixabay.com/download/audio/2021/10/30/audio_d3a63e0d3f.mp3?filename=tech-future-10449.mp3" }
+    ];
+
+    const grid = document.getElementById("musicGrid");
+    let currentAudio = null;
+    let currentCard = null;
+
+    songs.forEach((song, index) => {
+      const card = document.createElement("div");
+      card.className = "music-card";
+      card.innerHTML = `
+        <img src="stock-vector-mobile-music-player-interface-podcast-turntable-template-audio-streaming-service-layout-profile-2584886791.jpg" alt="Album Art">
+        <div class="play-btn" data-index="${index}">▶️</div>
+        <div class="song-info"><strong>${song.title}</strong></div>
+        <div class="progress-container"><div class="progress"></div></div>
+        <div class="time">00:00 / 00:00</div>
+      `;
+      grid.appendChild(card);
+    });
+
+    document.querySelectorAll(".play-btn").forEach(btn => {
+      btn.addEventListener("click", function () {
+        const index = this.getAttribute("data-index");
+        const song = songs[index];
+        const card = this.closest(".music-card");
+        const progressBar = card.querySelector(".progress");
+        const progressContainer = card.querySelector(".progress-container");
+        const timeDisplay = card.querySelector(".time");
+
+        if (currentAudio && currentAudio !== card.audio) {
+          currentAudio.pause();
+          currentAudio.currentTime = 0;
+          if (currentCard) {
+            currentCard.querySelector(".play-btn").textContent = "▶️";
+            currentCard.querySelector(".progress-container").style.display = "none";
+            currentCard.querySelector(".time").style.display = "none";
+          }
+        }
+
+        if (!card.audio) {
+          card.audio = new Audio(song.src);
+        }
+
+        if (card.audio.paused) {
+          card.audio.play();
+          this.textContent = "⏹️";
+          progressContainer.style.display = "block";
+          timeDisplay.style.display = "block";
+          currentAudio = card.audio;
+          currentCard = card;
+
+          card.audio.ontimeupdate = () => {
+            const progress = (card.audio.currentTime / card.audio.duration) * 100;
+            progressBar.style.width = progress + "%";
+
+            let current = formatTime(card.audio.currentTime);
+            let total = formatTime(card.audio.duration);
+            timeDisplay.textContent = `${current} / ${total}`;
+          };
+
+          card.audio.onended = () => {
+            this.textContent = "▶️";
+            progressContainer.style.display = "none";
+            timeDisplay.style.display = "none";
+            progressBar.style.width = "0%";
+          };
+        } else {
+          card.audio.pause();
+          card.audio.currentTime = 0;
+          this.textContent = "▶️";
+          progressContainer.style.display = "none";
+          timeDisplay.style.display = "none";
+          progressBar.style.width = "0%";
+        }
+      });
+    });
+
+    function formatTime(sec) {
+      if (isNaN(sec)) return "00:00";
+      let m = Math.floor(sec / 60);
+      let s = Math.floor(sec % 60);
+      return `${m < 10 ? "0" + m : m}:${s < 10 ? "0" + s : s}`;
+    }
+  </script>
+</body>
+</html>

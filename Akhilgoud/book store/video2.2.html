@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>AI Video Cards</title>
+  <!-- Bootstrap CSS -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+  <style>
+    .video-card {
+      position: relative;
+      border-radius: 10px;
+      overflow: hidden;
+      cursor: pointer;
+      transition: transform 0.3s;
+    }
+    .video-card:hover {
+      transform: scale(1.03);
+    }
+    .video-card img, 
+    .video-card video {
+      width: 100%;
+      height: 200px;
+      object-fit: cover;
+      display: block;
+    }
+    .video-card .p-3 {
+      background: #fff;
+    }
+  </style>
+</head>
+<body class="bg-light">
+
+<div class="container py-5">
+    <div class="heading">
+        
+    </div>
+  <div class="row g-4">
+
+    <!-- Card 1 with Thumbnail -->
+    <div class="col-md-4">
+      <div class="video-card" data-bs-toggle="modal" data-bs-target="#videoModal" data-yt="https://www.youtube.com/embed/5BNGhmztq1g?autoplay=1">
+        <img src="https://i.postimg.cc/YqN0Z1pg/360-F-566409029-UJr-Cz-RSKLURNLTCz-Jj-ONUNk-Io-Dh-BLC5z.jpg" alt="Video Thumbnail">
+        <div class="p-3">
+          <h6 class="fw-bold mb-1">Big Buck Bunny</h6>
+          <p class="text-muted mb-0">AI-enhanced animation clip</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Card 2 Without Thumbnail (Video Directly in Card) -->
+    <div class="col-md-4">
+      <div class="video-card" data-bs-toggle="modal" data-bs-target="#videoModal" data-yt="https://www.youtube.com/embed/tgbNymZ7vqY?autoplay=1">
+        <video muted autoplay loop playsinline>
+          <source src="https://www.w3schools.com/html/mov_bbb.mp4" type="video/mp4">
+        </video>
+        <div class="p-3">
+          <h6 class="fw-bold mb-1">Nature Scene</h6>
+          <p class="text-muted mb-0">AI upscaled HD forest video</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Card 3 With Thumbnail -->
+    <div class="col-md-4">
+      <div class="video-card" data-bs-toggle="modal" data-bs-target="#videoModal" data-yt="https://www.youtube.com/embed/a3ICNMQW7Ok?autoplay=1">
+        <img src="https://i.postimg.cc/Pr0jwT8K/ai-video-thumb.jpg" alt="Video Thumbnail">
+        <div class="p-3">
+          <h6 class="fw-bold mb-1">AI Future</h6>
+          <p class="text-muted mb-0">Artificial Intelligence vision video</p>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<!-- Modal -->
+<div class="modal fade" id="videoModal" tabindex="-1" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered modal-lg">
+    <div class="modal-content bg-dark">
+      <div class="modal-header border-0">
+        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+      </div>
+      <div class="ratio ratio-16x9">
+        <iframe id="videoFrame" src="" title="AI Video Player" allow="autoplay; encrypted-media" allowfullscreen></iframe>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Bootstrap JS -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+<!-- <script>
+  const videoModal = document.getElementById('videoModal');
+  const videoFrame = document.getElementById('videoFrame');
+
+  videoModal.addEventListener('show.bs.modal', e => {
+    const trigger = e.relatedTarget;
+    videoFrame.src = trigger.getAttribute('data-yt');
+  });
+
+  videoModal.addEventListener('hidden.bs.modal', () => {
+    videoFrame.src = '';
+  });
+</script> -->
+<script>
+  const videoModal = document.getElementById('videoModal');
+  const videoFrame = document.getElementById('videoFrame');
+
+  // Ensure all card videos are muted (extra safety)
+  document.querySelectorAll(".video-card video").forEach(v => {
+    v.muted = true;
+  });
+
+  videoModal.addEventListener('show.bs.modal', e => {
+    const trigger = e.relatedTarget;
+    videoFrame.src = trigger.getAttribute('data-yt');
+  });
+
+  videoModal.addEventListener('hidden.bs.modal', () => {
+    videoFrame.src = '';
+  });
+</script>
+
+</body>
+</html>

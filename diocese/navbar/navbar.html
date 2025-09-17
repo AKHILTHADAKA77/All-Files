@@ -1,0 +1,316 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Diocese Navbar</title>
+    <!-- Bootstrap 5.3.3 CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Bootstrap Icons -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css">
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <style>
+        :root {
+      
+            --secondary-color: #c0392b; 
+            --gold-color: #f1c40f;         
+            --green-color: #27ae60;       
+            --light-color: #ffffff;       
+            --dark-color: #2c3e50;     
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: var(--light-color);
+            color: var(--dark-color);
+        }
+        
+        .navbar {
+            background-color: var(--primary-color);
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            padding: 0;
+        }
+        
+        .navbar-brand {
+            display: flex;
+            align-items: center;
+            padding: 0.5rem 1rem;
+        }
+        
+        .navbar-brand img {
+            height: 80px;
+            margin-right: 15px;
+            /* border-radius: 50%; */
+            /* border: 2px solid var(--gold-color); */
+        }
+        
+        .navbar-brand h2 {
+            color: white;
+            font-size: 1.5rem;
+            font-weight: 600;
+            margin: 0;
+        }
+        .navbar-expand-lg .navbar-nav{
+        gap: 10px;
+        }
+        .navbar-nav .nav-link {
+            color: rgba(0, 0, 0, 0.8);
+            font-weight: 500;
+            margin: 0 5px;
+            padding: 0.7rem 1rem;
+            border-radius: 4px;
+            transition: all 0.3s ease;
+        }
+        
+        .navbar-nav .nav-link:hover {
+            color: rgb(201, 29, 29);
+            background-color: rgba(255, 255, 255, 0.1);
+        }
+        
+     .navbar-nav .nav-link.active {
+    color: white;
+    background-color: var(--secondary-color);
+    border-radius: 25px;
+    padding: 10px 20px;
+}
+        .dropdown-menu {
+            background-color: var(--primary-color);
+            border: none;
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
+            border-radius: 4px;
+            padding: 0.5rem 0;
+        }
+        
+        .dropdown-item {
+            color: rgba(255, 255, 255, 0.8);
+            padding: 0.7rem 1.5rem;
+            transition: all 0.3s ease;
+        }
+        
+        .dropdown-item:hover {
+            background-color: rgba(255, 255, 255, 0.1);
+            color: white;
+        }
+
+
+        .navbar-toggler {
+        background-color: #000000; 
+        border-radius: 50%;     
+        padding: 6px;        
+        }
+
+
+     .navbar-toggler-icon {
+  background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 30 30'%3e%3cpath stroke='white' stroke-width='2' stroke-linecap='round' stroke-miterlimit='10' d='M4 7h22M4 15h22M4 23h22'/%3e%3c/svg%3e");
+}
+
+
+        .navbar-toggler:focus {
+        outline: none !important;
+        box-shadow: none !important;
+        }
+
+        
+        /* Offcanvas styling */
+        .offcanvas {
+            background-color: var(--primary-color);
+        }
+        
+        .offcanvas-header {
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        
+        .offcanvas-title {
+            color: white;
+        }
+        
+        .offcanvas-body {
+            padding: 0;
+        }
+        
+        .offcanvas .nav-link {
+            color: rgba(255, 255, 255, 0.8);
+            padding: 1rem 1.5rem;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+        }
+        
+        .offcanvas .nav-link:hover {
+            background-color: rgba(255, 255, 255, 0.1);
+            color: white;
+        }
+        
+        .offcanvas .nav-link.active {
+            background-color: var(--secondary-color);
+            color: white;
+        }
+        
+        .offcanvas .dropdown-menu {
+            position: static;
+            transform: none !important;
+            background-color: rgba(0, 0, 0, 0.2);
+            border-radius: 0;
+            border: none;
+        }
+        
+        .offcanvas .dropdown-toggle::after {
+            margin-left: auto;
+        }
+        
+        .btn-close {
+            filter: invert(1);
+        }
+        
+
+    </style>
+</head>
+<body>
+    <!-- Navbar -->
+    <nav class="navbar navbar-expand-lg navbar-dark sticky-top">
+        <div class="container">
+            <a class="navbar-brand" href="#">
+                <img src="https://i.postimg.cc/wBp0QWBL/logo-1.webp" alt="Diocese Logo">
+            </a>
+            
+            <!-- Desktop Navigation -->
+            <div class="d-none d-lg-flex">
+                <ul class="navbar-nav">
+                    <li class="nav-item">
+                        <a class="nav-link active" href="#">
+                            <!-- <i class="fas fa-home"></i>  -->
+                            Home</a>
+                    </li>
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" id="bishopDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                            <!-- <i class="fas fa-cross"></i>  -->
+                            Bishop
+                        </a>
+                        <ul class="dropdown-menu" aria-labelledby="bishopDropdown">
+                            <li><a class="dropdown-item" href="#">Biography</a></li>
+                            <li><a class="dropdown-item" href="#">Pastoral Letters</a></li>
+                            <li><a class="dropdown-item" href="#">Schedule & Appointments</a></li>
+                            <li><a class="dropdown-item" href="#">Homilies</a></li>
+                            <li><a class="dropdown-item" href="#">Photo Gallery</a></li>
+                        </ul>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#">
+                            <!-- <i class="fas fa-church"></i>  -->
+                            Institution</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#">
+                            <!-- <i class="fas fa-graduation-cap"></i>  -->
+                            Educations</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#">
+                            <!-- <i class="fas fa-envelope"></i>  -->
+                            Contact</a>
+                    </li>
+                </ul>
+            </div>
+            
+            <!-- Mobile Menu Toggle -->
+            <button class="navbar-toggler d-lg-none" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasNavbar" aria-controls="offcanvasNavbar" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+        </div>
+    </nav>
+
+
+    <!-- Offcanvas Menu for Mobile -->
+    <div class="offcanvas offcanvas-end" tabindex="-1" id="offcanvasNavbar" aria-labelledby="offcanvasNavbarLabel">
+        <div class="offcanvas-header">
+            <h5 class="offcanvas-title" id="offcanvasNavbarLabel">
+                <img src="https://picsum.photos/seed/shieldlogo/50/50.jpg" alt="Diocese Logo" class="me-2">
+                Diocese Menu
+            </h5>
+            <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+        </div>
+        <div class="offcanvas-body">
+            <ul class="navbar-nav">
+                <li class="nav-item">
+                    <a class="nav-link active" href="#"><i class="fas fa-home"></i> Home</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link dropdown-toggle" href="#" data-bs-toggle="collapse" data-bs-target="#bishopCollapse" aria-expanded="false" aria-controls="bishopCollapse">
+                        <i class="fas fa-cross"></i> Bishop
+                    </a>
+                    <div class="collapse" id="bishopCollapse">
+                        <ul class="navbar-nav">
+                            <li class="nav-item">
+                                <a class="nav-link ps-4" href="#"><i class="fas fa-user"></i> Biography</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link ps-4" href="#"><i class="fas fa-envelope-open-text"></i> Pastoral Letters</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link ps-4" href="#"><i class="fas fa-calendar-alt"></i> Schedule & Appointments</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link ps-4" href="#"><i class="fas fa-microphone-alt"></i> Homilies</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link ps-4" href="#"><i class="fas fa-images"></i> Photo Gallery</a>
+                            </li>
+                        </ul>
+                    </div>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="#"><i class="fas fa-church"></i> Institution</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="#"><i class="fas fa-graduation-cap"></i> Educations</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="#"><i class="fas fa-envelope"></i> Contact</a>
+                </li>
+            </ul>
+            
+            <hr class="my-4" style="border-color: rgba(255,255,255,0.1);">
+            
+            <div class="text-white">
+                <h6>Quick Links</h6>
+                <ul class="list-unstyled">
+                    <li><a href="#" class="text-white-50"><i class="fas fa-praying-hands"></i> Prayer Requests</a></li>
+                    <li><a href="#" class="text-white-50"><i class="fas fa-calendar-alt"></i> Parish Calendar</a></li>
+                    <li><a href="#" class="text-white-50"><i class="fas fa-bible"></i> Daily Readings</a></li>
+                    <li><a href="#" class="text-white-50"><i class="fas fa-hand-holding-heart"></i> Donate</a></li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+
+    <!-- Bootstrap 5.3.3 JS Bundle -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+    
+    <script>
+        // Add active class to current nav item
+        document.addEventListener('DOMContentLoaded', function() {
+            const navLinks = document.querySelectorAll('.nav-link');
+            
+            navLinks.forEach(link => {
+                link.addEventListener('click', function() {
+                    // Remove active class from all links
+                    navLinks.forEach(l => l.classList.remove('active'));
+                    
+                    // Add active class to clicked link
+                    this.classList.add('active');
+                    
+                    // Close offcanvas on mobile after clicking a link
+                    if (window.innerWidth < 992) {
+                        const offcanvasElement = document.getElementById('offcanvasNavbar');
+                        const offcanvas = bootstrap.Offcanvas.getInstance(offcanvasElement);
+                        if (offcanvas) {
+                            offcanvas.hide();
+                        }
+                    }
+                });
+            });
+        });
+    </script>
+</body>
+</html>

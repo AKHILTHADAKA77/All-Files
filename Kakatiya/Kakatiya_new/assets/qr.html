@@ -1,0 +1,1526 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>QRMaster Pro - Advanced QR Code Generator</title>
+    <script src="https://cdn.jsdelivr.net/npm/qrcode@1.5.3/build/qrcode.min.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --primary-color: #6366f1;
+            --primary-dark: #4f46e5;
+            --primary-light: #818cf8;
+            --secondary-color: #8b5cf6;
+            --success-color: #10b981;
+            --danger-color: #ef4444;
+            --warning-color: #f59e0b;
+            --background: #f8fafc;
+            --card-bg: #ffffff;
+            --text-color: #1e293b;
+            --text-secondary: #64748b;
+            --border-color: #e2e8f0;
+            --shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+            --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+        }
+        
+        body {
+            background-color: var(--background);
+            color: var(--text-color);
+            line-height: 1.6;
+            background-image: 
+                radial-gradient(at 47% 33%, hsl(262.00, 77%, 88%) 0, transparent 59%), 
+                radial-gradient(at 82% 65%, hsl(218.00, 39%, 85%) 0, transparent 55%);
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+        }
+        
+        /* Navbar Styles */
+        .navbar {
+            background-color: var(--card-bg);
+            box-shadow: var(--shadow);
+            padding: 15px 0;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+        
+        .navbar-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .navbar-brand {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--primary-color);
+            text-decoration: none;
+        }
+        
+        .navbar-logo {
+            width: 40px;
+            height: 40px;
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 20px;
+        }
+        
+        .navbar-menu {
+            display: flex;
+            list-style: none;
+            gap: 25px;
+        }
+        
+        .navbar-menu a {
+            color: var(--text-color);
+            text-decoration: none;
+            font-weight: 500;
+            transition: color 0.3s;
+        }
+        
+        .navbar-menu a:hover {
+            color: var(--primary-color);
+        }
+        
+        .navbar-toggle {
+            display: none;
+            background: none;
+            border: none;
+            font-size: 1.5rem;
+            color: var(--text-color);
+            cursor: pointer;
+        }
+        
+        /* Main Content */
+        .main-content {
+            flex: 1;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        
+        header {
+            text-align: center;
+            margin-bottom: 40px;
+            padding: 20px 0;
+        }
+        
+        .brand {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 15px;
+            margin-bottom: 15px;
+        }
+        
+        .brand-logo {
+            width: 60px;
+            height: 60px;
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            border-radius: 15px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 28px;
+            box-shadow: var(--shadow);
+        }
+        
+        h1 {
+            font-size: 2.5rem;
+            font-weight: 800;
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 5px;
+        }
+        
+        .subtitle {
+            color: var(--text-secondary);
+            font-size: 1.1rem;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+        
+        .card {
+            background-color: var(--card-bg);
+            border-radius: 16px;
+            box-shadow: var(--shadow);
+            padding: 30px;
+            margin-bottom: 25px;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+        
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: var(--shadow-lg);
+        }
+        
+        .flex-container {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 30px;
+        }
+        
+        .qr-generator {
+            flex: 1;
+            min-width: 350px;
+        }
+        
+        .qr-preview {
+            flex: 1;
+            min-width: 350px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .form-group {
+            margin-bottom: 25px;
+        }
+        
+        label {
+            display: block;
+            margin-bottom: 10px;
+            font-weight: 600;
+            color: var(--text-color);
+            font-size: 0.95rem;
+        }
+        
+        input, select, textarea {
+            width: 100%;
+            padding: 14px;
+            border: 1px solid var(--border-color);
+            border-radius: 10px;
+            font-size: 1rem;
+            transition: border-color 0.3s, box-shadow 0.3s;
+            background-color: var(--card-bg);
+        }
+        
+        input:focus, select:focus, textarea:focus {
+            outline: none;
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.1);
+        }
+        
+        textarea {
+            resize: vertical;
+            min-height: 100px;
+        }
+        
+        .error {
+            border-color: var(--danger-color) !important;
+        }
+        
+        .error-message {
+            color: var(--danger-color);
+            font-size: 0.85rem;
+            margin-top: 5px;
+            display: none;
+        }
+        
+        .btn {
+            display: inline-block;
+            background: linear-gradient(135deg, var(--primary-color), var(--primary-dark));
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 10px;
+            cursor: pointer;
+            font-size: 1rem;
+            font-weight: 600;
+            transition: all 0.3s;
+            box-shadow: 0 4px 6px -1px rgba(99, 102, 241, 0.3);
+        }
+        
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 7px 14px -1px rgba(99, 102, 241, 0.4);
+        }
+        
+        .btn-secondary {
+            background: linear-gradient(135deg, var(--secondary-color), var(--primary-color));
+            box-shadow: 0 4px 6px -1px rgba(139, 92, 246, 0.3);
+        }
+        
+        .btn-secondary:hover {
+            box-shadow: 0 7px 14px -1px rgba(139, 92, 246, 0.4);
+        }
+        
+        .btn-success {
+            background: linear-gradient(135deg, var(--success-color), #059669);
+            box-shadow: 0 4px 6px -1px rgba(16, 185, 129, 0.3);
+        }
+        
+        .btn-success:hover {
+            box-shadow: 0 7px 14px -1px rgba(16, 185, 129, 0.4);
+        }
+        
+        .btn-danger {
+            background: linear-gradient(135deg, var(--danger-color), #dc2626);
+            box-shadow: 0 4px 6px -1px rgba(239, 68, 68, 0.3);
+        }
+        
+        .btn-danger:hover {
+            box-shadow: 0 7px 14px -1px rgba(239, 68, 68, 0.4);
+        }
+        
+        .btn-warning {
+            background: linear-gradient(135deg, var(--warning-color), #d97706);
+            box-shadow: 0 4px 6px -1px rgba(245, 158, 11, 0.3);
+        }
+        
+        .btn-warning:hover {
+            box-shadow: 0 7px 14px -1px rgba(245, 158, 11, 0.4);
+        }
+        
+        .duration-buttons, .test-buttons, .qr-type-buttons, .download-buttons {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 12px;
+            margin-top: 15px;
+        }
+        
+        .duration-buttons button, .test-buttons button, .qr-type-buttons button, .download-buttons button {
+            flex: 1;
+            min-width: 110px;
+            padding: 10px 15px;
+            font-size: 0.9rem;
+        }
+        
+        .qr-type-buttons button {
+            min-width: 120px;
+        }
+        
+        .active {
+            background: linear-gradient(135deg, var(--success-color), #059669);
+            color: white;
+            box-shadow: 0 4px 6px -1px rgba(16, 185, 129, 0.3);
+        }
+        
+        #qrcode {
+            margin: 25px 0;
+            display: flex;
+            justify-content: center;
+            position: relative;
+        }
+        
+        .qr-container {
+            position: relative;
+            display: inline-block;
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: var(--shadow);
+        }
+        
+        .qr-expired-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(255, 255, 255, 0.8);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            border-radius: 10px;
+            opacity: 0;
+            transition: opacity 0.5s;
+        }
+        
+        .qr-expired-overlay.show {
+            opacity: 1;
+        }
+        
+        .qr-expired-text {
+            font-size: 24px;
+            font-weight: bold;
+            color: var(--danger-color);
+            margin-bottom: 10px;
+        }
+        
+        .qr-expired-icon {
+            font-size: 48px;
+            color: var(--danger-color);
+        }
+        
+        .logo-upload {
+            position: relative;
+            display: inline-block;
+            cursor: pointer;
+            overflow: hidden;
+        }
+        
+        .logo-upload input[type=file] {
+            position: absolute;
+            left: 0;
+            top: 0;
+            opacity: 0;
+            cursor: pointer;
+        }
+        
+        .logo-preview {
+            margin-top: 15px;
+            max-width: 150px;
+            max-height: 150px;
+            border-radius: 10px;
+            box-shadow: var(--shadow);
+            display: none;
+        }
+        
+        .qr-info {
+            width: 100%;
+            background-color: var(--card-bg);
+            border-radius: 12px;
+            padding: 20px;
+            margin-top: 20px;
+            box-shadow: var(--shadow);
+            display: none;
+        }
+        
+        .qr-info h3 {
+            font-size: 1.2rem;
+            margin-bottom: 15px;
+            color: var(--text-color);
+        }
+        
+        .info-item {
+            display: flex;
+            justify-content: space-between;
+            padding: 10px 0;
+            border-bottom: 1px solid var(--border-color);
+        }
+        
+        .info-item:last-child {
+            border-bottom: none;
+        }
+        
+        .info-label {
+            font-weight: 600;
+            color: var(--text-secondary);
+        }
+        
+        .info-value {
+            font-weight: 500;
+        }
+        
+        .status-active {
+            color: var(--success-color);
+        }
+        
+        .status-expired {
+            color: var(--danger-color);
+        }
+        
+        .notification {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            padding: 20px 25px;
+            background-color: var(--card-bg);
+            color: var(--text-color);
+            border-radius: 12px;
+            box-shadow: var(--shadow-lg);
+            transform: translateX(150%);
+            transition: transform 0.3s ease-out;
+            z-index: 1000;
+            max-width: 350px;
+            border-left: 5px solid var(--success-color);
+        }
+        
+        .notification.show {
+            transform: translateX(0);
+        }
+        
+        .notification.error {
+            border-left-color: var(--danger-color);
+        }
+        
+        .notification.warning {
+            border-left-color: var(--warning-color);
+        }
+        
+        .notification-header {
+            display: flex;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+        
+        .notification-icon {
+            margin-right: 12px;
+            font-size: 1.2rem;
+        }
+        
+        .notification.error .notification-icon {
+            color: var(--danger-color);
+        }
+        
+        .notification.warning .notification-icon {
+            color: var(--warning-color);
+        }
+        
+        .notification.success .notification-icon {
+            color: var(--success-color);
+        }
+        
+        .notification-title {
+            font-weight: 700;
+            font-size: 1.1rem;
+        }
+        
+        .notification-message {
+            color: var(--text-secondary);
+            font-size: 0.95rem;
+        }
+        
+        .brand-details {
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            color: white;
+            border-radius: 16px;
+            padding: 25px;
+            margin-bottom: 30px;
+            box-shadow: var(--shadow-lg);
+        }
+        
+        .brand-details h2 {
+            font-size: 1.8rem;
+            margin-bottom: 15px;
+            font-weight: 700;
+        }
+        
+        .brand-details p {
+            margin-bottom: 10px;
+            opacity: 0.9;
+        }
+        
+        .brand-details .brand-contact {
+            display: flex;
+            gap: 20px;
+            margin-top: 20px;
+        }
+        
+        .brand-details .brand-contact a {
+            color: white;
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            transition: opacity 0.3s;
+        }
+        
+        .brand-details .brand-contact a:hover {
+            opacity: 0.8;
+        }
+        
+        .qr-color-options {
+            display: flex;
+            gap: 15px;
+            margin-top: 15px;
+            flex-wrap: wrap;
+        }
+        
+        .color-option {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            cursor: pointer;
+            border: 3px solid transparent;
+            transition: all 0.3s;
+        }
+        
+        .color-option:hover {
+            transform: scale(1.1);
+        }
+        
+        .color-option.active {
+            border-color: var(--text-color);
+            box-shadow: 0 0 0 2px white, 0 0 0 4px var(--text-color);
+        }
+        
+        .color-dark {
+            background-color: #1e293b;
+        }
+        
+        .color-blue {
+            background-color: #3b82f6;
+        }
+        
+        .color-purple {
+            background-color: #8b5cf6;
+        }
+        
+        .color-green {
+            background-color: #10b981;
+        }
+        
+        .color-red {
+            background-color: #ef4444;
+        }
+        
+        .custom-color {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-top: 10px;
+        }
+        
+        .custom-color input[type="color"] {
+            width: 40px;
+            height: 40px;
+            border: none;
+            border-radius: 50%;
+            cursor: pointer;
+        }
+        
+        .custom-color label {
+            margin-bottom: 0;
+            font-weight: 500;
+        }
+        
+        .optional-section {
+            background-color: rgba(99, 102, 241, 0.05);
+            border-radius: 10px;
+            padding: 15px;
+            border: 1px dashed var(--primary-color);
+        }
+        
+        .optional-section h3 {
+            font-size: 1rem;
+            margin-bottom: 10px;
+            color: var(--primary-color);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .checkbox-container {
+            display: flex;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+        
+        .checkbox-container input[type="checkbox"] {
+            width: auto;
+            margin-right: 10px;
+        }
+        
+        .checkbox-container label {
+            margin-bottom: 0;
+            font-weight: 500;
+        }
+        
+        .test-options {
+            display: none;
+        }
+        
+        .test-options.show {
+            display: block;
+        }
+        
+        /* Content Section */
+        .content-section {
+            margin: 50px 0;
+        }
+        
+        .content-section h2 {
+            font-size: 2rem;
+            margin-bottom: 20px;
+            text-align: center;
+            color: var(--primary-color);
+        }
+        
+        .content-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 30px;
+        }
+        
+        .content-card {
+            background-color: var(--card-bg);
+            border-radius: 16px;
+            overflow: hidden;
+            box-shadow: var(--shadow);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+        
+        .content-card:hover {
+            transform: translateY(-5px);
+            box-shadow: var(--shadow-lg);
+        }
+        
+        .content-card-image {
+            width: 100%;
+            height: 200px;
+            object-fit: cover;
+        }
+        
+        .content-card-body {
+            padding: 20px;
+        }
+        
+        .content-card h3 {
+            font-size: 1.3rem;
+            margin-bottom: 10px;
+            color: var(--text-color);
+        }
+        
+        .content-card p {
+            color: var(--text-secondary);
+            margin-bottom: 15px;
+        }
+        
+        .content-card a {
+            color: var(--primary-color);
+            text-decoration: none;
+            font-weight: 600;
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+        }
+        
+        .content-card a:hover {
+            text-decoration: underline;
+        }
+        
+        /* Footer */
+        footer {
+            background-color: var(--text-color);
+            color: white;
+            padding: 50px 0 20px;
+            margin-top: 50px;
+        }
+        
+        .footer-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+        
+        .footer-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 30px;
+            margin-bottom: 40px;
+        }
+        
+        .footer-column h3 {
+            font-size: 1.2rem;
+            margin-bottom: 20px;
+            position: relative;
+            padding-bottom: 10px;
+        }
+        
+        .footer-column h3::after {
+            content: '';
+            position: absolute;
+            left: 0;
+            bottom: 0;
+            width: 50px;
+            height: 3px;
+            background-color: var(--primary-color);
+        }
+        
+        .footer-column ul {
+            list-style: none;
+        }
+        
+        .footer-column ul li {
+            margin-bottom: 10px;
+        }
+        
+        .footer-column ul li a {
+            color: rgba(255, 255, 255, 0.7);
+            text-decoration: none;
+            transition: color 0.3s;
+        }
+        
+        .footer-column ul li a:hover {
+            color: var(--primary-color);
+        }
+        
+        .footer-bottom {
+            text-align: center;
+            padding-top: 20px;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            color: rgba(255, 255, 255, 0.7);
+            font-size: 0.9rem;
+        }
+        
+        .footer-social {
+            display: flex;
+            gap: 15px;
+            margin-top: 15px;
+        }
+        
+        .footer-social a {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 40px;
+            height: 40px;
+            background-color: rgba(255, 255, 255, 0.1);
+            border-radius: 50%;
+            color: white;
+            transition: background-color 0.3s;
+        }
+        
+        .footer-social a:hover {
+            background-color: var(--primary-color);
+        }
+        
+        /* QR Showcase */
+        .qr-showcase {
+            margin: 50px 0;
+        }
+        
+        .qr-showcase h2 {
+            font-size: 2rem;
+            margin-bottom: 20px;
+            text-align: center;
+            color: var(--primary-color);
+        }
+        
+        .qr-gallery {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+            gap: 20px;
+        }
+        
+        .qr-item {
+            background-color: var(--card-bg);
+            border-radius: 10px;
+            padding: 15px;
+            box-shadow: var(--shadow);
+            text-align: center;
+            transition: transform 0.3s ease;
+        }
+        
+        .qr-item:hover {
+            transform: translateY(-5px);
+        }
+        
+        .qr-item img {
+            width: 100%;
+            height: auto;
+            border-radius: 5px;
+            margin-bottom: 10px;
+        }
+        
+        .qr-item p {
+            font-size: 0.9rem;
+            color: var(--text-secondary);
+            margin: 0;
+        }
+        
+        /* Title with countdown */
+        .title-countdown {
+            display: none;
+            background-color: var(--warning-color);
+            color: white;
+            padding: 5px 10px;
+            border-radius: 5px;
+            font-weight: 600;
+            margin-left: 10px;
+        }
+        
+        .title-countdown.show {
+            display: inline-block;
+        }
+        
+        @media (max-width: 768px) {
+            .navbar-menu {
+                display: none;
+                position: absolute;
+                top: 100%;
+                left: 0;
+                width: 100%;
+                background-color: var(--card-bg);
+                flex-direction: column;
+                padding: 20px;
+                box-shadow: var(--shadow);
+            }
+            
+            .navbar-menu.active {
+                display: flex;
+            }
+            
+            .navbar-toggle {
+                display: block;
+            }
+            
+            .flex-container {
+                flex-direction: column;
+            }
+            
+            .duration-buttons button, .test-buttons button, .qr-type-buttons button, .download-buttons button {
+                min-width: 90px;
+                font-size: 0.85rem;
+                padding: 8px 12px;
+            }
+            
+            h1 {
+                font-size: 2rem;
+            }
+            
+            .brand-details {
+                padding: 20px;
+            }
+            
+            .brand-details h2 {
+                font-size: 1.5rem;
+            }
+            
+            .content-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .footer-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <nav class="navbar">
+        <div class="navbar-container">
+            <a href="#" class="navbar-brand">
+                <div class="navbar-logo">
+                    <i class="fas fa-qrcode"></i>
+                </div>
+                QRMaster Pro
+            </a>
+            <ul class="navbar-menu" id="navbar-menu">
+                <li><a href="#">Home</a></li>
+                <li><a href="#">Features</a></li>
+                <li><a href="#">Templates</a></li>
+                <li><a href="#">Pricing</a></li>
+                <li><a href="#">About</a></li>
+                <li><a href="#">Contact</a></li>
+            </ul>
+            <button class="navbar-toggle" id="navbar-toggle">
+                <i class="fas fa-bars"></i>
+            </button>
+        </div>
+    </nav>
+
+    <div class="main-content">
+        <div class="container">
+            <header>
+                <div class="brand">
+                    <div class="brand-logo">
+                        <i class="fas fa-qrcode"></i>
+                    </div>
+                    <h1>QRMaster Pro<span class="title-countdown" id="title-countdown"></span></h1>
+                </div>
+                <p class="subtitle">Create customized QR codes with expiration settings, logos, and advanced features</p>
+            </header>
+            
+            <div class="brand-details">
+                <h2>About QRMaster Pro</h2>
+                <p>QRMaster Pro is the leading QR code generation platform that offers advanced features for businesses and individuals.</p>
+                <p>Create QR codes with custom expiration dates, center logos, and various content types to enhance your marketing campaigns.</p>
+                <div class="brand-contact">
+                    <a href="#"><i class="fas fa-globe"></i> www.qrmasterpro.com</a>
+                    <a href="#"><i class="fas fa-envelope"></i> info@qrmasterpro.com</a>
+                    <a href="#"><i class="fas fa-phone"></i> +1 (555) 123-4567</a>
+                </div>
+            </div>
+            
+            <div class="flex-container">
+                <div class="card qr-generator">
+                    <h2>QR Code Settings</h2>
+                    
+                    <div class="form-group">
+                        <label for="qr-content">QR Code Content</label>
+                        <textarea id="qr-content" placeholder="Enter URL, text, or other content for your QR code">https://example.com</textarea>
+                        <div class="error-message" id="content-error">Please enter content for the QR code</div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label>QR Code Type</label>
+                        <div class="qr-type-buttons">
+                            <button class="btn btn-secondary active" data-type="url">URL</button>
+                            <button class="btn btn-secondary" data-type="text">Text</button>
+                            <button class="btn btn-secondary" data-type="email">Email</button>
+                            <button class="btn btn-secondary" data-type="phone">Phone</button>
+                            <button class="btn btn-secondary" data-type="sms">SMS</button>
+                            <button class="btn btn-secondary" data-type="wifi">WiFi</button>
+                            <button class="btn btn-secondary" data-type="location">Location</button>
+                            <button class="btn btn-secondary" data-type="vcard">vCard</button>
+                            <button class="btn btn-secondary" data-type="event">Event</button>
+                            <button class="btn btn-secondary" data-type="crypto">Crypto</button>
+                        </div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label>Access Duration</label>
+                        <div class="duration-buttons">
+                            <button class="btn btn-secondary active" data-duration="lifetime">Lifetime</button>
+                            <button class="btn btn-secondary" data-duration="3months">3 Months</button>
+                            <button class="btn btn-secondary" data-duration="6months">6 Months</button>
+                            <button class="btn btn-secondary" data-duration="9months">9 Months</button>
+                            <button class="btn btn-secondary" data-duration="1year">1 Year</button>
+                            <button class="btn btn-secondary" data-duration="2years">2 Years</button>
+                        </div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="logo-upload">Center Logo</label>
+                        <div class="logo-upload">
+                            <button class="btn btn-secondary">Choose Logo</button>
+                            <input type="file" id="logo-upload" accept="image/*">
+                        </div>
+                        <img id="logo-preview" class="logo-preview" alt="Logo preview">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label>QR Code Color</label>
+                        <div class="qr-color-options">
+                            <div class="color-option color-dark active" data-color="#1e293b"></div>
+                            <div class="color-option color-blue" data-color="#3b82f6"></div>
+                            <div class="color-option color-purple" data-color="#8b5cf6"></div>
+                            <div class="color-option color-green" data-color="#10b981"></div>
+                            <div class="color-option color-red" data-color="#ef4444"></div>
+                        </div>
+                        <div class="custom-color">
+                            <input type="color" id="custom-color" value="#1e293b">
+                            <label for="custom-color">Custom Color</label>
+                        </div>
+                    </div>
+                    
+                    <div class="optional-section">
+                        <h3><i class="fas fa-flask"></i> Testing Options (Optional)</h3>
+                        <div class="checkbox-container">
+                            <input type="checkbox" id="enable-testing">
+                            <label for="enable-testing">Enable testing mode</label>
+                        </div>
+                        <div class="test-options" id="test-options">
+                            <div class="form-group" style="margin-bottom: 15px;">
+                                <label>Test Duration (for demo purposes)</label>
+                                <div class="test-buttons">
+                                    <button class="btn btn-secondary" data-test="1">1 sec</button>
+                                    <button class="btn btn-secondary" data-test="2">2 sec</button>
+                                    <button class="btn btn-secondary" data-test="3">3 sec</button>
+                                    <button class="btn btn-secondary" data-test="4">4 sec</button>
+                                    <button class="btn btn-secondary" data-test="5">5 sec</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <button id="generate-qr" class="btn">Generate QR Code</button>
+                </div>
+                
+                <div class="card qr-preview">
+                    <h2>QR Code Preview</h2>
+                    <div id="qrcode">
+                        <div class="qr-container">
+                            <canvas id="qr-canvas"></canvas>
+                            <div class="qr-expired-overlay" id="qr-expired-overlay">
+                                <i class="fas fa-exclamation-triangle qr-expired-icon"></i>
+                                <div class="qr-expired-text">EXPIRED</div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="download-buttons">
+                        <button id="download-png" class="btn btn-success"><i class="fas fa-download"></i> Download PNG</button>
+                        <button id="download-svg" class="btn btn-success"><i class="fas fa-download"></i> Download SVG</button>
+                        <button id="download-jpg" class="btn btn-success"><i class="fas fa-download"></i> Download JPG</button>
+                    </div>
+                    <div class="qr-info" id="qr-info">
+                        <h3>QR Code Details</h3>
+                        <div class="info-item">
+                            <div class="info-label">Content Type</div>
+                            <div class="info-value" id="info-content-type"></div>
+                        </div>
+                        <div class="info-item">
+                            <div class="info-label">Content</div>
+                            <div class="info-value" id="info-content"></div>
+                        </div>
+                        <div class="info-item">
+                            <div class="info-label">Status</div>
+                            <div class="info-value" id="info-status"></div>
+                        </div>
+                        <div class="info-item">
+                            <div class="info-label">Expires In</div>
+                            <div class="info-value" id="info-expires-in"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <section class="content-section">
+                <h2>Key Features</h2>
+                <div class="content-grid">
+                    <div class="content-card">
+                        <img src="https://images.unsplash.com/photo-1620324835948-43d83d11b339?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w1MDcwODZ8MHwxfHNlYXJjaHwxfHxRUiUyMGNvZGUlMjBjb2xvcnN8ZW58MHx8fHwxNjk3NDkwNTA1fDA&ixlib=rb-4.0.3&q=80&w=400" alt="Colorful QR codes" class="content-card-image">
+                        <div class="content-card-body">
+                            <h3>Customized Design</h3>
+                            <p>Tailor your QR codes with different colors and integrate your brand's logo for a professional look.</p>
+                            <a href="#">Learn More <i class="fas fa-arrow-right"></i></a>
+                        </div>
+                    </div>
+                    <div class="content-card">
+                        <img src="https://images.unsplash.com/photo-1542831371-29b0f74f9713?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w1MDcwODZ8MHwxfHxtYXJrZXRpbmclMjBhbmFseXRpY3N8ZW58MHx8fHwxNjk3NDkwNTUyfDA&ixlib=rb-4.0.3&q=80&w=400" alt="Data analytics dashboard" class="content-card-image">
+                        <div class="content-card-body">
+                            <h3>Advanced Analytics</h3>
+                            <p>Track your QR code scans to gain valuable insights into your marketing campaigns.</p>
+                            <a href="#">Learn More <i class="fas fa-arrow-right"></i></a>
+                        </div>
+                    </div>
+                    <div class="content-card">
+                        <img src="https://images.unsplash.com/photo-1522204523234-8729aa6e993f?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w1MDcwODZ8MHwxfHNlYXJjaHwxfHxtYXJyZXRpbmclMjBhbmFseXRpY3N8ZW58MHx8fHwxNjk3NDkwNjEzfDA&ixlib=rb-4.0.3&q=80&w=400" alt="People collaborating" class="content-card-image">
+                        <div class="content-card-body">
+                            <h3>Dynamic & Secure</h3>
+                            <p>Update your QR codes' destination anytime and protect them with password and expiration settings.</p>
+                            <a href="#">Learn More <i class="fas fa-arrow-right"></i></a>
+                        </div>
+                    </div>
+                </div>
+            </section>
+            
+            <section class="qr-showcase">
+                <h2>QR Code Gallery</h2>
+                <div class="qr-gallery">
+                    <div class="qr-item">
+                        <img src="https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=https://qrmasterpro.com" alt="Example QR Code">
+                        <p>Website URL</p>
+                    </div>
+                    <div class="qr-item">
+                        <img src="https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=MATMSG:TO:info@qrmasterpro.com;SUB:Hello;BODY:How can I help you?;" alt="Example QR Code">
+                        <p>Email</p>
+                    </div>
+                    <div class="qr-item">
+                        <img src="https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=TEL:+15551234567" alt="Example QR Code">
+                        <p>Phone Number</p>
+                    </div>
+                    <div class="qr-item">
+                        <img src="https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=WIFI:S:MyNetwork;T:WPA;P:MyPassword;H:false;" alt="Example QR Code">
+                        <p>WiFi Access</p>
+                    </div>
+                    <div class="qr-item">
+                        <img src="https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=SMSTO:+15551234567:Hello%20from%20QRMaster%20Pro!" alt="Example QR Code">
+                        <p>SMS Message</p>
+                    </div>
+                    <div class="qr-item">
+                        <img src="https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=vcard" alt="Example QR Code">
+                        <p>vCard</p>
+                    </div>
+                </div>
+            </section>
+        </div>
+    </div>
+
+    <footer>
+        <div class="footer-container">
+            <div class="footer-grid">
+                <div class="footer-column">
+                    <h3>QRMaster Pro</h3>
+                    <p>Advanced QR code generation platform for dynamic content, brand integration, and analytics.</p>
+                    <div class="footer-social">
+                        <a href="#"><i class="fab fa-facebook-f"></i></a>
+                        <a href="#"><i class="fab fa-twitter"></i></a>
+                        <a href="#"><i class="fab fa-instagram"></i></a>
+                        <a href="#"><i class="fab fa-linkedin-in"></i></a>
+                    </div>
+                </div>
+                <div class="footer-column">
+                    <h3>Features</h3>
+                    <ul>
+                        <li><a href="#">Dynamic QR Codes</a></li>
+                        <li><a href="#">Custom Design</a></li>
+                        <li><a href="#">Analytics & Tracking</a></li>
+                        <li><a href="#">Bulk Creation</a></li>
+                        <li><a href="#">API Access</a></li>
+                    </ul>
+                </div>
+                <div class="footer-column">
+                    <h3>Company</h3>
+                    <ul>
+                        <li><a href="#">About Us</a></li>
+                        <li><a href="#">Contact</a></li>
+                        <li><a href="#">Pricing</a></li>
+                        <li><a href="#">Blog</a></li>
+                        <li><a href="#">Careers</a></li>
+                    </ul>
+                </div>
+                <div class="footer-column">
+                    <h3>Legal</h3>
+                    <ul>
+                        <li><a href="#">Privacy Policy</a></li>
+                        <li><a href="#">Terms of Service</a></li>
+                        <li><a href="#">GDPR Compliance</a></li>
+                        <li><a href="#">Disclaimer</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                &copy; 2024 QRMaster Pro. All Rights Reserved.
+            </div>
+        </div>
+    </footer>
+
+    <div class="notification" id="notification">
+        <div class="notification-header">
+            <div class="notification-icon" id="notification-icon"></div>
+            <div class="notification-title" id="notification-title"></div>
+        </div>
+        <div class="notification-message" id="notification-message"></div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const qrContent = document.getElementById('qr-content');
+            const generateBtn = document.getElementById('generate-qr');
+            const qrCanvas = document.getElementById('qr-canvas');
+            const downloadPngBtn = document.getElementById('download-png');
+            const downloadSvgBtn = document.getElementById('download-svg');
+            const downloadJpgBtn = document.getElementById('download-jpg');
+            const qrInfo = document.getElementById('qr-info');
+            const infoContentType = document.getElementById('info-content-type');
+            const infoContent = document.getElementById('info-content');
+            const infoStatus = document.getElementById('info-status');
+            const infoExpiresIn = document.getElementById('info-expires-in');
+            const qrTypeButtons = document.querySelectorAll('.qr-type-buttons button');
+            const durationButtons = document.querySelectorAll('.duration-buttons button');
+            const testButtons = document.querySelectorAll('.test-buttons button');
+            const enableTestingCheckbox = document.getElementById('enable-testing');
+            const testOptions = document.getElementById('test-options');
+            const titleCountdown = document.getElementById('title-countdown');
+            const qrExpiredOverlay = document.getElementById('qr-expired-overlay');
+            const logoUpload = document.getElementById('logo-upload');
+            const logoPreview = document.getElementById('logo-preview');
+            const qrColorOptions = document.querySelectorAll('.color-option');
+            const customColorInput = document.getElementById('custom-color');
+            const navbarToggle = document.getElementById('navbar-toggle');
+            const navbarMenu = document.getElementById('navbar-menu');
+            const contentError = document.getElementById('content-error');
+            const notification = document.getElementById('notification');
+            const notificationIcon = document.getElementById('notification-icon');
+            const notificationTitle = document.getElementById('notification-title');
+            const notificationMessage = document.getElementById('notification-message');
+
+            let qrCodeData = '';
+            let selectedDuration = 'lifetime';
+            let selectedTestDuration = 0;
+            let countdownInterval;
+            let selectedColor = '#1e293b';
+            let logoImage = null;
+
+            // Navbar toggle
+            navbarToggle.addEventListener('click', () => {
+                navbarMenu.classList.toggle('active');
+            });
+
+            // Show notification
+            const showNotification = (type, title, message) => {
+                notification.className = `notification show ${type}`;
+                notificationIcon.className = `notification-icon fas ${type === 'success' ? 'fa-check-circle' : type === 'error' ? 'fa-times-circle' : 'fa-exclamation-triangle'}`;
+                notificationTitle.textContent = title;
+                notificationMessage.textContent = message;
+
+                setTimeout(() => {
+                    notification.classList.remove('show');
+                }, 4000);
+            };
+
+            // QR Type buttons logic
+            qrTypeButtons.forEach(button => {
+                button.addEventListener('click', () => {
+                    qrTypeButtons.forEach(btn => btn.classList.remove('active'));
+                    button.classList.add('active');
+                    const type = button.dataset.type;
+                    updatePlaceholder(type);
+                });
+            });
+
+            const updatePlaceholder = (type) => {
+                let placeholder = '';
+                let defaultContent = '';
+                switch (type) {
+                    case 'url':
+                        placeholder = 'Enter URL (e.g., https://example.com)';
+                        defaultContent = 'https://example.com';
+                        break;
+                    case 'text':
+                        placeholder = 'Enter plain text message';
+                        defaultContent = 'Hello, QRMaster Pro!';
+                        break;
+                    case 'email':
+                        placeholder = 'Enter email address (e.g., mailto:test@example.com)';
+                        defaultContent = 'mailto:info@qrmasterpro.com?subject=Inquiry&body=Hello';
+                        break;
+                    case 'phone':
+                        placeholder = 'Enter phone number (e.g., tel:+15551234567)';
+                        defaultContent = 'tel:+15551234567';
+                        break;
+                    case 'sms':
+                        placeholder = 'Enter phone number for SMS (e.g., smsto:+15551234567:Hello)';
+                        defaultContent = 'smsto:+15551234567:Hello from QRMaster Pro!';
+                        break;
+                    case 'wifi':
+                        placeholder = 'Enter Wi-Fi details (e.g., WIFI:S:MyNetwork;T:WPA;P:MyPassword;;)';
+                        defaultContent = 'WIFI:S:MyNetwork;T:WPA;P:MyPassword;H:false;';
+                        break;
+                    case 'location':
+                        placeholder = 'Enter latitude,longitude (e.g., geo:40.7128,-74.0060)';
+                        defaultContent = 'geo:40.7128,-74.0060';
+                        break;
+                    case 'vcard':
+                        placeholder = 'Enter vCard data';
+                        defaultContent = 'BEGIN:VCARD\nVERSION:3.0\nN:Doe;John\nFN:John Doe\nORG:Example Inc.\nTITLE:Software Engineer\nTEL;TYPE=WORK,VOICE:1-555-555-1212\nADR;TYPE=WORK,PREF:;;123 Example St;Anytown;CA;12345;USA\nEMAIL:john.doe@example.com\nEND:VCARD';
+                        break;
+                    case 'event':
+                        placeholder = 'Enter iCalendar event details';
+                        defaultContent = 'BEGIN:VEVENT\nSUMMARY:Meeting\nDTSTART:20250825T100000Z\nDTEND:20250825T110000Z\nEND:VEVENT';
+                        break;
+                    case 'crypto':
+                        placeholder = 'Enter crypto address (e.g., bitcoin:1A1zP1eP5QGf...';
+                        defaultContent = 'bitcoin:1A1zP1eP5QGf...';
+                        break;
+                    default:
+                        placeholder = 'Enter URL, text, or other content for your QR code';
+                        defaultContent = 'https://example.com';
+                }
+                qrContent.placeholder = placeholder;
+                qrContent.value = defaultContent;
+            };
+
+            // Duration buttons logic
+            durationButtons.forEach(button => {
+                button.addEventListener('click', () => {
+                    durationButtons.forEach(btn => btn.classList.remove('active'));
+                    button.classList.add('active');
+                    selectedDuration = button.dataset.duration;
+                });
+            });
+
+            // Testing mode logic
+            enableTestingCheckbox.addEventListener('change', () => {
+                testOptions.classList.toggle('show', enableTestingCheckbox.checked);
+            });
+
+            // Test duration buttons logic
+            testButtons.forEach(button => {
+                button.addEventListener('click', () => {
+                    testButtons.forEach(btn => btn.classList.remove('active'));
+                    button.classList.add('active');
+                    selectedTestDuration = parseInt(button.dataset.test, 10);
+                });
+            });
+
+            // Logo upload logic
+            logoUpload.addEventListener('change', (e) => {
+                const file = e.target.files[0];
+                if (file) {
+                    const reader = new FileReader();
+                    reader.onload = (event) => {
+                        logoImage = new Image();
+                        logoImage.src = event.target.result;
+                        logoImage.onload = () => {
+                            logoPreview.src = logoImage.src;
+                            logoPreview.style.display = 'block';
+                            showNotification('success', 'Logo Uploaded', 'Your logo is ready to be embedded.');
+                        };
+                    };
+                    reader.readAsDataURL(file);
+                }
+            });
+
+            // QR color options
+            qrColorOptions.forEach(option => {
+                option.addEventListener('click', () => {
+                    qrColorOptions.forEach(opt => opt.classList.remove('active'));
+                    option.classList.add('active');
+                    selectedColor = option.dataset.color;
+                    customColorInput.value = selectedColor;
+                });
+            });
+
+            // Custom color input
+            customColorInput.addEventListener('input', (e) => {
+                selectedColor = e.target.value;
+                qrColorOptions.forEach(opt => opt.classList.remove('active'));
+            });
+
+            // Generate QR code button
+            generateBtn.addEventListener('click', () => {
+                qrCodeData = qrContent.value.trim();
+                const selectedType = document.querySelector('.qr-type-buttons button.active').dataset.type;
+
+                if (!qrCodeData) {
+                    qrContent.classList.add('error');
+                    contentError.style.display = 'block';
+                    showNotification('error', 'Generation Failed', 'Please enter content for the QR code.');
+                    return;
+                }
+
+                qrContent.classList.remove('error');
+                contentError.style.display = 'none';
+                
+                qrExpiredOverlay.classList.remove('show');
+                clearInterval(countdownInterval);
+                titleCountdown.classList.remove('show');
+                
+                showNotification('success', 'QR Code Generated', 'Your QR code has been successfully created.');
+
+                const options = {
+                    errorCorrectionLevel: 'H',
+                    color: {
+                        dark: selectedColor,
+                        light: '#FFFFFF'
+                    }
+                };
+
+                QRCode.toCanvas(qrCanvas, qrCodeData, options, (error) => {
+                    if (error) {
+                        console.error(error);
+                        showNotification('error', 'Generation Error', 'Could not generate QR code. Please check your content.');
+                        return;
+                    }
+
+                    // Draw the logo after the QR code is rendered
+                    if (logoImage && logoPreview.style.display === 'block') {
+                        const size = 300;
+                        const ctx = qrCanvas.getContext('2d');
+                        const logoSize = size * 0.25;
+                        const logoX = (size - logoSize) / 2;
+                        const logoY = (size - logoSize) / 2;
+
+                        ctx.drawImage(logoImage, logoX, logoY, logoSize, logoSize);
+                    }
+                    
+                    updateInfo(selectedType, qrCodeData, selectedDuration);
+
+                    if (enableTestingCheckbox.checked && selectedTestDuration > 0) {
+                        startCountdown(selectedTestDuration);
+                    }
+                });
+            });
+
+            // Countdown logic
+            const startCountdown = (duration) => {
+                let timeLeft = duration;
+                titleCountdown.textContent = `${timeLeft}s`;
+                titleCountdown.classList.add('show');
+
+                countdownInterval = setInterval(() => {
+                    timeLeft--;
+                    titleCountdown.textContent = `${timeLeft}s`;
+
+                    if (timeLeft <= 0) {
+                        clearInterval(countdownInterval);
+                        titleCountdown.classList.remove('show');
+                        qrExpiredOverlay.classList.add('show');
+                        infoStatus.textContent = 'Expired';
+                        infoStatus.className = 'info-value status-expired';
+                        infoExpiresIn.textContent = '0s';
+                        showNotification('warning', 'QR Code Expired', 'The QR code has expired. A new one can be generated.');
+                    }
+                }, 1000);
+            };
+
+            // Update info card
+            const updateInfo = (type, content, duration) => {
+                qrInfo.style.display = 'block';
+                infoContentType.textContent = type.charAt(0).toUpperCase() + type.slice(1);
+                infoContent.textContent = content.length > 50 ? `${content.substring(0, 50)}...` : content;
+                infoStatus.textContent = 'Active';
+                infoStatus.className = 'info-value status-active';
+
+                switch (duration) {
+                    case 'lifetime':
+                        infoExpiresIn.textContent = 'Never';
+                        break;
+                    case '3months':
+                        infoExpiresIn.textContent = '3 Months';
+                        break;
+                    case '6months':
+                        infoExpiresIn.textContent = '6 Months';
+                        break;
+                    case '9months':
+                        infoExpiresIn.textContent = '9 Months';
+                        break;
+                    case '1year':
+                        infoExpiresIn.textContent = '1 Year';
+                        break;
+                    case '2years':
+                        infoExpiresIn.textContent = '2 Years';
+                        break;
+                }
+
+                if (enableTestingCheckbox.checked && selectedTestDuration > 0) {
+                    infoExpiresIn.textContent = `${selectedTestDuration}s`;
+                }
+            };
+
+            // Download functionality
+            const download = (format) => {
+                const canvas = qrCanvas;
+                const link = document.createElement('a');
+                let filename = `qrcode.${format}`;
+
+                if (format === 'png' || format === 'jpg') {
+                    link.href = canvas.toDataURL(`image/${format}`, 1.0);
+                } else if (format === 'svg') {
+                    const svgData = getSvgData();
+                    const blob = new Blob([svgData], { type: 'image/svg+xml' });
+                    link.href = URL.createObjectURL(blob);
+                }
+
+                link.download = filename;
+                document.body.appendChild(link);
+                link.click();
+                document.body.removeChild(link);
+                showNotification('success', 'Download Complete', `Your QR code has been downloaded as a .${format} file.`);
+            };
+
+            const getSvgData = () => {
+                const size = 300;
+                const data = qrCodeData;
+                const color = selectedColor;
+                
+                let svg = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 ${size} ${size}" width="${size}" height="${size}">`;
+                svg += `<rect width="100%" height="100%" fill="#FFFFFF"/>`;
+                svg += `<text x="50%" y="50%" dominant-baseline="middle" text-anchor="middle" font-size="20" fill="${color}">Scan to see QR Code</text>`;
+                svg += `</svg>`;
+                return svg;
+            };
+
+            downloadPngBtn.addEventListener('click', () => download('png'));
+            downloadJpgBtn.addEventListener('click', () => download('jpg'));
+            downloadSvgBtn.addEventListener('click', () => {
+                showNotification('warning', 'SVG Download', 'SVG download is a basic demo and does not include the logo or full QR code vector data.');
+                download('svg');
+            });
+
+            // Initial QR code generation on page load
+            generateBtn.click();
+        });
+    </script>
+</body>
+</html>

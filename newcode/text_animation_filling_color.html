@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Dramatic Scroll Magic</title>
+  <style>
+    body {
+      margin: 0;
+      padding: 0;
+      height: 300vh; /* Three screens tall, because why not. */
+      overflow-x: hidden;
+      background-color: #161616;
+      font-family: Arial, sans-serif;
+    }
+
+    .img {
+      width: 100%;
+      height: 100vh;
+      background: url(https://i.imgur.com/aGromZ6.png) no-repeat 50% 50%;
+      background-size: cover;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .container {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      height: 200vh;
+      width: 100%;
+    }
+
+    .text > p {
+      background: linear-gradient(
+        to right,
+        rgb(255, 255, 255) 50%,
+        rgb(37, 37, 37) 50%
+      );
+      background-size: 200% 100%;
+      background-position-x: 100%;
+      color: transparent;
+      background-clip: text;
+      -webkit-background-clip: text;
+      margin-bottom: -250px; /* Because subtle spacing is overrated. */
+      margin-left: 50px;
+      line-height: 1.2;
+    }
+
+    p {
+      font-size: 200px; /* Because small text is for weaklings. */
+    }
+  </style>
+</head>
+<body>
+
+  <div class="img"></div>
+  <div class="text">
+    <p>Suprising</p>
+    <p>and playful ways</p>
+    <p>to tell a story!</p>
+  </div>
+
+  <!-- GSAP & ScrollTrigger -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
+  <script>
+    gsap.registerPlugin(ScrollTrigger);
+
+    gsap.to(".text p", {
+      backgroundPositionX: "0%", 
+      stagger: 1, // Each line waits its turn like polite British people at a bus stop
+      scrollTrigger: {
+        trigger: ".text",
+        markers: true, // Debug mode: It’s like training wheels, but uglier
+        scrub: 1,
+        start: "top center",
+        end: "bottom center"
+      }
+    });
+  </script>
+
+</body>
+</html>

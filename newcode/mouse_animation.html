@@ -1,0 +1,247 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>The One-File Video Beast</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <!-- Font Awesome for play/pause icons -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+
+  <style>
+    :root {
+      --brown: #24221b;
+      --cream: #e4dcc9;
+    }
+    body {
+      display: flex;
+      flex-direction: column;
+      height: 100vh;
+      margin: 1em;
+      align-items: center;
+      background-color: var(--cream);
+      gap: 1em;
+      font-family: "IBM Plex Mono", monospace;
+      font-size: 20px;
+      font-weight: bold;
+      letter-spacing: 2px;
+      user-select: none;
+    }
+    /* Video Container */
+    #video-container {
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      height: 394px;
+      width: 700px;
+      border: 3px solid var(--brown);
+      border-radius: 5px;
+      position: relative;
+      cursor: none;
+      max-width: 100%;
+    }
+    #play-button {
+      position: absolute;
+      border: 3px solid var(--brown);
+      border-radius: 100px;
+      width: 120px;
+      height: 120px;
+      left: 50%;
+      top: 50%;
+      transform: translate(-50%, -50%);
+      background-color: var(--cream);
+      opacity: 1;
+      cursor: none;
+    }
+    #video {
+      height: 100%;
+      width: 100%;
+      object-fit: cover;
+    }
+    .play-icon, .pause-icon {
+      font-size: 20px;
+      color: var(--brown);
+    }
+    /* Input and Buttons */
+    a {
+      text-decoration: none;
+      color: inherit;
+    }
+    ::placeholder {
+      color: var(--brown);
+      opacity: 30%;
+    }
+    ::selection {
+      background-color: var(--brown);
+      color: var(--cream);
+    }
+    .info {
+      display: flex;
+      flex-direction: row;
+      gap: 1em;
+      width: 700px;
+      height: 50px;
+      max-width: 100%;
+    }
+    .button {
+      border: 3px solid var(--brown);
+      background-color: var(--brown);
+      color: var(--cream);
+      border-radius: 50px;
+      display: flex;
+      align-items: center;
+      width: 30%;
+      justify-content: center;
+      font-size: 20px;
+      font-weight: bold;
+      letter-spacing: 2px;
+      cursor: pointer;
+    }
+    .button:hover {
+      background-color: var(--cream);
+      color: var(--brown);
+    }
+    .button > p { margin: 0; }
+    .one {
+      width: 70%;
+      padding: 0 20px;
+      border: 3px solid var(--brown);
+      border-radius: 50px;
+      display: flex;
+      align-items: center;
+      background-color: var(--cream);
+      font-size: 20px;
+      font-weight: bold;
+      letter-spacing: 2px;
+    }
+    .description {
+      height: fit-content;
+      padding: 20px 20px;
+      border: 3px solid var(--brown);
+      border-radius: 20px;
+      display: flex;
+      flex-direction: column;
+      background-color: var(--cream);
+      font-size: 16px;
+    }
+    .description > * { margin: 0; }
+    .link {
+      border-bottom: 2px solid var(--brown);
+    }
+    .link:hover {
+      background-color: var(--brown);
+      color: var(--cream);
+    }
+  </style>
+</head>
+<body>
+  <!-- Optional - input form -->
+  <div class="info">
+    <input type="text" class="one" id="video-url" placeholder="Enter a cool video URL" value="https://github.com/juxtopposed/codepen/blob/main/videoplayback.mp4?raw=true">
+    <button id="load-button" class="button" type="button">Load Video</button>
+  </div>
+
+  <!-- MAIN SECTION FOR PLAY BUTTON -->
+  <div id="video-container">
+    <video id="video" preload="metadata">
+      <source id="video-source" type="video/mp4">
+    </video>
+    <button id="play-button" type="button"><span class="play-icon"><i class="fa fa-solid fa-play"></i></span></button>
+  </div>
+
+  <!-- Optional Info -->
+  <div class="info">
+    <div class="one"><p>Title: A Super Cool Video!</p></div>
+    <div class="button"><p><a href="https://codepen.io/Juxtopposed" target="_blank">Subscribe</a></p></div>
+  </div>
+
+  <div class="info description">
+    <h3>How does this work?</h3>
+    <p>Simply add a video URL and click on "Load Video" to watch it. It can be any video!</p>
+    <p>If you like this pen, give it a heart! :)</p>
+    <p>Find me on <a href="https://www.youtube.com/@juxtopposed" target="_blank" class="link">YouTube</a> or <a href="https://twitter.com/juxtopposed" target="_blank" class="link">Twitter</a> for updates.</p>
+  </div>
+
+  <script>
+    const videoContainer = document.getElementById("video-container");
+    const playButton = document.getElementById("play-button");
+    const video = document.getElementById("video");
+
+    // Make button chase your mouse like an overexcited puppy
+    videoContainer.addEventListener("mousemove", function (event) {
+      const containerRect = videoContainer.getBoundingClientRect();
+      const mouseX = event.clientX - containerRect.left;
+      const mouseY = event.clientY - containerRect.top;
+      const buttonWidth = playButton.offsetWidth;
+      const buttonHeight = playButton.offsetHeight;
+      const buttonX = mouseX - buttonWidth / 2;
+      const buttonY = mouseY - buttonHeight / 2;
+      const maxButtonX = containerRect.width - buttonWidth;
+      const maxButtonY = containerRect.height - buttonHeight;
+      playButton.style.left = Math.min(Math.max(buttonX, 0), maxButtonX) + "px";
+      playButton.style.top = Math.min(Math.max(buttonY, 0), maxButtonY) + "px";
+    });
+
+    videoContainer.addEventListener("mouseleave", function () {
+      setTimeout(function () {
+        playButton.style.left = "50%";
+        playButton.style.top = "50%";
+        playButton.style.transform = "translate(-50%, -50%) scale(1)";
+        playButton.style.transition = "all 0.3s ease-out";
+      }, 50);
+    });
+
+    videoContainer.addEventListener("mouseover", function () {
+      playButton.style.transition = "transform ease-out 0.3s";
+      playButton.style.transform = "scale(1.2)";
+    });
+
+    videoContainer.addEventListener("mouseenter", function () {
+      if (!video.paused) playButton.style.opacity = "1";
+    });
+
+    videoContainer.addEventListener("mouseleave", function () {
+      if (!video.paused) {
+        playButton.style.opacity = "0";
+        playButton.style.transition = "opacity ease 1s";
+      }
+    });
+
+    videoContainer.addEventListener("click", function () {
+      if (video.paused) {
+        video.play();
+        playButton.innerHTML = '<span class="pause-icon"><i class="fa fa-solid fa-pause"></i></span>';
+      } else {
+        video.pause();
+        playButton.innerHTML = '<span class="play-icon"><i class="fa fa-solid fa-play"></i></span>';
+      }
+    });
+
+    video.addEventListener("ended", function () {
+      playButton.innerHTML = '<span class="play-icon"><i class="fa fa-solid fa-play"></i></span>';
+      playButton.style.opacity = "1";
+    });
+
+    // Load new video from input
+    const videoSource = document.getElementById("video-source");
+    const videoUrl = document.getElementById("video-url");
+    const loadButton = document.getElementById("load-button");
+
+    function loadVideo() {
+      const url = videoUrl.value.trim();
+      if (!url) return;
+      videoSource.setAttribute("src", url);
+      video.load();
+      video.play();
+    }
+
+    loadButton.addEventListener("click", function () {
+      loadVideo();
+      video.play();
+      playButton.innerHTML = '<span class="pause-icon"><i class="fa fa-solid fa-pause"></i></span>';
+      playButton.style.opacity = "0";
+      playButton.style.transition = "opacity ease 1s";
+    });
+  </script>
+</body>
+</html>

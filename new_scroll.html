@@ -1,0 +1,236 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>News & Events</title>
+    <link rel="stylesheet" href="styles.css">
+    <style>
+      body {
+    font-family: sans-serif;
+    background-color: #f0f2f5;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    margin: 0;
+}
+
+.news-container {
+    width: 550px;
+    background-color: #fff;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    overflow: hidden;
+}
+
+.header-tabs {
+    display: flex;
+    border-bottom: 2px solid #ddd;
+}
+
+.tab {
+    flex-grow: 1;
+    text-align: center;
+    padding: 12px 0;
+    border: none;
+    background-color: #f9f9f9;
+    cursor: pointer;
+    font-size: 14px;
+    font-weight: bold;
+    color: #555;
+    transition: all 0.3s ease;
+    border-right: 1px solid #ddd;
+}
+
+.tab:last-child {
+    border-right: none;
+}
+
+.tab.active {
+    background-color: #fff;
+    color: #333;
+    border-bottom: 2px solid #0056b3;
+}
+
+.news-scroller-wrapper {
+    height: 350px; /* Adjust height to show 3 cards */
+    overflow: hidden;
+    position: relative;
+    padding: 10px 0;
+}
+
+.news-scroller {
+    display: flex;
+    flex-direction: column;
+    transition: transform 0.5s ease-in-out;
+}
+
+.news-item {
+    display: flex;
+    align-items: center;
+    padding: 10px 20px;
+    border-bottom: 1px dashed #ccc;
+    min-height: 100px; /* Ensures consistent item height */
+}
+
+.news-item:last-child {
+    border-bottom: none;
+}
+
+.date-block {
+    width: 80px;
+    min-width: 80px;
+    height: 80px;
+    background-color: #337ab7;
+    color: #fff;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    border-radius: 4px;
+    padding: 5px;
+    box-sizing: border-box;
+    text-align: center;
+}
+
+.date {
+    font-size: 14px;
+    font-weight: bold;
+    line-height: 1.2;
+}
+
+.year {
+    font-size: 12px;
+    font-weight: normal;
+    margin-top: 2px;
+}
+
+.event-details {
+    flex-grow: 1;
+    margin-left: 20px;
+}
+
+.event-title {
+    margin: 0;
+    font-size: 15px;
+    color: #333;
+}
+    </style>
+</head>
+<body>
+
+<div class="news-container">
+    <div class="header-tabs">
+        <button class="tab active">IN THE NEWS</button>
+        <button class="tab">EVENTS</button>
+        <button class="tab">NOTICE BOARD</button>
+    </div>
+    <div class="news-scroller-wrapper">
+        <div class="news-scroller">
+            <div class="news-item">
+                <div class="date-block">
+                    <span class="date">31 Jul - 02 Aug</span>
+                    <span class="year">2025</span>
+                </div>
+                <div class="event-details">
+                    <p class="event-title">Programming Essentials in Java - III CSM</p>
+                </div>
+            </div>
+            <div class="news-item">
+                <div class="date-block">
+                    <span class="date">14-08</span>
+                    <span class="year">2025</span>
+                </div>
+                <div class="event-details">
+                    <p class="event-title">Field Visit - A part of Induction Program - B Tech 1 Year</p>
+                </div>
+            </div>
+            <div class="news-item">
+                <div class="date-block">
+                    <span class="date">15-08</span>
+                    <span class="year">2025</span>
+                </div>
+                <div class="event-details">
+                    <p class="event-title">Motivational Talk - A part of Induction Program - B Tech 1 Year</p>
+                </div>
+            </div>
+            <div class="news-item">
+                <div class="date-block">
+                    <span class="date">15-08</span>
+                    <span class="year">2025</span>
+                </div>
+                <div class="event-details">
+                    <p class="event-title">Inauguration of Incubation cell</p>
+                </div>
+            </div>
+            <div class="news-item">
+                <div class="date-block">
+                    <span class="date">15-08</span>
+                    <span class="year">2025</span>
+                </div>
+                <div class="event-details">
+                    <p class="event-title">Startup summit - IIC cell</p>
+                </div>
+            </div>
+            <div class="news-item">
+                <div class="date-block">
+                    <span class="date">15-08</span>
+                    <span class="year">2025</span>
+                </div>
+                <div class="event-details">
+                    <p class="event-title">Independence day</p>
+                </div>
+            </div>
+            <div class="news-item">
+                <div class="date-block">
+                    <span class="date">21-08</span>
+                    <span class="year">2025</span>
+                </div>
+                <div class="event-details">
+                    <p class="event-title">World Entrepreneurship day - IIC cell</p>
+                </div>
+            </div>
+            <div class="news-item">
+                <div class="date-block">
+                    <span class="date">22 & 23 Aug</span>
+                    <span class="year">2025</span>
+                </div>
+                <div class="event-details">
+                    <p class="event-title">Workshop on "Network Simulation Introduction III ECE</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>document.addEventListener('DOMContentLoaded', () => {
+    const scroller = document.querySelector('.news-scroller');
+    const newsItems = document.querySelectorAll('.news-item');
+    const itemHeight = newsItems[0].offsetHeight;
+    const numItems = newsItems.length;
+
+    let currentIndex = 0;
+
+    function scrollNews() {
+        currentIndex++;
+        // Check if we've scrolled past the last item visible on the screen
+        if (currentIndex > numItems - 3) {
+            // Loop back to the beginning to create an infinite scroll effect
+            setTimeout(() => {
+                scroller.style.transition = 'none';
+                scroller.style.transform = `translateY(0)`;
+                currentIndex = 0;
+            }, 500); // Wait for the transition to finish before resetting
+        }
+        
+        // Apply smooth transition for scrolling
+        scroller.style.transition = 'transform 0.5s ease-in-out';
+        scroller.style.transform = `translateY(-${currentIndex * itemHeight}px)`;
+    }
+
+    // Set up the automatic scrolling interval
+    setInterval(scrollNews, 3000); // Scrolls every 3 seconds
+});</script>
+</body>
+</html>

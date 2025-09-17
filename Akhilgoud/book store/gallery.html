@@ -1,0 +1,229 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Large Image Gallery with Clickable Images</title>
+  <!-- Bootstrap 5.3.3 CSS -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" />
+  <style>
+    body {
+      background: #f0f2f5;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      color: #343a40;
+    }
+    h2 {
+      font-weight: 700;
+      color: #212529;
+      text-align: center;
+      margin-bottom: 40px;
+      text-shadow: 0 1px 2px rgba(0,0,0,0.05);
+    }
+    figure {
+      background: #fff;
+      border-radius: 14px;
+      box-shadow: 0 6px 18px rgba(0,0,0,0.12);
+      padding: 14px;
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+      cursor: pointer;
+      margin: 0; /* reset default margins */
+    }
+    figure:hover {
+      transform: translateY(-6px);
+      box-shadow: 0 14px 36px rgba(0,0,0,0.18);
+    }
+    figure img {
+      width: 100%;
+      height: auto;
+      display: block;
+      border-radius: 12px;
+      object-fit: cover;
+      box-shadow: inset 0 0 12px rgba(0,0,0,0.05);
+      transition: filter 0.3s ease;
+      /* No padding or margin here */
+    }
+    figure:hover img {
+      filter: brightness(0.9);
+    }
+    figcaption {
+      margin-top: 12px;
+      font-size: 1rem;
+      font-weight: 600;
+      color: #495057;
+      text-align: center;
+      letter-spacing: 0.03em;
+      user-select: none;
+    }
+    .container {
+      max-width: 1200px;
+    }
+  </style>
+</head>
+<body>
+  <div class="container py-5">
+    <h2>Large Image Gallery with Clickable Images</h2>
+    <div class="row g-4">
+      <div class="col-12 col-md-6 col-lg-4">
+        <figure>
+          <a href="https://picsum.photos/800/600?random=1" target="_blank" rel="noopener noreferrer" tabindex="-1">
+            <img src="https://picsum.photos/400/300?random=1" alt="Image 1" />
+          </a>
+          <figcaption>Beautiful Image 1</figcaption>
+        </figure>
+      </div>
+      <div class="col-12 col-md-6 col-lg-4">
+        <figure>
+          <a href="https://picsum.photos/800/600?random=2" target="_blank" rel="noopener noreferrer" tabindex="-1">
+            <img src="https://picsum.photos/400/300?random=2" alt="Image 2" />
+          </a>
+          <figcaption>Beautiful Image 2</figcaption>
+        </figure>
+      </div>
+      <div class="col-12 col-md-6 col-lg-4">
+        <figure>
+          <a href="https://picsum.photos/800/600?random=3" target="_blank" rel="noopener noreferrer" tabindex="-1">
+            <img src="https://picsum.photos/400/300?random=3" alt="Image 3" />
+          </a>
+          <figcaption>Beautiful Image 3</figcaption>
+        </figure>
+      </div>
+      <div class="col-12 col-md-6 col-lg-4">
+        <figure>
+          <a href="https://picsum.photos/800/600?random=4" target="_blank" rel="noopener noreferrer" tabindex="-1">
+            <img src="https://picsum.photos/400/300?random=4" alt="Image 4" />
+          </a>
+          <figcaption>Beautiful Image 4</figcaption>
+        </figure>
+      </div>
+      <div class="col-12 col-md-6 col-lg-4">
+        <figure>
+          <a href="https://picsum.photos/800/600?random=5" target="_blank" rel="noopener noreferrer" tabindex="-1">
+            <img src="https://picsum.photos/400/300?random=5" alt="Image 5" />
+          </a>
+          <figcaption>Beautiful Image 5</figcaption>
+        </figure>
+      </div>
+      <div class="col-12 col-md-6 col-lg-4">
+        <figure>
+          <a href="https://picsum.photos/800/600?random=6" target="_blank" rel="noopener noreferrer" tabindex="-1">
+            <img src="https://picsum.photos/400/300?random=6" alt="Image 6" />
+          </a>
+          <figcaption>Beautiful Image 6</figcaption>
+        </figure>
+      </div>
+      <div class="col-12 col-md-6 col-lg-4">
+        <figure>
+          <a href="https://picsum.photos/800/600?random=7" target="_blank" rel="noopener noreferrer" tabindex="-1">
+            <img src="https://picsum.photos/400/300?random=7" alt="Image 7" />
+          </a>
+          <figcaption>Beautiful Image 7</figcaption>
+        </figure>
+      </div>
+      <div class="col-12 col-md-6 col-lg-4">
+        <figure>
+          <a href="https://picsum.photos/800/600?random=8" target="_blank" rel="noopener noreferrer" tabindex="-1">
+            <img src="https://picsum.photos/400/300?random=8" alt="Image 8" />
+          </a>
+          <figcaption>Beautiful Image 8</figcaption>
+        </figure>
+      </div>
+      <div class="col-12 col-md-6 col-lg-4">
+        <figure>
+          <a href="https://picsum.photos/800/600?random=9" target="_blank" rel="noopener noreferrer" tabindex="-1">
+            <img src="https://picsum.photos/400/300?random=9" alt="Image 9" />
+          </a>
+          <figcaption>Beautiful Image 9</figcaption>
+        </figure>
+      </div>
+      <div class="col-12 col-md-6 col-lg-4">
+        <figure>
+          <a href="https://picsum.photos/800/600?random=10" target="_blank" rel="noopener noreferrer" tabindex="-1">
+            <img src="https://picsum.photos/400/300?random=10" alt="Image 10" />
+          </a>
+          <figcaption>Beautiful Image 10</figcaption>
+        </figure>
+      </div>
+      <div class="col-12 col-md-6 col-lg-4">
+        <figure>
+          <a href="https://picsum.photos/800/600?random=11" target="_blank" rel="noopener noreferrer" tabindex="-1">
+            <img src="https://picsum.photos/400/300?random=11" alt="Image 11" />
+          </a>
+          <figcaption>Beautiful Image 11</figcaption>
+        </figure>
+      </div>
+      <div class="col-12 col-md-6 col-lg-4">
+        <figure>
+          <a href="https://picsum.photos/800/600?random=12" target="_blank" rel="noopener noreferrer" tabindex="-1">
+            <img src="https://picsum.photos/400/300?random=12" alt="Image 12" />
+          </a>
+          <figcaption>Beautiful Image 12</figcaption>
+        </figure>
+      </div>
+      <div class="col-12 col-md-6 col-lg-4">
+        <figure>
+          <a href="https://picsum.photos/800/600?random=13" target="_blank" rel="noopener noreferrer" tabindex="-1">
+            <img src="https://picsum.photos/400/300?random=13" alt="Image 13" />
+          </a>
+          <figcaption>Beautiful Image 13</figcaption>
+        </figure>
+      </div>
+      <div class="col-12 col-md-6 col-lg-4">
+        <figure>
+          <a href="https://picsum.photos/800/600?random=14" target="_blank" rel="noopener noreferrer" tabindex="-1">
+            <img src="https://picsum.photos/400/300?random=14" alt="Image 14" />
+          </a>
+          <figcaption>Beautiful Image 14</figcaption>
+        </figure>
+      </div>
+      <div class="col-12 col-md-6 col-lg-4">
+        <figure>
+          <a href="https://picsum.photos/800/600?random=15" target="_blank" rel="noopener noreferrer" tabindex="-1">
+            <img src="https://picsum.photos/400/300?random=15" alt="Image 15" />
+          </a>
+          <figcaption>Beautiful Image 15</figcaption>
+        </figure>
+      </div>
+      <div class="col-12 col-md-6 col-lg-4">
+        <figure>
+          <a href="https://picsum.photos/800/600?random=16" target="_blank" rel="noopener noreferrer" tabindex="-1">
+            <img src="https://picsum.photos/400/300?random=16" alt="Image 16" />
+          </a>
+          <figcaption>Beautiful Image 16</figcaption>
+        </figure>
+      </div>
+      <div class="col-12 col-md-6 col-lg-4">
+        <figure>
+          <a href="https://picsum.photos/800/600?random=17" target="_blank" rel="noopener noreferrer" tabindex="-1">
+            <img src="https://picsum.photos/400/300?random=17" alt="Image 17" />
+          </a>
+          <figcaption>Beautiful Image 17</figcaption>
+        </figure>
+      </div>
+      <div class="col-12 col-md-6 col-lg-4">
+        <figure>
+          <a href="https://picsum.photos/800/600?random=18" target="_blank" rel="noopener noreferrer" tabindex="-1">
+            <img src="https://picsum.photos/400/300?random=18" alt="Image 18" />
+          </a>
+          <figcaption>Beautiful Image 18</figcaption>
+        </figure>
+      </div>
+      <div class="col-12 col-md-6 col-lg-4">
+        <figure>
+          <a href="https://picsum.photos/800/600?random=19" target="_blank" rel="noopener noreferrer" tabindex="-1">
+            <img src="https://picsum.photos/400/300?random=19" alt="Image 19" />
+          </a>
+          <figcaption>Beautiful Image 19</figcaption>
+        </figure>
+      </div>
+      <div class="col-12 col-md-6 col-lg-4">
+        <figure>
+          <a href="https://picsum.photos/800/600?random=20" target="_blank" rel="noopener noreferrer" tabindex="-1">
+            <img src="https://picsum.photos/400/300?random=20" alt="Image 20" />
+          </a>
+          <figcaption>Beautiful Image 20</figcaption>
+        </figure>
+      </div>
+    </div>
+  </div>
+</body>
+</html>

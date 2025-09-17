@@ -1,0 +1,777 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SEO Developer Portfolio</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        /* SEO-inspired color scheme */
+        :root {
+            --primary: #4285F4;   /* Google blue */
+            --secondary: #34A853; /* Google green */
+            --accent: #FBBC05;    /* Google yellow */
+            --highlight: #EA4335; /* Google red */
+            --dark: #202124;      /* Google dark */
+            --light: #F8F9FA;     /* Google light */
+            --text: #3C4043;      /* Google text */
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Roboto, Oxygen, Ubuntu, sans-serif;
+        }
+        
+        body {
+            line-height: 1.6;
+            color: var(--text);
+            background-color: var(--light);
+        }
+        
+        .container {
+            width: 90%;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 15px;
+        }
+        
+        /* Header & Navigation */
+        header {
+            background: white;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+        
+        nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 20px 0;
+        }
+        
+        .logo {
+            font-size: 1.8rem;
+            font-weight: 800;
+            color: var(--primary);
+        }
+        
+        .logo span {
+            color: var(--secondary);
+        }
+        
+        .nav-links {
+            display: flex;
+            list-style: none;
+        }
+        
+        .nav-links li {
+            margin-left: 30px;
+        }
+        
+        .nav-links a {
+            color: var(--text);
+            font-weight: 600;
+            text-decoration: none;
+            transition: color 0.3s;
+        }
+        
+        .nav-links a:hover {
+            color: var(--primary);
+        }
+        
+        /* Hero Section */
+        .hero {
+            padding: 100px 0;
+            background: linear-gradient(135deg, #f0f4ff 0%, #e6f0ff 100%);
+            text-align: center;
+        }
+        
+        .hero h1 {
+            font-size: 3.5rem;
+            margin-bottom: 20px;
+            color: var(--dark);
+        }
+        
+        .hero p {
+            font-size: 1.3rem;
+            max-width: 800px;
+            margin: 0 auto 30px;
+            color: var(--text);
+        }
+        
+        .search-box {
+            display: inline-flex;
+            align-items: center;
+            background: white;
+            padding: 15px 25px;
+            border-radius: 50px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+            margin-top: 30px;
+        }
+        
+        .search-box input {
+            border: none;
+            outline: none;
+            font-size: 1.1rem;
+            padding: 0 15px;
+            width: 300px;
+        }
+        
+        .search-box button {
+            background: var(--primary);
+            color: white;
+            border: none;
+            padding: 12px 25px;
+            border-radius: 50px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: background 0.3s;
+        }
+        
+        .search-box button:hover {
+            background: var(--secondary);
+        }
+        
+        /* SEO Metrics */
+        .seo-metrics {
+            padding: 80px 0;
+            background: white;
+        }
+        
+        .metrics-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 30px;
+            text-align: center;
+        }
+        
+        .metric-card {
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+            transition: transform 0.3s;
+        }
+        
+        .metric-card:hover {
+            transform: translateY(-5px);
+        }
+        
+        .metric-card i {
+            font-size: 2.5rem;
+            color: var(--primary);
+            margin-bottom: 20px;
+        }
+        
+        .metric-value {
+            font-size: 2.5rem;
+            font-weight: 800;
+            color: var(--dark);
+            margin-bottom: 10px;
+        }
+        
+        /* Case Studies */
+        .case-studies {
+            padding: 80px 0;
+            background: var(--light);
+        }
+        
+        .section-title {
+            text-align: center;
+            margin-bottom: 50px;
+        }
+        
+        .section-title h2 {
+            font-size: 2.5rem;
+            color: var(--dark);
+            margin-bottom: 15px;
+        }
+        
+        .section-title p {
+            color: var(--text);
+            max-width: 600px;
+            margin: 0 auto;
+        }
+        
+        .cases-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 30px;
+        }
+        
+        .case-card {
+            background: white;
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+        }
+        
+        .case-img {
+            height: 200px;
+            background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 3rem;
+        }
+        
+        .case-content {
+            padding: 25px;
+        }
+        
+        .case-content h3 {
+            margin-bottom: 15px;
+            color: var(--dark);
+        }
+        
+        .results {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 20px;
+            padding-top: 20px;
+            border-top: 1px solid #eee;
+        }
+        
+        .result-item {
+            text-align: center;
+        }
+        
+        .result-value {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--secondary);
+        }
+        
+        /* Services */
+        .services {
+            padding: 80px 0;
+            background: white;
+        }
+        
+        .services-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 30px;
+        }
+        
+        .service-card {
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+            transition: transform 0.3s;
+            text-align: center;
+        }
+        
+        .service-card:hover {
+            transform: translateY(-5px);
+        }
+        
+        .service-card i {
+            font-size: 2.5rem;
+            color: var(--primary);
+            margin-bottom: 20px;
+        }
+        
+        /* Testimonials */
+        .testimonials {
+            padding: 80px 0;
+            background: var(--light);
+        }
+        
+        .testimonials-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 30px;
+        }
+        
+        .testimonial-card {
+            background: white;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+        }
+        
+        .testimonial-text {
+            font-style: italic;
+            margin-bottom: 20px;
+            color: var(--text);
+        }
+        
+        .client {
+            display: flex;
+            align-items: center;
+        }
+        
+        .client-img {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            background: var(--primary);
+            margin-right: 15px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: bold;
+        }
+        
+        /* CTA Section */
+        .cta {
+            padding: 100px 0;
+            background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
+            color: white;
+            text-align: center;
+        }
+        
+        .cta h2 {
+            font-size: 2.5rem;
+            margin-bottom: 20px;
+        }
+        
+        .cta p {
+            max-width: 600px;
+            margin: 0 auto 30px;
+            font-size: 1.2rem;
+        }
+        
+        .btn {
+            display: inline-block;
+            padding: 15px 30px;
+            background: white;
+            color: var(--primary);
+            border-radius: 50px;
+            font-weight: 700;
+            text-decoration: none;
+            transition: transform 0.3s;
+        }
+        
+        .btn:hover {
+            transform: translateY(-3px);
+        }
+        
+        /* Footer */
+        footer {
+            background: var(--dark);
+            color: white;
+            padding: 60px 0 30px;
+        }
+        
+        .footer-content {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 40px;
+            margin-bottom: 40px;
+        }
+        
+        .footer-column h3 {
+            margin-bottom: 20px;
+            font-size: 1.3rem;
+        }
+        
+        .footer-column ul {
+            list-style: none;
+        }
+        
+        .footer-column ul li {
+            margin-bottom: 10px;
+        }
+        
+        .footer-column a {
+            color: #ddd;
+            text-decoration: none;
+            transition: color 0.3s;
+        }
+        
+        .footer-column a:hover {
+            color: white;
+        }
+        
+        .social-links {
+            display: flex;
+            gap: 15px;
+            margin-top: 20px;
+        }
+        
+        .social-links a {
+            color: white;
+            font-size: 1.2rem;
+        }
+        
+        .copyright {
+            text-align: center;
+            padding-top: 30px;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .nav-links {
+                display: none;
+            }
+            
+            .hero h1 {
+                font-size: 2.5rem;
+            }
+            
+            .search-box {
+                flex-direction: column;
+                padding: 20px;
+            }
+            
+            .search-box input {
+                width: 100%;
+                margin-bottom: 15px;
+            }
+            
+            .metrics-grid,
+            .cases-grid,
+            .services-grid,
+            .testimonials-grid,
+            .footer-content {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Header & Navigation -->
+    <header>
+        <div class="container">
+            <nav>
+                <a href="#" class="logo">SEO<span>Expert</span></a>
+                <ul class="nav-links">
+                    <li><a href="#metrics">Results</a></li>
+                    <li><a href="#cases">Case Studies</a></li>
+                    <li><a href="#services">Services</a></li>
+                    <li><a href="#testimonials">Testimonials</a></li>
+                    <li><a href="#contact">Contact</a></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+
+    <!-- Hero Section -->
+    <section class="hero">
+        <div class="container">
+            <h1>SEO Developer & Technical SEO Specialist</h1>
+            <p>I help businesses increase organic traffic, improve search rankings, and drive conversions through technical SEO optimization and data-driven strategies.</p>
+            
+            <div class="search-box">
+                <input type="text" placeholder="Check your website SEO score...">
+                <button>Analyze</button>
+            </div>
+        </div>
+    </section>
+
+    <!-- SEO Metrics -->
+    <section id="metrics" class="seo-metrics">
+        <div class="container">
+            <div class="metrics-grid">
+                <div class="metric-card">
+                    <i class="fas fa-chart-line"></i>
+                    <div class="metric-value">+157%</div>
+                    <p>Average Organic Traffic Increase</p>
+                </div>
+                
+                <div class="metric-card">
+                    <i class="fas fa-search"></i>
+                    <div class="metric-value">4.2M</div>
+                    <p>Keywords Ranked in Top 10</p>
+                </div>
+                
+                <div class="metric-card">
+                    <i class="fas fa-dollar-sign"></i>
+                    <div class="metric-value">215%</div>
+                    <p>Average ROI on SEO Campaigns</p>
+                </div>
+                
+                <div class="metric-card">
+                    <i class="fas fa-clock"></i>
+                    <div class="metric-value">94%</div>
+                    <p>Core Web Vitals Improvement</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Case Studies -->
+    <section id="cases" class="case-studies">
+        <div class="container">
+            <div class="section-title">
+                <h2>SEO Case Studies</h2>
+                <p>Real results from successful SEO campaigns and technical optimizations</p>
+            </div>
+            
+            <div class="cases-grid">
+                <div class="case-card">
+                    <div class="case-img">
+                        <i class="fas fa-shopping-cart"></i>
+                    </div>
+                    <div class="case-content">
+                        <h3>E-commerce SEO Overhaul</h3>
+                        <p>Technical SEO restructuring for a major online retailer resulting in significant traffic and revenue growth.</p>
+                        
+                        <div class="results">
+                            <div class="result-item">
+                                <div class="result-value">+183%</div>
+                                <div>Organic Traffic</div>
+                            </div>
+                            <div class="result-item">
+                                <div class="result-value">+227%</div>
+                                <div>Revenue</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="case-card">
+                    <div class="case-img">
+                        <i class="fas fa-newspaper"></i>
+                    </div>
+                    <div class="case-content">
+                        <h3>News Portal SEO</h3>
+                        <p>Content strategy and technical optimization for a news website facing indexing and crawl budget issues.</p>
+                        
+                        <div class="results">
+                            <div class="result-item">
+                                <div class="result-value">+94%</div>
+                                <div>Indexed Pages</div>
+                            </div>
+                            <div class="result-item">
+                                <div class="result-value">+312%</div>
+                                <div>Impressions</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="case-card">
+                    <div class="case-img">
+                        <i class="fas fa-mobile-alt"></i>
+                    </div>
+                    <div class="case-content">
+                        <h3>Mobile-First SEO</h3>
+                        <p>Comprehensive mobile optimization for a SaaS company struggling with mobile visibility and conversions.</p>
+                        
+                        <div class="results">
+                            <div class="result-item">
+                                <div class="result-value">+76%</div>
+                                <div>Mobile Traffic</div>
+                            </div>
+                            <div class="result-item">
+                                <div class="result-value">+143%</div>
+                                <div>Conversions</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Services -->
+    <section id="services" class="services">
+        <div class="container">
+            <div class="section-title">
+                <h2>SEO Development Services</h2>
+                <p>Comprehensive technical SEO solutions tailored to your business needs</p>
+            </div>
+            
+            <div class="services-grid">
+                <div class="service-card">
+                    <i class="fas fa-search"></i>
+                    <h3>Technical SEO Audits</h3>
+                    <p>Comprehensive analysis of your website's technical health and SEO performance.</p>
+                </div>
+                
+                <div class="service-card">
+                    <i class="fas fa-laptop-code"></i>
+                    <h3>On-Page Optimization</h3>
+                    <p>Strategic optimization of content, meta tags, and internal linking structure.</p>
+                </div>
+                
+                <div class="service-card">
+                    <i class="fas fa-tachometer-alt"></i>
+                    <h3>Performance Optimization</h3>
+                    <p>Site speed improvements and Core Web Vitals optimization for better rankings.</p>
+                </div>
+                
+                <div class="service-card">
+                    <i class="fas fa-sitemap"></i>
+                    <h3>Site Architecture</h3>
+                    <p>Information architecture restructuring for better crawlability and user experience.</p>
+                </div>
+                
+                <div class="service-card">
+                    <i class="fas fa-mobile-alt"></i>
+                    <h3>Mobile-First SEO</h3>
+                    <p>Mobile optimization ensuring your site delivers exceptional experience on all devices.</p>
+                </div>
+                
+                <div class="service-card">
+                    <i class="fas fa-chart-line"></i>
+                    <h3>SEO Analytics</h3>
+                    <p>Data-driven insights and tracking setup to monitor performance and identify opportunities.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Testimonials -->
+    <section id="testimonials" class="testimonials">
+        <div class="container">
+            <div class="section-title">
+                <h2>Client Testimonials</h2>
+                <p>What businesses say about my SEO development services</p>
+            </div>
+            
+            <div class="testimonials-grid">
+                <div class="testimonial-card">
+                    <div class="testimonial-text">
+                        <p>"The technical SEO audit uncovered issues we didn't even know we had. The implementation was smooth, and results were almost immediate."</p>
+                    </div>
+                    <div class="client">
+                        <div class="client-img">JD</div>
+                        <div>
+                            <h4>John Davis</h4>
+                            <p>CTO, TechCorp</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="testimonial-card">
+                    <div class="testimonial-text">
+                        <p>"Our organic traffic increased by 157% in just 6 months. The ROI on our SEO investment has been incredible."</p>
+                    </div>
+                    <div class="client">
+                        <div class="client-img">SM</div>
+                        <div>
+                            <h4>Sarah Mitchell</h4>
+                            <p>Marketing Director, RetailPlus</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="testimonial-card">
+                    <div class="testimonial-text">
+                        <p>"The mobile optimization strategy completely transformed our online presence. We're now dominating mobile search results."</p>
+                    </div>
+                    <div class="client">
+                        <div class="client-img">MJ</div>
+                        <div>
+                            <h4>Michael Johnson</h4>
+                            <p>CEO, AppWorks</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- CTA Section -->
+    <section id="contact" class="cta">
+        <div class="container">
+            <h2>Ready to Improve Your SEO Performance?</h2>
+            <p>Let me help you achieve better visibility, more traffic, and increased conversions through technical SEO excellence.</p>
+            <a href="#contact" class="btn">Get Free SEO Audit</a>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer>
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-column">
+                    <h3>SEOExpert</h3>
+                    <p>Technical SEO development services to help your business grow through improved search visibility.</p>
+                    <div class="social-links">
+                        <a href="#"><i class="fab fa-twitter"></i></a>
+                        <a href="#"><i class="fab fa-linkedin"></i></a>
+                        <a href="#"><i class="fab fa-github"></i></a>
+                    </div>
+                </div>
+                
+                <div class="footer-column">
+                    <h3>Services</h3>
+                    <ul>
+                        <li><a href="#">Technical SEO Audit</a></li>
+                        <li><a href="#">On-Page Optimization</a></li>
+                        <li><a href="#">Performance Optimization</a></li>
+                        <li><a href="#">Mobile-First SEO</a></li>
+                    </ul>
+                </div>
+                
+                <div class="footer-column">
+                    <h3>Resources</h3>
+                    <ul>
+                        <li><a href="#">SEO Blog</a></li>
+                        <li><a href="#">Case Studies</a></li>
+                        <li><a href="#">Webinars</a></li>
+                        <li><a href="#">SEO Tools</a></li>
+                    </ul>
+                </div>
+                
+                <div class="footer-column">
+                    <h3>Contact</h3>
+                    <ul>
+                        <li><i class="fas fa-envelope"></i> contact@seoexpert.com</li>
+                        <li><i class="fas fa-phone"></i> +1 (555) 123-4567</li>
+                        <li><i class="fas fa-map-marker-alt"></i> San Francisco, CA</li>
+                    </ul>
+                </div>
+            </div>
+            
+            <div class="copyright">
+                <p>&copy; 2023 SEOExpert. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // Simple animation for metric counters
+        document.addEventListener('DOMContentLoaded', function() {
+            const metricValues = document.querySelectorAll('.metric-value');
+            
+            metricValues.forEach(value => {
+                const target = parseInt(value.textContent);
+                let current = 0;
+                const duration = 2000;
+                const steps = 50;
+                const increment = target / steps;
+                const stepTime = duration / steps;
+                
+                const timer = setInterval(() => {
+                    current += increment;
+                    if (current >= target) {
+                        value.textContent = value.textContent; // Reset to original
+                        clearInterval(timer);
+                    } else {
+                        if (value.textContent.includes('%')) {
+                            value.textContent = '+' + Math.round(current) + '%';
+                        } else {
+                            value.textContent = Math.round(current).toLocaleString();
+                        }
+                    }
+                }, stepTime);
+            });
+            
+            // Simple form validation for demo
+            const searchButton = document.querySelector('.search-box button');
+            if (searchButton) {
+                searchButton.addEventListener('click', function() {
+                    const input = document.querySelector('.search-box input');
+                    if (input.value.trim() === '') {
+                        alert('Please enter a website URL to analyze');
+                    } else {
+                        alert('SEO analysis would run for: ' + input.value + '\n(This is a demo - no actual analysis performed)');
+                    }
+                });
+            }
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>The Blend Mode Circus 🎪</title>
+  <style>
+    body {
+      margin: 0;
+      padding: 0;
+      background: black;
+      height: 100vh;
+      overflow: hidden;
+      font-family: Arial, sans-serif;
+    }
+
+    h1 {
+      color: black;
+      text-align: start;
+      font-size: 5rem;
+      position: relative;
+      z-index: 200;
+      padding: 40px;
+    }
+
+    h1 span {
+      display: inline-block;
+      animation: bounce 1.5s infinite alternate ease-in-out;
+    }
+
+    .box {
+      background: white;
+      position: absolute;
+      left: 0;
+      top: 0;
+      bottom: 0;
+      right: 50%;
+      mix-blend-mode: difference;
+      z-index: 100;
+    }
+
+    .min {
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 50%;
+      background: white;
+      mix-blend-mode: difference;
+      z-index: 101;
+    }
+
+    .contrast-diff {
+      mix-blend-mode: difference;
+      color: #fff !important;
+    }
+
+    @keyframes bounce {
+      0% { transform: translateY(0); }
+      100% { transform: translateY(-20px); }
+    }
+  </style>
+</head>
+<body>
+  <h1><span>HELLO HELLO</span></h1>
+  <div class="box"></div>
+  <div class="min"></div>
+  <h1 class="contrast-diff" style="position:absolute; bottom:40px; right:40px;">
+    BYE BYE
+  </h1>
+</body>
+</html>

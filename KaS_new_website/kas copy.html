@@ -1,0 +1,272 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Digital Agency Navbar</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+  <!-- Google Font -->
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600&display=swap" rel="stylesheet">
+  <style>
+    body {
+      margin: 0;
+      background-color: #000;
+      font-family: 'Poppins', sans-serif;
+      /* background: #c6ff00;  */
+    }
+
+    .navbar {
+      background-color: #000;
+      padding: 0.8rem 1rem;
+    }
+
+    .navbar-brand {
+      display: flex;
+      align-items: center;
+      color: #ffffff;
+      font-weight: 600;
+      font-size: 1.2rem;
+    }
+   .navbar-brand:hover{
+    color: #90e600;
+   }
+    .navbar-nav .nav-link {
+      color: #fff;
+      margin: 0 10px;
+      font-size: 0.95rem;
+      font-weight: 500;
+      transition: color 0.3s;
+    }
+
+    .navbar-nav .nav-link:hover,
+    .navbar-nav .nav-link:focus,
+    .dropdown-item:hover {
+      color: #a6ff00;
+    }
+    
+    .navbar-nav li .nav_link_active{
+    color: #a6ff00;
+    }
+    .btn-talk {
+      background-color: #a6ff00;
+      color: #000;
+      font-weight: 600;
+      /* border-radius: 25px; */
+      padding: 8px 20px;
+      transition: background-color 0.3s;
+    }
+
+    .btn-talk:hover {
+      background-color: #90e600;
+      color: #000;
+    }
+
+    /* Toggler styling */
+    .navbar-toggler {
+      border: none;
+      outline: none;
+    background-color: #90e600;
+    /* border-radius: 0px; */
+    }
+    .navbar-toggler-icon {
+      /* border-radius: 4px; */
+      padding: 20px 10px;
+      background-image: url("data:image/svg+xml;charset=utf8,%3Csvg viewBox='0 0 30 30' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath stroke='white' stroke-width='2' stroke-linecap='round' stroke-miterlimit='10' d='M4 7h22M4 15h22M4 23h22'/%3E%3C/svg%3E");
+    }
+
+    /* Offcanvas customization */
+    .offcanvas {
+      background-color: #000;
+      color: #fff;
+    }
+
+    .offcanvas .nav-link {
+      color: #fff;
+      font-size: 1.1rem;
+      margin: 10px 0;
+    }
+
+    .offcanvas .nav-link:hover {
+      color: #a6ff00;
+    }
+
+    /* Dropdown styling */
+    .dropdown-menu {
+      background-color: #111;
+      border: none;
+      border-radius: 0; /* sharp edges */
+      margin-top: 0;
+    }
+
+    .dropdown-item {
+      color: #fff;
+      transition: background 0.3s;
+    }
+
+    .dropdown-item:hover {
+      background-color: transparent;
+      color: #a6ff00;
+    }
+
+    /* Hover dropdown (desktop only) */
+    @media (min-width: 992px) {
+      .nav-item.dropdown:hover .dropdown-menu {
+        display: block;
+      }
+    }
+
+    @media (min-width: 992px) {
+      .offcanvas {
+        display: none !important;
+      }
+    }
+  </style>
+  <!-- scrolling -->
+     <style>
+    body {
+      margin: 0;
+      background: #000;
+      color: #fff;
+      font-family: Arial, sans-serif;
+      overflow-x: hidden;
+    }
+    .scroll-container {
+      position: relative;
+      width: 100%;
+      overflow: hidden;
+      /* background: #c6ff00;  */
+      background: #90e600;
+      /* margin: 20px 0; */
+    }
+    .scroll {
+      display: inline-flex;
+      white-space: nowrap;
+      animation: scroll-left 15s linear infinite;
+    }
+    .scroll span {
+      font-size: 20px;
+      font-weight: bold;
+      color: #000;
+      padding: 20px 40px;
+    }
+    @keyframes scroll-left {
+      0%   { transform: translateX(0); }
+      100% { transform: translateX(-50%); }
+    }
+  </style>
+</head>
+<body>
+
+<nav class="navbar navbar-expand-lg">
+  <div class="container-fluid">
+    <!-- Logo -->
+    <a class="navbar-brand" href="#">Kakatiya Solutions</a>
+
+    <!-- Mobile Toggler -->
+    <button class="navbar-toggler d-lg-none" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasNavbar">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+
+    <!-- Desktop Menu -->
+    <div class="collapse navbar-collapse d-none d-lg-flex justify-content-center">
+      <ul class="navbar-nav mb-2 mb-lg-0">
+        <li class="nav-item"><a class="nav-link nav_link_active" href="#">Home</a></li>
+           <li class="nav-item"><a class="nav-link" href="#">About Us</a></li>
+        <li class="nav-item"><a class="nav-link" href="#">Projects</a></li>
+        <!-- Services Dropdown -->
+        <li class="nav-item dropdown">
+          <a class="nav-link dropdown-toggle" href="#">Services</a>
+          <ul class="dropdown-menu">
+            <li><a class="dropdown-item" href="#">Web Development</a></li>
+            <li><a class="dropdown-item" href="#">App Development</a></li>
+            <li><a class="dropdown-item" href="#">Digital Marketing</a></li>
+            <li><a class="dropdown-item" href="#">UI/UX Design</a></li>
+          </ul>
+        </li>
+        <li class="nav-item"><a class="nav-link" href="#">Blogs</a></li>
+        <li class="nav-item"><a class="nav-link" href="#">Contact Us</a></li>
+      </ul>
+    </div>
+
+    <!-- Talk Button -->
+    <a href="#" class="btn btn-talk d-none d-lg-block">Let’s Talk</a>
+
+    <!-- Offcanvas (Mobile Menu) -->
+    <div class="offcanvas offcanvas-end" tabindex="-1" id="offcanvasNavbar">
+      <div class="offcanvas-header">
+        <h5 class="offcanvas-title">Kakatiya Solutions</h5>
+        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="offcanvas"></button>
+      </div>
+      <div class="offcanvas-body">
+        <ul class="navbar-nav">
+          <li class="nav-item"><a class="nav-link " href="#">Home</a></li>
+                 <li class="nav-item"><a class="nav-link" href="#">About Us</a></li>
+                     <li class="nav-item"><a class="nav-link" href="#">Projects</a></li>
+          <li class="nav-item dropdown">
+            <a class="nav-link dropdown-toggle" href="#" data-bs-toggle="dropdown">Services</a>
+            <ul class="dropdown-menu">
+              <li><a class="dropdown-item" href="#">Web Development</a></li>
+              <li><a class="dropdown-item" href="#">App Development</a></li>
+              <li><a class="dropdown-item" href="#">Digital Marketing</a></li>
+              <li><a class="dropdown-item" href="#">UI/UX Design</a></li>
+            </ul>
+          </li>
+          <li class="nav-item"><a class="nav-link" href="#">Blogs</a></li>
+          <li class="nav-item"><a class="nav-link" href="#">Contact Us</a></li>
+        </ul>
+        <a href="#" class="btn btn-talk mt-3">Let’s Talk</a>
+      </div>
+    </div>
+  </div>
+</nav>
+
+<section class="banner_section">
+<div id="carouselExampleControlsNoTouching" class="carousel slide" data-bs-touch="false">
+  <div class="carousel-inner">
+    <div class="carousel-item active">
+      <img src="banner1.png" class="d-block w-100" alt="...">
+    </div>
+    <div class="carousel-item">
+      <img src="banner1.png" class="d-block w-100" alt="...">
+    </div>
+    <div class="carousel-item">
+      <img src="kas_banner.png" class="d-block w-100" alt="...">
+    </div>
+  </div>
+  <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleControlsNoTouching" data-bs-slide="prev">
+    <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+    <span class="visually-hidden">Previous</span>
+  </button>
+  <button class="carousel-control-next" type="button" data-bs-target="#carouselExampleControlsNoTouching" data-bs-slide="next">
+    <span class="carousel-control-next-icon" aria-hidden="true"></span>
+    <span class="visually-hidden">Next</span>
+  </button>
+</div>
+</section>
+<section class="scrolling_text">
+    <div class="container-fluid scroll-container">
+        <div class="row">
+
+      <div class="scroll">
+        <span>YOUR TEXT HERE </span><span>✦</span>
+        <span>YOUR TEXT HERE </span><span>✦</span>
+        <span>YOUR TEXT HERE </span><span>✦</span>
+        <span>YOUR TEXT HERE </span><span>✦</span>
+        <span>YOUR TEXT HERE </span><span>✦</span>
+        <span>YOUR TEXT HERE </span><span>✦</span>
+        <span>YOUR TEXT HERE </span><span>✦</span>
+        <span>YOUR TEXT HERE </span><span>✦</span>
+      </div>
+    </div>
+
+        </div>
+    </div>
+    
+</section>
+<script src='https://www.noupe.com/embed/01991d3c7d5771a5b5b651feca5826bece04.js'></script>
+<script src='https://cdn.jotfor.ms/agent/embedjs/01991d4008bb7bcab4e61d07496306bcd5f0/embed.js'>
+</script>
+<!-- <script src='https://www.noupe.com/embed/01991d37a7ce7dd2bd29af2b90559a8d1ff2.js'></script> -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

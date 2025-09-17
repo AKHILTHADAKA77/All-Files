@@ -1,0 +1,263 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Bootstrap Video Gallery with Custom AutoPlay Toggle</title>
+
+<!-- Bootstrap CSS -->
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" />
+<!-- Bootstrap Icons -->
+<link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" rel="stylesheet" />
+
+<style>
+  body {
+    font-family: Arial, sans-serif;
+    margin-top: 2rem;
+    background: #3f0f7d;
+  }
+  h1 {
+    color: white;
+    margin-bottom: 1.5rem;
+    text-align: center;
+  }
+  .video-thumb {
+    position: relative;
+    cursor: pointer;
+    border-radius: 14px;
+    overflow: hidden;
+    box-shadow: 0 3px 13px rgba(0,0,0,0.3);
+    background: black;
+    max-width: 320px;
+    margin: auto;
+  }
+  .video-thumb img {
+    width: 100%;
+    height: 180px;
+    object-fit: cover;
+  }
+  .video-title {
+    padding: 0.6rem 0.75rem;
+    font-weight: 600;
+    font-size: 1rem;
+    color: white;
+    background: #2d094a;
+    text-align: center;
+  }
+  .row.g-3 {
+    justify-content: center;
+  }
+
+  /* Modal styles */
+  .modal-content {
+    background-color: #121212;
+    border-radius: 12px;
+    overflow: hidden;
+  }
+  .modal-body {
+    position: relative;
+    padding: 0;
+    background: black;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 360px;
+  }
+  iframe#modalVideo {
+    width: 100%;
+    height: 400px;
+    border: none;
+  }
+  .btn-close-white {
+    filter: invert(1);
+  }
+
+  /* Auto-play toggle styling */
+  .auto-play-container {
+    display: flex;
+    align-items: center;
+    cursor: pointer;
+    gap: 10px;
+    position: absolute;
+    top: 10px;
+    left: 15px;
+    z-index: 1070;
+    user-select: none;
+    background: rgba(255,255,255,0.9);
+    border-radius: 40px;
+    padding: 5px 12px;
+    box-shadow: 0 0 8px rgba(0,0,0,0.3);
+  }
+  .icon-wrapper {
+    background-color: white;
+    border-radius: 50%;
+    padding: 8px 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: background-color 0.3s ease;
+  }
+  .icon-wrapper i {
+    font-size: 30px;
+    color: black;
+  }
+  .status-text {
+    font-size: 16px;
+    font-weight: bold;
+    color: black;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+  }
+  .status-text.show {
+    opacity: 1;
+    color: black;
+  }
+</style>
+</head>
+<body>
+
+<div class="container">
+  <h1>Bootstrap Video Gallery with Custom AutoPlay Toggle</h1>
+  <div class="row g-3">
+    <!-- Example video thumbnails with YouTube IDs -->
+    <div class="col-12 col-sm-6 col-md-4">
+      <div class="video-thumb" data-video-id="YE7VzlLtp-4" data-title="The Bear Video">
+        <img src="https://img.youtube.com/vi/YE7VzlLtp-4/hqdefault.jpg" alt="The Bear Video" loading="lazy" />
+        <div class="video-title">The Bear Video</div>
+      </div>
+    </div>
+    <div class="col-12 col-sm-6 col-md-4">
+      <div class="video-thumb" data-video-id="Bey4XXJAqS8" data-title="Big Buck Bunny">
+        <img src="https://img.youtube.com/vi/Bey4XXJAqS8/hqdefault.jpg" alt="Big Buck Bunny" loading="lazy" />
+        <div class="video-title">Big Buck Bunny</div>
+      </div>
+    </div>
+    <div class="col-12 col-sm-6 col-md-4">
+      <div class="video-thumb" data-video-id="VYOjWnS4cMY" data-title="Childish Gambino - This Is America">
+        <img src="https://img.youtube.com/vi/VYOjWnS4cMY/hqdefault.jpg" alt="This Is America" loading="lazy" />
+        <div class="video-title">This Is America</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Modal -->
+<div class="modal fade" id="videoModal" tabindex="-1" aria-labelledby="videoModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered modal-lg">
+    <div class="modal-content">
+
+      <!-- AutoPlay toggle -->
+      <div class="auto-play-container" id="autoPlayToggle" role="button" tabindex="0" aria-pressed="false" aria-label="Toggle auto play">
+        <div class="icon-wrapper">
+          <i class="bi bi-play-fill" id="autoPlayIcon"></i>
+        </div>
+        <span class="status-text" id="statusText">AutoPlay OFF</span>
+      </div>
+
+      <div class="modal-header border-0">
+        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+
+      <div class="modal-body">
+        <iframe id="modalVideo" src="" allow="autoplay; encrypted-media" allowfullscreen></iframe>
+      </div>
+
+      <div class="modal-footer text-white bg-dark bg-opacity-75">
+        <span id="modalVideoTitle" class="fs-5 mx-auto"></span>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<!-- Bootstrap JS Bundle -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+
+<script>
+  const videoThumbs = document.querySelectorAll('.video-thumb');
+  const videoModal = document.getElementById('videoModal');
+  const modalVideo = document.getElementById('modalVideo');
+  const modalVideoTitle = document.getElementById('modalVideoTitle');
+  const autoPlayToggle = document.getElementById('autoPlayToggle');
+  const autoPlayIcon = document.getElementById('autoPlayIcon');
+  const statusText = document.getElementById('statusText');
+
+  let isAutoPlaying = false;
+  let currentVideoId = '';
+  let statusTimeout = null;
+
+  function showStatus(text) {
+    if (statusTimeout) clearTimeout(statusTimeout);
+    statusText.textContent = text;
+    statusText.classList.add('show');
+    statusTimeout = setTimeout(() => statusText.classList.remove('show'), 2000);
+  }
+
+  function updateAutoPlayUI() {
+    if(isAutoPlaying) {
+      autoPlayIcon.classList.replace('bi-play-fill', 'bi-pause-fill');
+      autoPlayToggle.setAttribute('aria-pressed', 'true');
+      showStatus('AutoPlay ON');
+    } else {
+      autoPlayIcon.classList.replace('bi-pause-fill', 'bi-play-fill');
+      autoPlayToggle.setAttribute('aria-pressed', 'false');
+      showStatus('AutoPlay OFF');
+    }
+  }
+
+  function setVideoSrc(videoId, autoplay) {
+    const autoplayFlag = autoplay ? 1 : 0;
+    modalVideo.src = `https://www.youtube.com/embed/${videoId}?rel=0&autoplay=${autoplayFlag}`;
+  }
+
+  function startAutoplay() {
+    isAutoPlaying = true;
+    updateAutoPlayUI();
+    setVideoSrc(currentVideoId, true);
+  }
+
+  function stopAutoplay() {
+    isAutoPlaying = false;
+    updateAutoPlayUI();
+    setVideoSrc(currentVideoId, false);
+  }
+
+  function toggleAutoPlay() {
+    if(!currentVideoId) return;
+    if (isAutoPlaying) stopAutoplay();
+    else startAutoplay();
+  }
+
+  // Thumbnails click - open modal and load video with autoplay off
+  videoThumbs.forEach(thumb => {
+    thumb.addEventListener('click', () => {
+      currentVideoId = thumb.getAttribute('data-video-id');
+      modalVideoTitle.textContent = thumb.getAttribute('data-title');
+      isAutoPlaying = false;
+      updateAutoPlayUI();
+      setVideoSrc(currentVideoId, false);
+      const modal = bootstrap.Modal.getOrCreateInstance(videoModal);
+      modal.show();
+    });
+  });
+
+  // AutoPlay toggle click
+  autoPlayToggle.addEventListener('click', toggleAutoPlay);
+  autoPlayToggle.addEventListener('keydown', e => {
+    if(e.key === "Enter" || e.key === " ") {
+      e.preventDefault();
+      toggleAutoPlay();
+    }
+  });
+
+  // Stop video and reset on modal hide
+  videoModal.addEventListener('hidden.bs.modal', () => {
+    modalVideo.src = '';
+    currentVideoId = '';
+    isAutoPlaying = false;
+    updateAutoPlayUI();
+  });
+</script>
+
+</body>
+</html>

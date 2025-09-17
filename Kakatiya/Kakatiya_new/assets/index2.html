@@ -1,0 +1,820 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>URL Manager</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css">
+    <style>
+        body {
+            background-color: #f8f9fa;
+        }
+        .url-container {
+            margin-top: 20px;
+        }
+        .url-card {
+            margin-bottom: 20px;
+            border-radius: 10px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s ease;
+        }
+        .url-card:hover {
+            transform: translateY(-5px);
+        }
+        .url-item {
+            padding: 15px;
+            border-bottom: 1px solid #eee;
+        }
+        .url-item:last-child {
+            border-bottom: none;
+        }
+        .admin-panel {
+            display: none;
+            margin-top: 20px;
+        }
+        .login-form {
+            max-width: 400px;
+            margin: 50px auto;
+            padding: 20px;
+            background-color: white;
+            border-radius: 10px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+        .category-section {
+            margin-bottom: 30px;
+        }
+        .category-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+        .url-list {
+            margin-left: 20px;
+        }
+        .card-header {
+            background-color: #0d6efd;
+            color: white;
+            font-weight: bold;
+            border-radius: 10px 10px 0 0 !important;
+        }
+        .edit-input {
+            border: none;
+            background: transparent;
+            width: 100%;
+        }
+        .edit-input:focus {
+            outline: none;
+            background: #f8f9fa;
+            border-radius: 4px;
+            padding: 2px 5px;
+        }
+        .notification {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            padding: 15px 20px;
+            background-color: #28a745;
+            color: white;
+            border-radius: 5px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            z-index: 1000;
+            display: none;
+        }
+        .url-actions {
+            display: flex;
+            gap: 5px;
+        }
+        .category-actions {
+            display: flex;
+            gap: 5px;
+        }
+        .export-section {
+            margin-top: 15px;
+            padding-top: 15px;
+            border-top: 1px solid #eee;
+        }
+        .folder-structure {
+            margin-top: 15px;
+            padding: 15px;
+            background-color: #f8f9fa;
+            border-radius: 5px;
+            font-family: monospace;
+        }
+        .folder-item {
+            margin-left: 20px;
+            padding: 5px 0;
+        }
+        .file-item {
+            margin-left: 40px;
+            padding: 5px 0;
+            color: #0d6efd;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
+            <div class="container-fluid">
+                <a class="navbar-brand" href="#"><i class="bi bi-link-45deg"></i> URL Manager</a>
+                <div class="d-flex">
+                    <button id="showAdminBtn" class="btn btn-outline-light me-2"><i class="bi bi-gear"></i> Admin Panel</button>
+                    <button id="backToIndexBtn" class="btn btn-outline-light" style="display: none;"><i class="bi bi-house-door"></i> Back to Index</button>
+                    <button id="logoutBtn" class="btn btn-outline-light" style="display: none;"><i class="bi bi-box-arrow-right"></i> Logout</button>
+                </div>
+            </div>
+        </nav>
+
+        <!-- Notification -->
+        <div id="notification" class="notification"></div>
+
+        <!-- Main URL Display Page -->
+        <div id="urlDisplayPage">
+            <h1 class="mt-4 mb-4 text-center">URL Collection</h1>
+            
+            <div id="urlCategories" class="url-container row">
+                <!-- Categories will be dynamically added here -->
+            </div>
+        </div>
+
+        <!-- Admin Login Form -->
+        <div id="adminLogin" class="login-form" style="display: none;">
+            <h3 class="text-center mb-4">Admin Login</h3>
+            <div class="mb-3">
+                <label for="username" class="form-label">Username</label>
+                <input type="text" class="form-control" id="username" placeholder="Enter username">
+            </div>
+            <div class="mb-3">
+                <label for="password" class="form-label">Password</label>
+                <input type="password" class="form-control" id="password" placeholder="Enter password">
+            </div>
+            <button id="loginBtn" class="btn btn-primary w-100"><i class="bi bi-box-arrow-in-right"></i> Login</button>
+            <div id="loginError" class="text-danger mt-2 text-center" style="display: none;">Invalid username or password</div>
+        </div>
+
+        <!-- Admin Panel -->
+        <div id="adminPanel" class="admin-panel">
+            <h2 class="mb-4 text-center"><i class="bi bi-gear"></i> Admin Panel</h2>
+            
+            <!-- Category Management -->
+            <div class="card mb-4">
+                <div class="card-header">
+                    <h3 class="mb-0"><i class="bi bi-folder"></i> Categories</h3>
+                </div>
+                <div class="card-body">
+                    <div class="d-flex justify-content-between mb-3">
+                        <h5>Manage Categories</h5>
+                        <button id="addCategoryBtn" class="btn btn-primary"><i class="bi bi-plus-circle"></i> Add Category</button>
+                    </div>
+                    <div id="categoriesList" class="url-list">
+                        <!-- Categories will be dynamically added here -->
+                    </div>
+                </div>
+            </div>
+            
+            <!-- URL Management -->
+            <div class="card">
+                <div class="card-header">
+                    <h3 class="mb-0"><i class="bi bi-link-45deg"></i> URLs</h3>
+                </div>
+                <div class="card-body">
+                    <div class="d-flex justify-content-between mb-3">
+                        <h5>Manage URLs</h5>
+                        <button id="addUrlBtn" class="btn btn-primary"><i class="bi bi-plus-circle"></i> Add URL</button>
+                    </div>
+                    <div class="mb-3">
+                        <label for="categorySelect" class="form-label">Filter by Category</label>
+                        <select id="categorySelect" class="form-select">
+                            <option value="">All Categories</option>
+                        </select>
+                    </div>
+                    <div id="urlsList" class="url-list">
+                        <!-- URLs will be dynamically added here -->
+                    </div>
+                    
+                    <!-- Folder Structure Section -->
+                    <div class="export-section">
+                        <h5>Folder Structure</h5>
+                        <p>Your data is organized in the following folder structure:</p>
+                        <div id="folderStructure" class="folder-structure">
+                            <!-- Folder structure will be dynamically added here -->
+                        </div>
+                        <button id="exportDataBtn" class="btn btn-success mt-3"><i class="bi bi-download"></i> Download All Folders</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Add Category Modal -->
+        <div class="modal fade" id="addCategoryModal" tabindex="-1" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title"><i class="bi bi-folder-plus"></i> Add New Category</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <div class="mb-3">
+                            <label for="categoryName" class="form-label">Category Name</label>
+                            <input type="text" class="form-control" id="categoryName" placeholder="Enter category name">
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                        <button type="button" class="btn btn-primary" id="saveCategoryBtn"><i class="bi bi-check-circle"></i> Save</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Edit Category Modal -->
+        <div class="modal fade" id="editCategoryModal" tabindex="-1" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title"><i class="bi bi-pencil-square"></i> Edit Category</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <div class="mb-3">
+                            <label for="editCategoryName" class="form-label">Category Name</label>
+                            <input type="text" class="form-control" id="editCategoryName" placeholder="Enter category name">
+                            <input type="hidden" id="editCategoryId">
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                        <button type="button" class="btn btn-primary" id="updateCategoryBtn"><i class="bi bi-check-circle"></i> Update</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Add URL Modal -->
+        <div class="modal fade" id="addUrlModal" tabindex="-1" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title"><i class="bi bi-link-45deg"></i> Add New URL</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <div class="mb-3">
+                            <label for="urlTitle" class="form-label">Title</label>
+                            <input type="text" class="form-control" id="urlTitle" placeholder="Enter URL title">
+                        </div>
+                        <div class="mb-3">
+                            <label for="urlLink" class="form-label">URL</label>
+                            <input type="text" class="form-control" id="urlLink" placeholder="Enter URL">
+                        </div>
+                        <div class="mb-3">
+                            <label for="urlCategory" class="form-label">Category</label>
+                            <select id="urlCategory" class="form-select">
+                                <option value="">Select a category</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                        <button type="button" class="btn btn-primary" id="saveUrlBtn"><i class="bi bi-check-circle"></i> Save</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Edit URL Modal -->
+        <div class="modal fade" id="editUrlModal" tabindex="-1" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title"><i class="bi bi-pencil-square"></i> Edit URL</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <div class="mb-3">
+                            <label for="editUrlTitle" class="form-label">Title</label>
+                            <input type="text" class="form-control" id="editUrlTitle" placeholder="Enter URL title">
+                        </div>
+                        <div class="mb-3">
+                            <label for="editUrlLink" class="form-label">URL</label>
+                            <input type="text" class="form-control" id="editUrlLink" placeholder="Enter URL">
+                        </div>
+                        <div class="mb-3">
+                            <label for="editUrlCategory" class="form-label">Category</label>
+                            <select id="editUrlCategory" class="form-select">
+                                <option value="">Select a category</option>
+                            </select>
+                            <input type="hidden" id="editUrlId">
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                        <button type="button" class="btn btn-primary" id="updateUrlBtn"><i class="bi bi-check-circle"></i> Update</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/jszip@3.7.1/dist/jszip.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/file-saver@2.0.5/dist/FileSaver.min.js"></script>
+    <script>
+        // Load data from localStorage or use sample data
+        let categories = JSON.parse(localStorage.getItem('categories')) || [
+            { id: 1, name: "Social Media" },
+            { id: 2, name: "News" },
+            { id: 3, name: "Technology" }
+        ];
+
+        let urls = JSON.parse(localStorage.getItem('urls')) || [
+            { id: 1, title: "Facebook", url: "https://www.facebook.com", categoryId: 1 },
+            { id: 2, title: "Twitter", url: "https://www.twitter.com", categoryId: 1 },
+            { id: 3, title: "BBC News", url: "https://www.bbc.com/news", categoryId: 2 },
+            { id: 4, title: "TechCrunch", url: "https://techcrunch.com", categoryId: 3 }
+        ];
+
+        // Admin credentials
+        const adminCredentials = {
+            username: "admin",
+            password: "admin123"
+        };
+
+        let isLoggedIn = false;
+        let nextCategoryId = categories.length > 0 ? Math.max(...categories.map(c => c.id)) + 1 : 1;
+        let nextUrlId = urls.length > 0 ? Math.max(...urls.map(u => u.id)) + 1 : 1;
+
+        // DOM elements
+        const urlDisplayPage = document.getElementById('urlDisplayPage');
+        const adminLogin = document.getElementById('adminLogin');
+        const adminPanel = document.getElementById('adminPanel');
+        const showAdminBtn = document.getElementById('showAdminBtn');
+        const backToIndexBtn = document.getElementById('backToIndexBtn');
+        const logoutBtn = document.getElementById('logoutBtn');
+        const loginBtn = document.getElementById('loginBtn');
+        const loginError = document.getElementById('loginError');
+        const usernameInput = document.getElementById('username');
+        const passwordInput = document.getElementById('password');
+        const addCategoryBtn = document.getElementById('addCategoryBtn');
+        const addUrlBtn = document.getElementById('addUrlBtn');
+        const exportDataBtn = document.getElementById('exportDataBtn');
+        const categorySelect = document.getElementById('categorySelect');
+        const urlCategorySelect = document.getElementById('urlCategory');
+        const editUrlCategorySelect = document.getElementById('editUrlCategory');
+        const saveCategoryBtn = document.getElementById('saveCategoryBtn');
+        const updateCategoryBtn = document.getElementById('updateCategoryBtn');
+        const saveUrlBtn = document.getElementById('saveUrlBtn');
+        const updateUrlBtn = document.getElementById('updateUrlBtn');
+        const categoryNameInput = document.getElementById('categoryName');
+        const editCategoryNameInput = document.getElementById('editCategoryName');
+        const editCategoryIdInput = document.getElementById('editCategoryId');
+        const urlTitleInput = document.getElementById('urlTitle');
+        const urlLinkInput = document.getElementById('urlLink');
+        const editUrlTitleInput = document.getElementById('editUrlTitle');
+        const editUrlLinkInput = document.getElementById('editUrlLink');
+        const editUrlIdInput = document.getElementById('editUrlId');
+        const notification = document.getElementById('notification');
+        const folderStructure = document.getElementById('folderStructure');
+
+        // Event listeners
+        showAdminBtn.addEventListener('click', showAdminLogin);
+        backToIndexBtn.addEventListener('click', backToIndex);
+        logoutBtn.addEventListener('click', logout);
+        loginBtn.addEventListener('click', login);
+        exportDataBtn.addEventListener('click', exportData);
+        addCategoryBtn.addEventListener('click', () => {
+            categoryNameInput.value = '';
+            new bootstrap.Modal(document.getElementById('addCategoryModal')).show();
+        });
+        addUrlBtn.addEventListener('click', () => {
+            urlTitleInput.value = '';
+            urlLinkInput.value = '';
+            urlCategorySelect.value = '';
+            updateUrlCategorySelect();
+            new bootstrap.Modal(document.getElementById('addUrlModal')).show();
+        });
+        saveCategoryBtn.addEventListener('click', saveCategory);
+        updateCategoryBtn.addEventListener('click', updateCategory);
+        saveUrlBtn.addEventListener('click', saveUrl);
+        updateUrlBtn.addEventListener('click', updateUrl);
+        categorySelect.addEventListener('change', displayUrlsByCategory);
+
+        // Functions
+        function showAdminLogin() {
+            urlDisplayPage.style.display = 'none';
+            adminLogin.style.display = 'block';
+            adminPanel.style.display = 'none';
+            showAdminBtn.style.display = 'none';
+            backToIndexBtn.style.display = 'block';
+        }
+
+        function backToIndex() {
+            urlDisplayPage.style.display = 'block';
+            adminLogin.style.display = 'none';
+            adminPanel.style.display = 'none';
+            showAdminBtn.style.display = 'block';
+            backToIndexBtn.style.display = 'none';
+            logoutBtn.style.display = 'none';
+            
+            // Clear login form
+            usernameInput.value = '';
+            passwordInput.value = '';
+            loginError.style.display = 'none';
+        }
+
+        function login() {
+            const username = usernameInput.value;
+            const password = passwordInput.value;
+
+            if (username === adminCredentials.username && password === adminCredentials.password) {
+                isLoggedIn = true;
+                urlDisplayPage.style.display = 'none';
+                adminLogin.style.display = 'none';
+                adminPanel.style.display = 'block';
+                logoutBtn.style.display = 'block';
+                showAdminBtn.style.display = 'none';
+                loginError.style.display = 'none';
+                
+                updateAdminPanel();
+                showNotification('Login successful!');
+            } else {
+                loginError.style.display = 'block';
+            }
+        }
+
+        function logout() {
+            isLoggedIn = false;
+            backToIndex();
+            showNotification('Logged out successfully!');
+        }
+
+        function updateAdminPanel() {
+            displayCategories();
+            updateCategorySelect();
+            updateUrlCategorySelect();
+            displayUrlsByCategory();
+            updateFolderStructure();
+        }
+
+        function displayCategories() {
+            const categoriesList = document.getElementById('categoriesList');
+            categoriesList.innerHTML = '';
+            
+            categories.forEach(category => {
+                const categoryItem = document.createElement('div');
+                categoryItem.className = 'd-flex justify-content-between align-items-center mb-2 p-2 border rounded';
+                categoryItem.innerHTML = `
+                    <span>${category.name}</span>
+                    <div class="category-actions">
+                        <button class="btn btn-sm btn-outline-primary edit-category-btn" data-id="${category.id}" data-name="${category.name}">
+                            <i class="bi bi-pencil"></i>
+                        </button>
+                        <button class="btn btn-sm btn-outline-danger delete-category-btn" data-id="${category.id}">
+                            <i class="bi bi-trash"></i>
+                        </button>
+                    </div>
+                `;
+                categoriesList.appendChild(categoryItem);
+            });
+
+            // Add event listeners to edit buttons
+            document.querySelectorAll('.edit-category-btn').forEach(btn => {
+                btn.addEventListener('click', function() {
+                    const categoryId = parseInt(this.getAttribute('data-id'));
+                    const categoryName = this.getAttribute('data-name');
+                    editCategory(categoryId, categoryName);
+                });
+            });
+
+            // Add event listeners to delete buttons
+            document.querySelectorAll('.delete-category-btn').forEach(btn => {
+                btn.addEventListener('click', function() {
+                    const categoryId = parseInt(this.getAttribute('data-id'));
+                    deleteCategory(categoryId);
+                });
+            });
+        }
+
+        function updateCategorySelect() {
+            categorySelect.innerHTML = '<option value="">All Categories</option>';
+            
+            categories.forEach(category => {
+                const option = document.createElement('option');
+                option.value = category.id;
+                option.textContent = category.name;
+                categorySelect.appendChild(option);
+            });
+        }
+
+        function updateUrlCategorySelect() {
+            urlCategorySelect.innerHTML = '<option value="">Select a category</option>';
+            editUrlCategorySelect.innerHTML = '<option value="">Select a category</option>';
+            
+            categories.forEach(category => {
+                const option1 = document.createElement('option');
+                option1.value = category.id;
+                option1.textContent = category.name;
+                urlCategorySelect.appendChild(option1);
+                
+                const option2 = document.createElement('option');
+                option2.value = category.id;
+                option2.textContent = category.name;
+                editUrlCategorySelect.appendChild(option2);
+            });
+        }
+
+        function displayUrlsByCategory() {
+            const categoryId = categorySelect.value ? parseInt(categorySelect.value) : null;
+            const urlsList = document.getElementById('urlsList');
+            urlsList.innerHTML = '';
+            
+            let filteredUrls = urls;
+            if (categoryId !== null) {
+                filteredUrls = urls.filter(url => url.categoryId === categoryId);
+            }
+            
+            if (filteredUrls.length === 0) {
+                urlsList.innerHTML = '<div class="text-center p-3">No URLs found</div>';
+                return;
+            }
+            
+            filteredUrls.forEach(url => {
+                const category = categories.find(c => c.id === url.categoryId);
+                const categoryName = category ? category.name : 'Unknown';
+                
+                const urlItem = document.createElement('div');
+                urlItem.className = 'd-flex justify-content-between align-items-start mb-2 p-2 border rounded';
+                urlItem.innerHTML = `
+                    <div>
+                        <div><strong>${url.title}</strong></div>
+                        <div><a href="${url.url}" target="_blank">${url.url}</a></div>
+                        <div><span class="badge bg-secondary">${categoryName}</span></div>
+                    </div>
+                    <div class="url-actions">
+                        <button class="btn btn-sm btn-outline-primary edit-url-btn" 
+                                data-id="${url.id}" 
+                                data-title="${url.title}" 
+                                data-url="${url.url}" 
+                                data-category="${url.categoryId}">
+                            <i class="bi bi-pencil"></i>
+                        </button>
+                        <button class="btn btn-sm btn-outline-danger delete-url-btn" data-id="${url.id}">
+                            <i class="bi bi-trash"></i>
+                        </button>
+                    </div>
+                `;
+                urlsList.appendChild(urlItem);
+            });
+
+            // Add event listeners to edit buttons
+            document.querySelectorAll('.edit-url-btn').forEach(btn => {
+                btn.addEventListener('click', function() {
+                    const urlId = parseInt(this.getAttribute('data-id'));
+                    const urlTitle = this.getAttribute('data-title');
+                    const urlLink = this.getAttribute('data-url');
+                    const urlCategoryId = parseInt(this.getAttribute('data-category'));
+                    editUrl(urlId, urlTitle, urlLink, urlCategoryId);
+                });
+            });
+
+            // Add event listeners to delete buttons
+            document.querySelectorAll('.delete-url-btn').forEach(btn => {
+                btn.addEventListener('click', function() {
+                    const urlId = parseInt(this.getAttribute('data-id'));
+                    deleteUrl(urlId);
+                });
+            });
+        }
+
+        function updateFolderStructure() {
+            folderStructure.innerHTML = '<div class="folder-item"><i class="bi bi-folder-fill"></i> url_collection</div>';
+            
+            categories.forEach(category => {
+                const categoryFolderName = category.name.replace(/\s+/g, '_').toLowerCase();
+                const categoryUrls = urls.filter(url => url.categoryId === category.id);
+                
+                const categoryFolder = document.createElement('div');
+                categoryFolder.className = 'folder-item';
+                categoryFolder.innerHTML = `<i class="bi bi-folder-fill"></i> ${categoryFolderName}`;
+                folderStructure.appendChild(categoryFolder);
+                
+                const linksFile = document.createElement('div');
+                linksFile.className = 'file-item';
+                linksFile.innerHTML = `<i class="bi bi-file-earmark-code"></i> links.json (${categoryUrls.length} links)`;
+                folderStructure.appendChild(linksFile);
+            });
+        }
+
+        function saveCategory() {
+            const categoryName = categoryNameInput.value.trim();
+            
+            if (categoryName) {
+                categories.push({
+                    id: nextCategoryId++,
+                    name: categoryName
+                });
+                
+                saveDataToLocalStorage();
+                categoryNameInput.value = '';
+                bootstrap.Modal.getInstance(document.getElementById('addCategoryModal')).hide();
+                updateAdminPanel();
+                showNotification('Category added successfully!');
+            }
+        }
+
+        function editCategory(id, name) {
+            editCategoryNameInput.value = name;
+            editCategoryIdInput.value = id;
+            new bootstrap.Modal(document.getElementById('editCategoryModal')).show();
+        }
+
+        function updateCategory() {
+            const categoryId = parseInt(editCategoryIdInput.value);
+            const categoryName = editCategoryNameInput.value.trim();
+            
+            if (categoryName) {
+                const categoryIndex = categories.findIndex(c => c.id === categoryId);
+                if (categoryIndex !== -1) {
+                    categories[categoryIndex].name = categoryName;
+                    
+                    saveDataToLocalStorage();
+                    bootstrap.Modal.getInstance(document.getElementById('editCategoryModal')).hide();
+                    updateAdminPanel();
+                    showNotification('Category updated successfully!');
+                }
+            }
+        }
+
+        function saveUrl() {
+            const title = urlTitleInput.value.trim();
+            const url = urlLinkInput.value.trim();
+            const categoryId = parseInt(urlCategorySelect.value);
+            
+            if (title && url && !isNaN(categoryId)) {
+                urls.push({
+                    id: nextUrlId++,
+                    title: title,
+                    url: url,
+                    categoryId: categoryId
+                });
+                
+                saveDataToLocalStorage();
+                urlTitleInput.value = '';
+                urlLinkInput.value = '';
+                urlCategorySelect.value = '';
+                bootstrap.Modal.getInstance(document.getElementById('addUrlModal')).hide();
+                updateAdminPanel();
+                showNotification('URL added successfully!');
+            }
+        }
+
+        function editUrl(id, title, url, categoryId) {
+            editUrlTitleInput.value = title;
+            editUrlLinkInput.value = url;
+            editUrlCategorySelect.value = categoryId;
+            editUrlIdInput.value = id;
+            new bootstrap.Modal(document.getElementById('editUrlModal')).show();
+        }
+
+        function updateUrl() {
+            const urlId = parseInt(editUrlIdInput.value);
+            const urlTitle = editUrlTitleInput.value.trim();
+            const urlLink = editUrlLinkInput.value.trim();
+            const urlCategoryId = parseInt(editUrlCategorySelect.value);
+            
+            if (urlTitle && urlLink && !isNaN(urlCategoryId)) {
+                const urlIndex = urls.findIndex(u => u.id === urlId);
+                if (urlIndex !== -1) {
+                    urls[urlIndex] = {
+                        id: urlId,
+                        title: urlTitle,
+                        url: urlLink,
+                        categoryId: urlCategoryId
+                    };
+                    
+                    saveDataToLocalStorage();
+                    bootstrap.Modal.getInstance(document.getElementById('editUrlModal')).hide();
+                    updateAdminPanel();
+                    showNotification('URL updated successfully!');
+                }
+            }
+        }
+
+        function deleteCategory(categoryId) {
+            if (confirm('Are you sure you want to delete this category? All URLs in this category will also be deleted.')) {
+                // Remove the category
+                categories = categories.filter(category => category.id !== categoryId);
+                
+                // Remove all URLs in this category
+                urls = urls.filter(url => url.categoryId !== categoryId);
+                
+                saveDataToLocalStorage();
+                updateAdminPanel();
+                showNotification('Category deleted successfully!');
+            }
+        }
+
+        function deleteUrl(urlId) {
+            if (confirm('Are you sure you want to delete this URL?')) {
+                urls = urls.filter(url => url.id !== urlId);
+                
+                saveDataToLocalStorage();
+                updateAdminPanel();
+                showNotification('URL deleted successfully!');
+            }
+        }
+
+        function displayUrls() {
+            const urlCategories = document.getElementById('urlCategories');
+            urlCategories.innerHTML = '';
+            
+            if (categories.length === 0) {
+                urlCategories.innerHTML = '<div class="col-12 text-center p-5">No categories available</div>';
+                return;
+            }
+            
+            categories.forEach(category => {
+                const categoryUrls = urls.filter(url => url.categoryId === category.id);
+                
+                const categoryDiv = document.createElement('div');
+                categoryDiv.className = 'col-md-4 mb-4';
+                
+                const card = document.createElement('div');
+                card.className = 'card url-card h-100';
+                
+                const cardHeader = document.createElement('div');
+                cardHeader.className = 'card-header';
+                cardHeader.innerHTML = `
+                    <h5 class="mb-0">${category.name}</h5>
+                `;
+                
+                const cardBody = document.createElement('div');
+                cardBody.className = 'card-body';
+                
+                if (categoryUrls.length === 0) {
+                    cardBody.innerHTML = '<div class="text-center p-3">No URLs in this category</div>';
+                } else {
+                    categoryUrls.forEach(url => {
+                        const urlItem = document.createElement('div');
+                        urlItem.className = 'url-item';
+                        urlItem.innerHTML = `
+                            <h6><a href="${url.url}" target="_blank" class="text-decoration-none">${url.title}</a></h6>
+                            <p class="mb-0"><small><a href="${url.url}" target="_blank" class="text-muted">${url.url}</a></small></p>
+                        `;
+                        cardBody.appendChild(urlItem);
+                    });
+                }
+                
+                card.appendChild(cardHeader);
+                card.appendChild(cardBody);
+                categoryDiv.appendChild(card);
+                urlCategories.appendChild(categoryDiv);
+            });
+        }
+
+        function saveDataToLocalStorage() {
+            localStorage.setItem('categories', JSON.stringify(categories));
+            localStorage.setItem('urls', JSON.stringify(urls));
+        }
+
+        function exportData() {
+            const zip = new JSZip();
+            const urlCollection = zip.folder("url_collection");
+            
+            // Create a folder for each category and add the links.json file
+            categories.forEach(category => {
+                const categoryFolderName = category.name.replace(/\s+/g, '_').toLowerCase();
+                const categoryFolder = urlCollection.folder(categoryFolderName);
+                
+                // Get URLs for this category
+                const categoryUrls = urls.filter(url => url.categoryId === category.id);
+                
+                // Create JSON content for this category
+                const jsonContent = JSON.stringify(categoryUrls, null, 2);
+                
+                // Add the JSON file to the category folder
+                categoryFolder.file("links.json", jsonContent);
+            });
+            
+            // Generate the zip file and download it
+            zip.generateAsync({type: "blob"}).then(function(content) {
+                saveAs(content, "url_collection.zip");
+                showNotification('Data exported successfully!');
+            });
+        }
+
+        function showNotification(message) {
+            notification.textContent = message;
+            notification.style.display = 'block';
+            
+            setTimeout(() => {
+                notification.style.display = 'none';
+            }, 3000);
+        }
+
+        // Initialize the page
+        displayUrls();
+    </script>
+</body>
+</html>

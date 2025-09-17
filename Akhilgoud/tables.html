@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Advanced Tables Party 🎉</title>
+
+  <!-- Bootstrap 5.3.3 CSS -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+
+  <!-- Custom CSS -->
+  <style>
+    /* ===============================
+       Hover effect for striped tables
+       =============================== */
+    .table-striped tbody tr:hover {
+      background-color: #ffe066 !important; /* Bright party highlight */
+      cursor: pointer;
+      transform: scale(1.02);
+      transition: 0.2s;
+    }
+
+    /* ===============================
+       Header glow for sortable table
+       =============================== */
+    #sortableTable th {
+      cursor: pointer;
+      transition: 0.3s;
+    }
+    #sortableTable th:hover {
+      text-shadow: 1px 1px 2px #000;
+      color: #ff5722;
+    }
+
+    /* ===============================
+       Rainbow Party Table
+       =============================== */
+    .rainbow th {
+      animation: rainbow 5s infinite;
+    }
+    @keyframes rainbow {
+      0% {color:red;}
+      20% {color:orange;}
+      40% {color:yellow;}
+      60% {color:green;}
+      80% {color:blue;}
+      100% {color:violet;}
+    }
+
+    /* ===============================
+       Collapsible table button
+       =============================== */
+    .btn-toggle {
+      margin-bottom: 10px;
+    }
+
+    /* General styling */
+    body { font-family: Arial, sans-serif; background:#f8f9fa; }
+    h1 { text-align:center; margin-bottom:30px; }
+    h3 { margin-top:30px; margin-bottom:15px; }
+  </style>
+</head>
+<body class="p-4">
+
+  <h1>Advanced Tables Showcase 🤓</h1>
+
+  <!-- ===============================
+       1. Responsive Table
+       =============================== -->
+  <div class="table-responsive mb-5">
+    <h3>1️⃣ Responsive Table</h3>
+    <table class="table table-bordered table-hover">
+      <thead class="table-dark">
+        <tr>
+          <th>Name</th>
+          <th>Age</th>
+          <th>Role</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr><td>Akhil</td><td>22</td><td>Developer</td></tr>
+        <tr><td>Meera</td><td>24</td><td>Designer</td></tr>
+        <tr><td>Ravi</td><td>30</td><td>Tester</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- ===============================
+       2. Striped + Hover Table
+       =============================== -->
+  <div class="mb-5">
+    <h3>2️⃣ Striped & Hover Table</h3>
+    <table class="table table-striped table-hover">
+      <thead>
+        <tr>
+          <th>City</th>
+          <th>Country</th>
+          <th>Population</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr><td>Paris</td><td>France</td><td>2.1M</td></tr>
+        <tr><td>Tokyo</td><td>Japan</td><td>14M</td></tr>
+        <tr><td>NYC</td><td>USA</td><td>8.5M</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- ===============================
+       3. Sortable Table
+       =============================== -->
+  <div class="mb-5">
+    <h3>3️⃣ Sortable Table (Click Headers!)</h3>
+    <table class="table table-bordered" id="sortableTable">
+      <thead class="table-primary">
+        <tr>
+          <th onclick="sortTable(0)">Name ⬆⬇</th>
+          <th onclick="sortTable(1)">Age ⬆⬇</th>
+          <th onclick="sortTable(2)">Role ⬆⬇</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr><td>Akhil</td><td>22</td><td>Developer</td></tr>
+        <tr><td>Meera</td><td>24</td><td>Designer</td></tr>
+        <tr><td>Ravi</td><td>30</td><td>Tester</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- ===============================
+       4. Collapsible Table
+       =============================== -->
+  <div class="mb-5">
+    <h3>4️⃣ Collapsible Table</h3>
+    <button class="btn btn-warning btn-toggle" onclick="toggleCollapsible()">Show/Hide Table</button>
+    <table class="table table-bordered" id="collapsibleTable">
+      <thead class="table-success">
+        <tr>
+          <th>Animal</th>
+          <th>Sound</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr><td>Dog</td><td>Woof</td></tr>
+        <tr><td>Cat</td><td>Meow</td></tr>
+        <tr><td>Cow</td><td>Moo</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- ===============================
+       5. Rainbow Animated Table
+       =============================== -->
+  <div class="mb-5">
+    <h3>5️⃣ Rainbow Animated Table 🌈</h3>
+    <table class="table table-bordered rainbow">
+      <thead>
+        <tr>
+          <th>Fruit</th>
+          <th>Color</th>
+          <th>Taste</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr><td>Mango</td><td>Yellow</td><td>Sweet</td></tr>
+        <tr><td>Orange</td><td>Orange</td><td>Tangy</td></tr>
+        <tr><td>Strawberry</td><td>Red</td><td>Juicy</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- ===============================
+       JavaScript Section
+       =============================== -->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+  <script>
+    // ===============================
+    // Sortable Table JS
+    // ===============================
+    function sortTable(n) {
+      const table = document.getElementById("sortableTable");
+      const rows = Array.from(table.rows).slice(1);
+      let asc = table.getAttribute("data-sort") !== "asc";
+
+      rows.sort((a,b) => {
+        let x = a.cells[n].innerText.toLowerCase();
+        let y = b.cells[n].innerText.toLowerCase();
+        if(!isNaN(x) && !isNaN(y)) return asc ? x-y : y-x;
+        return asc ? x.localeCompare(y) : y.localeCompare(x);
+      });
+
+      rows.forEach(row => table.appendChild(row));
+      table.setAttribute("data-sort", asc ? "asc" : "desc");
+    }
+
+    // ===============================
+    // Collapsible Table JS
+    // ===============================
+    function toggleCollapsible() {
+      const table = document.getElementById("collapsibleTable");
+      table.style.display = table.style.display === "none" ? "table" : "none";
+    }
+
+    // Initially hide collapsible table
+    document.getElementById("collapsibleTable").style.display = "none";
+  </script>
+
+</body>
+</html>

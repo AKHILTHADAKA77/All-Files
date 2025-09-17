@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>The Magical Dot Parade 🎉</title>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/MotionPathPlugin.min.js"></script>
+  <style>
+    body {
+      background-color: navy;
+      font-family: helvetica, sans-serif;
+      margin: 0;
+      padding: 0;
+      overflow-x: hidden;
+    }
+
+    .row {
+      display: flex;
+      align-items: center;
+      justify-content: flex-start;
+      padding: 50px;
+    }
+
+    .other-content {
+      padding-right: 200px;
+      color: white;
+    }
+
+    .dots-container {
+      position: relative;
+    }
+
+    #circle-path-bg {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 315px;
+      height: 630px;
+      z-index: 1;
+    }
+
+    .dot {
+      opacity: 0;
+      position: relative;
+      background-color: #abdc80;
+      box-shadow: 0 0 15px 7px rgba(0, 156, 154, 1);
+      width: 20px;
+      height: 20px;
+      border-radius: 50%;
+      z-index: 2;
+    }
+
+    .dot.show-dot {
+      opacity: 1;
+    }
+
+    .dot span {
+      display: block;
+      opacity: 0;
+      position: absolute;
+      right: 0;
+      top: 0;
+      transition: opacity 0.15s linear;
+      padding-right: 50px;
+      color: #fff;
+      min-width: 300px;
+      text-align: right;
+      font-size: 18px;
+      font-weight: bold;
+    }
+
+    .dot.show-text span {
+      opacity: 1;
+    }
+  </style>
+</head>
+<body>
+  <div class="row">
+    <div class="other-content">
+      <h1>This is other content</h1>
+      <p>(Meanwhile, dots are auditioning for a Broadway show on the right 👉)</p>
+    </div>
+    <div class="dots-container">
+      <svg version="1.1" id="circle-path-bg"
+        xmlns="http://www.w3.org/2000/svg"
+        xmlns:xlink="http://www.w3.org/1999/xlink"
+        x="0px" y="0px"
+        viewBox="0 0 315.1 630.2"
+        style="enable-background:new 0 0 315.1 630.2" xml:space="preserve">
+        <path class="st0" d="M313,54.3c-144.3,0-261.3,117-261.3,261.3s117,261.3,261.3,261.3" 
+          style="fill:none;stroke:#ffffff;stroke-width:1.9588;stroke-miterlimit:10"/>
+        <linearGradient id="circleGradient" gradientUnits="userSpaceOnUse"
+          x1="211.2286" y1="315.088" x2="526.3167" y2="315.088"
+          gradientTransform="matrix(-1 0 0 1 526.3167 0)">
+          <stop offset="0" style="stop-color:#2fbfca"/>
+          <stop offset="0.998" style="stop-color:#5c2c87"/>
+        </linearGradient>
+        <path d="M315.1,2.9C142.7,2.9,2.9,142.7,2.9,315.1c0,172.4,139.8,312.1,312.1,312.1"
+          style="fill:none;stroke:url(#circleGradient);stroke-width:5.8765;stroke-miterlimit:10"/>
+        <path id="dotpath" d="M315,2.9C142.6,2.9,2.8,142.7,2.8,315.1S142.6,627.2,315,627.2"
+          style="fill:none;stroke:#ed1c24;stroke-width:1.9588;stroke-miterlimit:10"/>
+      </svg>
+
+      <div id="dot-1" class="dot"><span>Observation Carts</span></div>
+      <div id="dot-2" class="dot"><span>Observation Tablets</span></div>
+      <div id="dot-3" class="dot"><span>Observation Software</span></div>
+      <div id="dot-4" class="dot"><span>Use Case Analytics</span></div>
+      <div id="dot-5" class="dot"><span>Virtual Clinician Observers</span></div>
+      <div id="dot-6" class="dot"><span>Clinician Implementation</span></div>
+      <div id="dot-7" class="dot"><span>24/7/365 Support</span></div>
+    </div>
+  </div>
+
+  <script>
+    gsap.registerPlugin(MotionPathPlugin);
+
+    function showDot() {
+      this._targets[0].classList.add("show-dot");
+    }
+    function showText() {
+      this._targets[0].classList.add("show-text");
+    }
+
+    let animatedDots = [
+      "#dot-1","#dot-2","#dot-3","#dot-4",
+      "#dot-5","#dot-6","#dot-7"
+    ];
+
+    let endValue = -0.15;
+    let durationValue = 2;
+
+    animatedDots.forEach(function(dot, index) {
+      let delayValue = index;
+      endValue = endValue + 0.15;
+
+      gsap.to(dot, {
+        duration: durationValue,
+        delay: delayValue,
+        onStart: showDot,
+        onComplete: showText,
+        motionPath: {
+          path: "#dotpath",
+          align: "#dotpath",
+          start: 1,
+          alignOrigin: [0.5, 0.5],
+          end: endValue
+        }
+      });
+
+      durationValue = durationValue - 0.3;
+    });
+  </script>
+</body>
+</html>

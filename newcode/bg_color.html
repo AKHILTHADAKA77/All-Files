@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Doomscrolling Simulator</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;700&display=swap');
+    body {
+      margin: 0;
+      height: 200vh; /* Tall enough to start your doomscroll workout */
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      color: white;
+      font-family: 'IBM Plex Sans', sans-serif;
+      font-size: 3em;
+      background: oklch(75% 0.3 100);
+      background-size: 100% 100vh;
+      background-attachment: local;
+      background-repeat: no-repeat;
+      transition: background 0.5s ease; /* smoother than butter */
+    }
+    #content {
+      position: fixed;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+    }
+  </style>
+</head>
+<body>
+  <div id="content">Doomscrolling</div>
+
+  <!-- GSAP (because we like drama in our scrolls) -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+  <script>
+    function getRandomOklchColor() {
+      const chroma = Math.random() * 0.4;   // how spicy the color is
+      const hue = Math.random() * 360;      // spin the color wheel like Wheel of Fortune
+      return `oklch(70% ${chroma} ${hue})`;
+    }
+
+    const colors = [getRandomOklchColor()];
+
+    function updateBackground() {
+      const gradient = `linear-gradient(${colors.join(', ')})`;
+      document.body.style.background = gradient;
+    }
+
+    updateBackground();
+
+    window.addEventListener('scroll', () => {
+      const scrollHeight = document.body.scrollHeight;
+      const scrollPosition = window.innerHeight + window.scrollY;
+
+      // When you reach near the bottom, we toss in a new color like surprise confetti 🎉
+      if (scrollPosition >= scrollHeight - window.innerHeight / 2) {
+        document.body.style.height = `${scrollHeight + window.innerHeight}px`;
+        colors.push(getRandomOklchColor());
+        gsap.to(document.body, {
+          background: `linear-gradient(${colors.join(', ')})`,
+          duration: 1,
+          onUpdate: updateBackground
+        });
+      }
+    });
+  </script>
+</body>
+</html>
