@@ -1,0 +1,167 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Brand Logo Marquee</title>
+
+  <style>
+  :root {
+    --color-text: navy;
+    --color-bg: papayawhip;
+    --color-bg-accent: #ecdcc0;
+    --card-bg: white;
+    --card-radius: 1rem;
+    --card-shadow: 0 6px 16px rgba(0,0,0,0.1);
+    --card-shadow-hover: 0 10px 24px rgba(0,0,0,0.15);
+    --size: clamp(10rem, 1rem + 40vmin, 30rem);
+    --gap: calc(var(--size) / 14);
+    --duration: 60s;
+    --scroll-start: 0;
+    --scroll-end: calc(-100% - var(--gap));
+  }
+
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --color-text: papayawhip;
+      --color-bg: #0d0d2b;
+      --color-bg-accent: #1c1c72;
+      --card-bg: #1e1e40;
+    }
+  }
+
+  * { box-sizing: border-box; }
+
+  body {
+    display: grid;
+    align-content: center;
+    gap: var(--gap);
+    width: 100%;
+    min-height: 100vh;
+    font-family: system-ui, sans-serif;
+    color: var(--color-text);
+    background-color: var(--color-bg);
+    overflow: hidden;
+  }
+
+  /* Marquee Base */
+  .marquee {
+    display: flex;
+    overflow: hidden;
+    user-select: none;
+    gap: var(--gap);
+    mask-image: linear-gradient(
+      to right,
+      hsl(0 0% 0% / 0),
+      hsl(0 0% 0% / 1) 20%,
+      hsl(0 0% 0% / 1) 80%,
+      hsl(0 0% 0% / 0)
+    );
+  }
+
+  .marquee__group {
+    flex-shrink: 0;
+    display: flex;
+    align-items: center;
+    justify-content: space-around;
+    gap: var(--gap);
+    min-width: 100%;
+    animation: scroll-x var(--duration) linear infinite;
+  }
+
+  .marquee--reverse .marquee__group {
+    animation-direction: reverse;
+  }
+
+  /* Card Styling */
+  .brand-card {
+    background: var(--card-bg);
+    border-radius: var(--card-radius);
+    box-shadow: var(--card-shadow);
+    padding: 1rem;
+    width: 120px;
+    height: 120px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+  }
+
+  .brand-card:hover {
+    transform: scale(1.08) translateY(-4px);
+    box-shadow: var(--card-shadow-hover);
+  }
+
+  /* SVG Styling */
+  .brand-card svg {
+    width: 60%;
+    height: 60%;
+    fill: currentColor;
+    color: var(--color-text);
+  }
+
+  /* Animations */
+  @keyframes scroll-x {
+    from { transform: translateX(var(--scroll-start)); }
+    to { transform: translateX(var(--scroll-end)); }
+  }
+  </style>
+</head>
+<body>
+
+  <!-- Inline SVG Symbols -->
+  <svg xmlns="http://www.w3.org/2000/svg" style="display:none">
+    <symbol id="mcdonalds" viewBox="0 0 24 24">
+      <path d="M12 2c-3 0-5.5 2.7-7 7v13h3V9c1-3 2.5-5 4-5s3 2 4 5v13h3V9c-1.5-4.3-4-7-7-7z"/>
+    </symbol>
+    <symbol id="jordan" viewBox="0 0 24 24">
+      <circle cx="12" cy="12" r="10"/>
+    </symbol>
+    <symbol id="aws" viewBox="0 0 24 24">
+      <path d="M2 12l10-9 10 9-10 9-10-9z"/>
+    </symbol>
+    <symbol id="spotify" viewBox="0 0 24 24">
+      <circle cx="12" cy="12" r="10"/>
+      <path d="M7 9c4-2 10-1 12 1M7 12c3-1 8-1 10 1M7 15c2-1 6 0 8 1" stroke="currentColor" stroke-width="1.5" fill="none"/>
+    </symbol>
+    <symbol id="burger-king" viewBox="0 0 24 24">
+      <rect x="4" y="6" width="16" height="12" rx="3"/>
+    </symbol>
+    <symbol id="honda" viewBox="0 0 24 24">
+      <rect x="6" y="4" width="12" height="16" rx="2"/>
+    </symbol>
+    <symbol id="notion" viewBox="0 0 24 24">
+      <rect x="3" y="3" width="18" height="18" rx="2"/>
+      <path d="M8 8l8 8M16 8l-8 8" stroke="currentColor" stroke-width="1.5"/>
+    </symbol>
+    <symbol id="hulu" viewBox="0 0 24 24">
+      <rect x="2" y="6" width="20" height="12" rx="2"/>
+    </symbol>
+  </svg>
+
+  <!-- Marquee -->
+  <div class="marquee">
+    <div class="marquee__group">
+      <div class="brand-card"><svg><use xlink:href="#mcdonalds"/></svg></div>
+      <div class="brand-card"><svg><use xlink:href="#jordan"/></svg></div>
+      <div class="brand-card"><svg><use xlink:href="#aws"/></svg></div>
+      <div class="brand-card"><svg><use xlink:href="#spotify"/></svg></div>
+      <div class="brand-card"><svg><use xlink:href="#burger-king"/></svg></div>
+      <div class="brand-card"><svg><use xlink:href="#honda"/></svg></div>
+      <div class="brand-card"><svg><use xlink:href="#notion"/></svg></div>
+      <div class="brand-card"><svg><use xlink:href="#hulu"/></svg></div>
+    </div>
+    <div class="marquee__group">
+      <div class="brand-card"><svg><use xlink:href="#mcdonalds"/></svg></div>
+      <div class="brand-card"><svg><use xlink:href="#jordan"/></svg></div>
+      <div class="brand-card"><svg><use xlink:href="#aws"/></svg></div>
+      <div class="brand-card"><svg><use xlink:href="#spotify"/></svg></div>
+      <div class="brand-card"><svg><use xlink:href="#burger-king"/></svg></div>
+      <div class="brand-card"><svg><use xlink:href="#honda"/></svg></div>
+      <div class="brand-card"><svg><use xlink:href="#notion"/></svg></div>
+      <div class="brand-card"><svg><use xlink:href="#hulu"/></svg></div>
+    </div>
+  </div>
+
+</body>
+</html>
